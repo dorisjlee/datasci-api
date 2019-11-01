@@ -1,6 +1,6 @@
 import pandas as pd
 
-class Data:
+class Dataset:
 	def __init__(self,filename):
 		self.filename = filename
 		self.df = self.loadCSV()
@@ -8,7 +8,7 @@ class Data:
 		self.dataModel = self.getDataModel()
 		self.computeStats()
 	def __repr__(self):
-		return f"<Data Obj: {str(self.filename)}>"
+		return f"<Dataset Obj: {str(self.filename)}>"
 
 	def loadCSV(self):
 		df = pd.read_csv(self.filename)
