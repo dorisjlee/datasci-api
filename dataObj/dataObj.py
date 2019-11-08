@@ -12,7 +12,7 @@ class DataObj:
 	def __repr__(self):
 		return f"<Data Obj: {str(self.dataset)} -- Rows{str(self.rows)}, Columns{str(self.columns)}>"
 
-	def renderAs(type): 
+	def display(): 
 		# render this data object as: vis, columns, etc.?
 		return NotImplemented
 
