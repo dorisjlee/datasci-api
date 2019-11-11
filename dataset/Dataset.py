@@ -1,12 +1,14 @@
 import pandas as pd
-
+import json
 class Dataset:
 	def __init__(self,filename):
 		self.filename = filename
 		self.df = self.loadCSV()
 		self.dataType = self.getDataType()
 		self.dataModel = self.getDataModel()
+		# self.df_json  = self.df.to_json(orient='records')
 		self.computeStats()
+
 	def __repr__(self):
 		return f"<Dataset Obj: {str(self.filename)}>"
 

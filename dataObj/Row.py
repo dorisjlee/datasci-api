@@ -10,9 +10,9 @@ class Row:
 		self.points = []
 		self.pattern = []
 		# Properties
-		self.highlight = highlightGrey
+		self.highlight = highlight
 		self.clusterOutlier = clusterOutlier
 		
 	def __repr__(self):
-		return f"Row{str(self.rowName)}"
+		return f"Row <{str(self.fAttribute)},{str(self.fVal)}>"
 
