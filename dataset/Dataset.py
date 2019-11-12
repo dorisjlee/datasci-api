@@ -4,9 +4,9 @@ class Dataset:
 	def __init__(self,filename):
 		self.filename = filename
 		self.df = self.loadCSV()
-		self.dataType = self.getDataType()
-		self.dataModel = self.getDataModel()
 		# self.df_json  = self.df.to_json(orient='records')
+		self.computeDataType()
+		self.computeDataModel()
 		self.computeStats()
 
 	def __repr__(self):
@@ -16,20 +16,34 @@ class Dataset:
 		df = pd.read_csv(self.filename)
 		return df
 
-	def getDataType(self):
+	def computeDataType(self):
 		df = self.df
-		dataType = {
-			"quantitative":list(df.dtypes[df.dtypes=="float64"].keys()),
+		self.dataType = {
+			"quantitative":list(df.dtypes[df.dtypes=="float64"].keys()) + list(df.dtypes[df.dtypes=="int64"].keys()),
 			"categorical":list(df.dtypes[df.dtypes=="object"].keys()),
-			"ordinal":list(df.dtypes[df.dtypes=="int64"].keys())
+			"ordinal": [],
+			"date":[]
 		}
-		return dataType
-	def getDataModel(self):
-		dataModel = {
+		# for attr in list(df.dtypes[df.dtypes=="int64"].keys()):
+		# 	if self.cardinality[attr]>50:
+
+		self.dataTypeLookup = self.reverseMapping(self.dataType)
+
+
+	def computeDataModel(self):
+		self.dataModel = {
 			"measure":self.dataType["quantitative"],
-			"dimension":self.dataType["ordinal"]+self.dataType["categorical"]
+			"dimension":self.dataType["ordinal"]+self.dataType["categorical"]+self.dataType["date"]
 		}
-		return dataModel
+
+		self.dataModelLookup = self.reverseMapping(self.dataModel)
+	def reverseMapping (self, map):
+		reverseMap ={}
+		for valKey in map:
+		    for val in map[valKey]:
+		        reverseMap[val]=valKey
+		return reverseMap
+
 	def computeStats(self):
 		# precompute statistics
 		def cardinality(df,columnName):

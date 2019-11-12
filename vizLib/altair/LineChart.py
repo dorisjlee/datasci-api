@@ -14,5 +14,7 @@ class LineChart(AltairChart):
 		    # TODO: need to change aggregate to non-default function, read aggFunc info in somewhere
 		    y = alt.Y(measure,type="quantitative", aggregate="mean")
 		)
+		chart = chart.configure_mark(tooltip=alt.TooltipContent('encoding')) # Setting tooltip as non-null
+		chart = chart.interactive() # If you want to enable Zooming and Panning
 		return chart 
 	

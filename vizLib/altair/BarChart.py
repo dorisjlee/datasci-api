@@ -15,12 +15,10 @@ class BarChart(AltairChart):
 		            op="mean",  # The operation to run on the field prior to sorting
 		            order="descending"  # The order to sort in
 		        )),
-		    x = alt.X(measure,type="quantitative", aggregate="mean")#,
-		    #color=alt.condition(
-		    #     f"datum.{dimension} == {insightDic['FILTER_VAL']}",  # If the year is 1810 this test returns True,
-		    #     alt.value('orange'),     # which sets the bar orange.
-		    #     alt.value('steelblue')   # And if it's not true it sets the bar steelblue.
-		    # )
+		    x = alt.X(measure,type="quantitative", aggregate="mean")
 		)
+		chart = chart.configure_mark(tooltip=alt.TooltipContent('encoding')) # Setting tooltip as non-null
+		chart = chart.interactive() # If you want to enable Zooming and Panning
+
 		return chart 
 	

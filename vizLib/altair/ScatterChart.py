@@ -12,4 +12,7 @@ class ScatterChart(AltairChart):
 		    x=alt.X(measures[0].columnName),
 		    y=alt.Y(measures[1].columnName)
 		)
+		chart = chart.configure_mark(tooltip=alt.TooltipContent('encoding')) # Setting tooltip as non-null
+		chart = chart.interactive() # If you want to enable Zooming and Panning
+
 		return chart 

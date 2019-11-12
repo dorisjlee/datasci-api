@@ -12,4 +12,8 @@ class Histogram(AltairChart):
 			alt.X(measures[0].columnName, type="quantitative", bin=alt.Bin(maxbins=50)),
 			y='count()',
 		)
+		chart = chart.configure_mark(tooltip=alt.TooltipContent('encoding')) # Setting tooltip as non-null
+		# interactive doesn't work for histograms
+		#chart = chart.interactive() # If you want to enable Zooming and Panning 
+
 		return chart 
