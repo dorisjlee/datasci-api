@@ -39,39 +39,55 @@ class DataObj:
 		Ndim = 0 
 		Nmsr = 0 
 		for spec in dobj.spec: 
-		    if (spec.dataModel == "dimension"):
-		        Ndim +=1
-		    elif (spec.dataModel == "measure"):
-		        Nmsr +=1
+			if (spec.dataModel == "dimension"):
+				Ndim +=1
+			elif (spec.dataModel == "measure"):
+				Nmsr +=1
+		print ("Ndim,Nmsr:",Ndim,Nmsr)
+		# Helper function (TODO: Move this into utils)
+		def lineOrBar(dobj):
+			dimension = filterDataModel(dobj,"dimension")[0]
+			dimType = dimension.dataType
+			if (dimType =="date" or dimType == "oridinal"):
+				chart = LineChart(dobj)
+			else: # unordered categorical
+				chart = BarChart(dobj)
+				# TODO: if cardinality large than 6 then sort bars
+			return chart
+		def filterDataModel(dobj,dmodel):       
+			return list(filter(lambda x: x.dataModel==dmodel if hasattr(x,"dataModel") else False,dobj.spec))
 		# ShowMe logic + additional heuristics
 		countCol = Column("Count")
 		if (Ndim == 0 and Nmsr ==1):
-		    # Histogram with Count on the y axis
-		    chart = Histogram(dobj)
+			# Histogram with Count on the y axis
+			chart = Histogram(dobj)
 		elif (Ndim ==2 and Nmsr==0):
-		    pass
+			pass
 		elif (Ndim ==0 and Nmsr==2):
-		    # Scatterplot
-		    chart = ScatterChart(dobj)
+			# Scatterplot
+			chart = ScatterChart(dobj)
 		elif (Ndim ==1 and Nmsr ==2):
-		    # Scatterplot broken down by the dimension
-		    pass 
+			# Scatterplot broken down by the dimension
+			pass 
 		elif (Ndim ==1 and (Nmsr ==0 or Nmsr==1)):
-		    # Bar Chart
-		    if (Nmsr==0): dobj.spec.append(countCol)
-		    dimension = list(filter(lambda x: x.dataModel=="dimension" if hasattr(x,"dataModel") else False,dobj.spec))[0]
-		    dimType = dimension.dataType
-		    if (dimType =="date" or dimType == "oridinal"):
-		        chart = LineChart(dobj)
-		    else: # unordered categorical
-		        chart = BarChart(dobj)
-		        # TODO: if cardinality large than 6 then sort bars
+			# Bar Chart
+			if (Nmsr==0): dobj.spec.append(countCol)
+			chart = lineOrBar(dobj)
 		elif (Ndim ==2 and Nmsr==1):
-		    # Bar/Line chart broken down by dimension
-		    pass
+			print("here")
+			# Bar/Line chart broken down by dimension
+			dimension = filterDataModel(dobj,"dimension")
+			d1 = dimension[0]
+			d2 = dimension[1]
+			if (dobj.dataset.cardinality[d1.columnName]<dobj.dataset.cardinality[d2.columnName]):
+				d1.channel = "color"
+			else:
+				d2.channel = "color"
+			chart = lineOrBar(dobj)
+			# TODO: Generalize to breakdown by? 
+			chart.chart = chart.chart.encode(color="Origin")
 		elif (Ndim==3):
-		    pass
+			pass
 		else:
-		    pass
+			pass
 		return chart.chart
-		
