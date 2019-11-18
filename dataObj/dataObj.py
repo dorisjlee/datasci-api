@@ -7,7 +7,7 @@ class DataObj:
 	It can be a visualization, group of data points, column, etc and does not have to be fully specified.
 	'''
 	def __init__(self, dataset, spec = [] ):
-		self.dataset = dataset
+		self.dataset = dataset # may be inefficient use of memory
 		self.spec =spec #list of Row and Column objects
 		self.type = ""
 		self.expandUnderspecified()
