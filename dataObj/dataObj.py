@@ -26,12 +26,13 @@ class DataObj:
 	# 		return f"<Data Obj: {str(self.dataset)} -- {str(self.spec)}>"
 	def expandUnderspecified(self):
 		for rcObj in self.spec:
-			if (rcObj.dataType==""):
-				rcObj.dataType = self.dataset.dataTypeLookup[rcObj.columnName]
-			
-			if (rcObj.dataModel==""):
-				rcObj.dataModel = self.dataset.dataModelLookup[rcObj.columnName]
-			
+			if( type(rcObj) is Column):
+				if (rcObj.dataType==""):
+					rcObj.dataType = self.dataset.dataTypeLookup[rcObj.columnName]
+
+				if (rcObj.dataModel==""):
+					rcObj.dataModel = self.dataset.dataModelLookup[rcObj.columnName]
+
 	def display(self,renderer="altair"): 
 		# render this data object as: vis, columns, etc.?
 		encoder = Autoencoding(renderer)

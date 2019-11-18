@@ -33,6 +33,9 @@ class DataObjCollection:
 
 	def display(self):
 		# Similar to display for individual DataObjects, takes fully specified visualizations and renders them. If score is available, display order of dashboard is based on score, otherwise random display order
-		return NotImplemented
+		displays = []
+		for viz in self.collection:
+			displays.append(viz.display())
+		return displays
 			
 
