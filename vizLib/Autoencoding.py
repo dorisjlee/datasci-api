@@ -59,18 +59,23 @@ class Autoencoding:
 			if (Nmsr==0): dobj.spec.append(countCol)
 			chart = lineOrBar(dobj)
 		elif (Ndim ==2 and Nmsr==1):
-			print("here")
+			print("here2")
 			# Bar/Line chart broken down by dimension
 			dimension = filterDataModel(dobj,"dimension")
 			d1 = dimension[0]
 			d2 = dimension[1]
+
 			if (dobj.dataset.cardinality[d1.columnName]<dobj.dataset.cardinality[d2.columnName]):
-				d1.channel = "color"
+				# d1.channel = "color"
+				dobj.removeColumnFromSpec(d1.columnName)
+				colorAttr = d1.columnName
 			else:
-				d2.channel = "color"
+				# d2.channel = "color"
+				dobj.removeColumnFromSpec(d2.columnName)
+				colorAttr = d2.columnName
 			chart = lineOrBar(dobj)
 			# TODO: Generalize to breakdown by? 
-			chart.chart = chart.chart.encode(color="Origin")
+			chart.chart = chart.chart.encode(color=colorAttr)
 		elif (Ndim==3):
 			pass
 		else:

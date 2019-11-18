@@ -37,4 +37,6 @@ class DataObj:
 		# render this data object as: vis, columns, etc.?
 		encoder = Autoencoding(renderer)
 		return encoder.createVis(self)
+	def removeColumnFromSpec(self,columnName):
+		self.spec = list(filter(lambda x: x.columnName!=columnName,self.spec))
 	
