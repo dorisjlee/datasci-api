@@ -25,7 +25,7 @@ class Dataset:
 	def computeDataType(self):
 		# df = self.df
 		# self.dataType = {
-		# 	"quantitative":list(df.dtypes[df.dtypes=="float64"].keys()) + list(df.dtypes[df.dtypes=="int64"].keys()),
+		# 	"quantitative":list(dfw.dtypes[df.dtypes=="float64"].keys()) + list(df.dtypes[df.dtypes=="int64"].keys()),
 		# 	"categorical":list(df.dtypes[df.dtypes=="object"].keys()),
 		# 	"ordinal": [],
 		# 	"date":[]
@@ -45,6 +45,7 @@ class Dataset:
 		self.dataType = self.mapping(self.dataTypeLookup)
 
 	def computeDataModel(self):
+		# TODO: Need to be modified to take in schema for overriding defaults
 		self.dataModel = {
 			"measure":self.dataType["quantitative"],
 			"dimension":self.dataType["ordinal"]+self.dataType["categorical"]+self.dataType["date"]

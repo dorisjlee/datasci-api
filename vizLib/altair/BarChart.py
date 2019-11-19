@@ -10,15 +10,16 @@ class BarChart(AltairChart):
 		dimension = list(filter(lambda x: x.dataModel=="dimension" if hasattr(x,"dataModel") else False,self.dobj.spec))[0].columnName
 		measure = list(filter(lambda x: x.dataModel=="measure" if hasattr(x,"dataModel") else False,self.dobj.spec))[0].columnName
 		chart = alt.Chart(self.dobj.dataset.df).mark_bar().encode(
-		    y = alt.Y(dimension, type = "nominal", sort=alt.EncodingSortField(
-		            field=measure,  # The field to use for the sort
-		            op="mean",  # The operation to run on the field prior to sorting
-		            order="descending"  # The order to sort in
-		        )),
-		    x = alt.X(measure,type="quantitative", aggregate="mean")
+		    y = alt.Y(dimension, type = "nominal"),
+		    	# , sort=alt.EncodingSortField(
+		     #        field=measure,  # The field to use for the sort
+		     #        op="mean",  # The operation to run on the field prior to sorting
+		     #        order="descending"  # The order to sort in
+		     #    )),
+		    x = alt.X(measure,type="quantitative", aggregate="mean")#TODO: fix to non-default aggregate function
 		)
 		chart = chart.configure_mark(tooltip=alt.TooltipContent('encoding')) # Setting tooltip as non-null
-		chart = chart.interactive() # If you want to enable Zooming and Panning
-
+		# Can not do interactive whenever you have default count measure otherwise output strange error (Javascript Error: Cannot read property 'length' of undefined)
+		#chart = chart.interactive() # If you want to enable Zooming and Panning
 		return chart 
 	
