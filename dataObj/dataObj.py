@@ -35,8 +35,12 @@ class DataObj:
 
 	def display(self,renderer="altair"): 
 		# render this data object as: vis, columns, etc.?
+		import jupyter_widget_mockup
 		encoder = Autoencoding(renderer)
-		return encoder.createVis(self)
+		chart = encoder.createVis(self)
+		widget = jupyter_widget_mockup.Mockup(graphSpecs = [chart.to_dict()])
+		return widget
+		# return chart
 	def removeColumnFromSpec(self,columnName):
 		self.spec = list(filter(lambda x: x.columnName!=columnName,self.spec))
 	
