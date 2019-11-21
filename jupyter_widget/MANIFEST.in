@@ -1,0 +1,2 @@
+recursive-include jupyter_widget_mockup/static *.*
+include jupyter-widget-mockup.json
