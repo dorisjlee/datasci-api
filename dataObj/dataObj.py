@@ -1,6 +1,7 @@
 from dataObj.Row import Row
 from dataObj.Column import Column
 from vizLib.Autoencoding import Autoencoding
+from compiler.Compiler import Compiler
 class DataObj:
 	'''
 	DataObj is an abstract object representing some aspect of the data. 
@@ -11,7 +12,9 @@ class DataObj:
 		self.dataset = dataset # may be inefficient use of memory
 		self.spec =spec #list of Row and Column objects
 		self.type = ""
-		self.expandUnderspecified()
+		compiler = Compiler()
+		compiler.expandUnderspecified(self)
+		self.collection = compiler.enumerateCollection(self)
 
 	def __repr__(self):
 		# TODO: figure out a way to call display when printing out a data obj
@@ -24,15 +27,6 @@ class DataObj:
 	# 		return vis
 	# 	else: 
 	# 		return f"<Data Obj: {str(self.dataset)} -- {str(self.spec)}>"
-	def expandUnderspecified(self):
-		for rcObj in self.spec:
-			if( type(rcObj) is Column):
-				if (rcObj.dataType==""):
-					rcObj.dataType = self.dataset.dataTypeLookup[rcObj.columnName]
-
-				if (rcObj.dataModel==""):
-					rcObj.dataModel = self.dataset.dataModelLookup[rcObj.columnName]
-
 	def display(self,renderer="altair"): 
 		# render this data object as: vis, columns, etc.?
 		import jupyter_widget_mockup

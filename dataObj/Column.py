@@ -3,6 +3,7 @@ class Column:
 	Column Object represents one or a group of datapoints (columns) in the Dataset.
 	'''
 	def __init__(self, columnName, channel="", dataType="",dataModel="", transform="",aggregation="",binning="",scale=""):
+		self.className = "Column"
 		# Descriptor
 		self.columnName = columnName
 		# Properties

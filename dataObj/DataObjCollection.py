@@ -33,9 +33,12 @@ class DataObjCollection:
 
 	def display(self):
 		# Similar to display for individual DataObjects, takes fully specified visualizations and renders them. If score is available, display order of dashboard is based on score, otherwise random display order
-		displays = []
+		import jupyter_widget_mockup
+		from vizLib.Autoencoding import Autoencoding
+		chartSpecs = []
 		for viz in self.collection:
-			displays.append(viz.display())
-		return displays
-			
-
+			encoder = Autoencoding()
+			chart = encoder.createVis(viz).to_dict()
+			chartSpecs.append(chart)
+		widget = jupyter_widget_mockup.Mockup(graphSpecs = chartSpecs)	
+		return widget

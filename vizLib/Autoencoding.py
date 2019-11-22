@@ -24,9 +24,9 @@ class Autoencoding:
 		Ndim = 0 
 		Nmsr = 0 
 		for spec in dobj.spec: 
-			if (spec.dataModel == "dimension"):
+			if (dobj.dataset.dataModelLookup[spec.columnName] == "dimension"):
 				Ndim +=1
-			elif (spec.dataModel == "measure"):
+			elif (dobj.dataset.dataModelLookup[spec.columnName] == "measure"):
 				Nmsr +=1
 		# print ("Ndim,Nmsr:",Ndim,Nmsr)
 		# Helper function (TODO: Move this into utils)
