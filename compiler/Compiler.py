@@ -6,16 +6,18 @@ class Compiler:
 	def __repr__(self):
 		return f"<Compiler>"
 
+
 	def expandUnderspecified(self,dobj):
 		# Automatic type conversion (only for single attributes not lists of attributes)
-		for rcObj in dobj.spec:
-			if( type(rcObj) is Column and type(rcObj)=="string"):
+		import copy
+		expandedDobj = copy.deepcopy(dobj) # Preserve the original dobj
+		for rcObj in expandedDobj.spec:
+			if( rcObj.className == "Column"):
 				if (rcObj.dataType==""):
-					rcObj.dataType = dobj.dataset.dataTypeLookup[rcObj.columnName]
-
+					rcObj.dataType = expandedDobj.dataset.dataTypeLookup[rcObj.columnName]
 				if (rcObj.dataModel==""):
-					rcObj.dataModel = dobj.dataset.dataModelLookup[rcObj.columnName]
-
+					rcObj.dataModel = expandedDobj.dataset.dataModelLookup[rcObj.columnName]
+		return expandedDobj
 
 	def enumerateCollection(self,dobj):
 		from dataObj.dataObj import DataObj
@@ -47,7 +49,8 @@ class Compiler:
 
 		collection = []
 		if (len(col1Attrs)<=1 and len(col2Attrs)<=1 and len(rowSpecs)<=1):
-			return  DataObjCollection(collection)
+			# If DataObj does not represent a collection, return False. 
+			return False
 		else:
 			for col1 in col1Attrs:
 				for col2 in col2Attrs:

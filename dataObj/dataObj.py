@@ -12,9 +12,7 @@ class DataObj:
 		self.dataset = dataset # may be inefficient use of memory
 		self.spec =spec #list of Row and Column objects
 		self.type = ""
-		compiler = Compiler()
-		compiler.expandUnderspecified(self)
-		self.collection = compiler.enumerateCollection(self)
+		self.compile()
 
 	def __repr__(self):
 		# TODO: figure out a way to call display when printing out a data obj
@@ -27,6 +25,29 @@ class DataObj:
 	# 		return vis
 	# 	else: 
 	# 		return f"<Data Obj: {str(self.dataset)} -- {str(self.spec)}>"
+
+	def compile(self):
+		dobj = self
+		compiler = Compiler()
+		# 1. If the DataObj represent a collection, then compile it into a collection. Otherwise, return False
+		# Input: DataObj --> Output: DataObjCollection/False
+		dataObjCollection = compiler.enumerateCollection(dobj)
+		# 2. For every DataObject in the DataObject Collection, expand underspecified
+		# Output : DataObj/DataObjectCollection
+		if (dataObjCollection):
+			self.compiled = dataObjCollection  # Preserve any dataObjectCollection specification
+			compiledCollection = []
+			for dataObj in dataObjCollection.collection:
+				compiled = compiler.expandUnderspecified(dataObj)
+				compiledCollection.append(compiled)
+				print ("uncompiled:",dataObj)
+				print ("compiled:",compiled)
+			self.compiled.collection = compiledCollection # return DataObjCollection
+		else:
+			self.compiled = compiler.expandUnderspecified(dobj) # return DataObj
+			print ("uncompiled:",dobj)
+			print ("compiled:",self.compiled)
+			
 	def display(self,renderer="altair"): 
 		# render this data object as: vis, columns, etc.?
 		import jupyter_widget_mockup

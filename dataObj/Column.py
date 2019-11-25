@@ -15,5 +15,9 @@ class Column:
 		self.binning = binning
 		self.scale = scale
 	def __repr__(self):
-		return f"Column <{str(self.columnName)}>"
+		repr =  f"Column <{str(self.columnName)},"+ \
+			   f"channel:{str(self.channel)},"+ \
+			   f"dataType:{str(self.dataType)},"+ \
+			   f"dataModel:{str(self.dataModel)}>"
+		return repr
 
