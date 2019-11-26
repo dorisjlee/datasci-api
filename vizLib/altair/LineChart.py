@@ -1,6 +1,5 @@
-from vizLib.altair.AltairChart import AltairChart
 import altair as alt
-class LineChart(AltairChart):
+class LineChart():
 	def __init__(self,dobj):
 		self.dobj = dobj
 		self.chart = self.initializeChart()
