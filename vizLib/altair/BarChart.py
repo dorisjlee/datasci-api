@@ -1,6 +1,5 @@
-from vizLib.altair.AltairChart import AltairChart
 import altair as alt
-class BarChart(AltairChart):
+class BarChart():
 	def __init__(self,dobj):
 		self.dobj = dobj
 		self.chart = self.initializeChart()
@@ -11,11 +10,6 @@ class BarChart(AltairChart):
 		measure = list(filter(lambda x: x.dataModel=="measure" if hasattr(x,"dataModel") else False,self.dobj.spec))[0].columnName
 		chart = alt.Chart(self.dobj.dataset.df).mark_bar().encode(
 		    y = alt.Y(dimension, type = "nominal"),
-		    	# , sort=alt.EncodingSortField(
-		     #        field=measure,  # The field to use for the sort
-		     #        op="mean",  # The operation to run on the field prior to sorting
-		     #        order="descending"  # The order to sort in
-		     #    )),
 		    x = alt.X(measure,type="quantitative", aggregate="mean")#TODO: fix to non-default aggregate function
 		)
 		chart = chart.configure_mark(tooltip=alt.TooltipContent('encoding')) # Setting tooltip as non-null
