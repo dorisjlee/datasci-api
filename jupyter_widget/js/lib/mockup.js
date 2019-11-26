@@ -51,19 +51,15 @@ var MockupView = widgets.DOMWidgetView.extend({
         i.setAttribute('type',"text");              
         f.appendChild(i);
         this.el.appendChild(f);
-        let title = document.createElement("h3");            
-        this.el.appendChild(title);
         
         // initializing the form and the title values  
         i.setAttribute('value', this.model.get('value'));
-        title.textContent = this.model.get('value');
         
         // Listening to changes in the frontend input
         f.addEventListener("input", (inputEvent => view.callback(inputEvent, f)), false);
 
         // handle to access the DOM elements directly
         this.input = i;  
-        this.title = title;
 
         //displayDiv.className = "recommendationContentOuter";
 
@@ -75,8 +71,6 @@ var MockupView = widgets.DOMWidgetView.extend({
     value_changed: function() {
         // access to the 'input' DOM element
         this.input.setAttribute('value', this.model.get('value'))
-        // access to the 'h3' DOM element
-        this.title.textContent = this.model.get('value')
 
         staticDiv = document.createElement('div');
         staticDiv.id = "staticOuterDiv";
