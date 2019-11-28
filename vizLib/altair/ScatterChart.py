@@ -8,8 +8,8 @@ class ScatterChart():
 	def initializeChart(self):
 		# UP TO HERE: Broken because self.expandUnderspecified() in dataObj does not run when there are multiple object, we should not rely on spec
 		# measures = list(filter(lambda x: x.dataModel=="measure" if hasattr(x,"dataModel") else False,self.dobj.spec))
-		xAttr = list(filter(lambda x: x.channel =="x",self.dobj.spec))[0].columnName
-		yAttr = list(filter(lambda x: x.channel =="y",self.dobj.spec))[0].columnName
+		xAttr = self.dobj.getObjFromChannel("x")[0].columnName
+		yAttr = self.dobj.getObjFromChannel("y")[0].columnName
 		chart = alt.Chart(self.dobj.dataset.df).mark_circle().encode(
 		    x=alt.X(xAttr),
 		    y=alt.Y(yAttr)

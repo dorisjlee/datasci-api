@@ -89,14 +89,15 @@ class Compiler:
 		# print ("Ndim,Nmsr:",Ndim,Nmsr)
 		# Helper function (TODO: Move this into utils)
 		def lineOrBar(dobj):
+			measure = filterDataModel(dobj,"measure")[0]
 			dimension = filterDataModel(dobj,"dimension")[0]
 			dimType = dimension.dataType
 			if (dimType =="date" or dimType == "oridinal"):
 				# chart = LineChart(dobj)
-				return "line"
+				return "line", {"x": dimension, "y": measure}
 			else: # unordered categorical
 				# chart = BarChart(dobj)
-				return "bar"
+				return "bar", {"x": measure, "y": dimension}
 				# TODO: if cardinality large than 6 then sort bars
 			return chart
 		def filterDataModel(dobj,dmodel):       
@@ -110,20 +111,25 @@ class Compiler:
 			for val in available_channels:
 				specifiedDict[val]=dobj.getObjFromChannel(val)
 				specifiedChannel[val].channel = val # populate initially with the auto-values, will be overridden later if necessary
+			print (specifiedChannel)
 			# for every specified element, swap with channel that originally contained that element in the autoChannel
 			for sVal,sAttr in specifiedDict.items():
 				if (len(sAttr)==1): #if specified in dobj
 					# remove the specified channel from available channels
 					if (len(available_channels)>0):
+						print (sVal)
 						available_channels.remove(sVal)
 						swapWithChannel = available_channels[0] # pick any
+						#if (specifiedChannel[sVal].channel!=sVal):
+							#print ("compare:",specifiedChannel[sVal].channel,sVal)
 						specifiedChannel[swapWithChannel].channel = sVal
 						specifiedChannel[sVal].channel = swapWithChannel
-						available_channels.remove(swapWithChannel)
+						# available_channels.remove(swapWithChannel)
 				elif (len(sAttr)>1):
 					raise ValueError("There should not be more than one attribute specified in the same channel.")
 				# elif (len(sAttr)==0): # if unspecified, then populate the channel value with the showMe default
 				# 	specifiedChannel[sVal].channel = sVal
+			print (specifiedChannel)
 			dobj.spec = list(specifiedChannel.values())
 			return dobj
 		# ShowMe logic + additional heuristics
@@ -135,7 +141,9 @@ class Compiler:
 		if (Ndim == 0 and Nmsr ==1):
 			# Histogram with Count on the y axis
 			measure = filterDataModel(dobj,"measure")[0]
-			measure.channel = "x"
+			dobj.spec.append(countCol)
+			# measure.channel = "x"
+			autoChannel = {"x": measure,"y": countCol}
 			dobj.mark = "histogram"
 		elif (Ndim ==1 and (Nmsr ==0 or Nmsr==1)):
 			# Bar Chart
@@ -143,28 +151,31 @@ class Compiler:
 			if (Nmsr==0): 
 				countCol.channel= "y" 
 				dobj.spec.append(countCol)
+			dimension = filterDataModel(dobj,"dimension")[0]
 			measure = filterDataModel(dobj,"measure")[0]
-			measure.channel = "x"
-			dobj.mark = lineOrBar(dobj)
+			# measure.channel = "x"
+			dobj.mark, autoChannel = lineOrBar(dobj)
 		elif (Ndim ==2 and (Nmsr==0 or Nmsr==1)):
 			
-			dimension = filterDataModel(dobj,"dimension")
-			d1 = dimension[0]
-			d2 = dimension[1]
+			dimensions = filterDataModel(dobj,"dimension")
+			d1 = dimensions[0]
+			d2 = dimensions[1]
 			if (dobj.dataset.cardinality[d1.columnName]<dobj.dataset.cardinality[d2.columnName]):
 				# d1.channel = "color"
 				dobj.removeColumnFromSpec(d1.columnName)
+				dimension = d2.columnName
 				colorAttr = d1.columnName
 			else:
 				# d2.channel = "color"
 				dobj.removeColumnFromSpec(d2.columnName)
+				dimension = d1.columnName
 				colorAttr = d2.columnName
 			# Colored Bar/Line chart with Count as default measure
 			if (Nmsr==0):
 				dobj.spec.append(countCol)
 			# print (dobj)
-			dobj.mark = lineOrBar(dobj)
-			
+			dobj.mark, autoChannel = lineOrBar(dobj)
+			measure = filterDataModel(dobj,"measure")[0]
 			# TODO: Generalize to breakdown by? 
 			chart.chart = chart.chart.encode(color=colorAttr)
 		elif (Ndim ==0 and Nmsr==2):
@@ -182,7 +193,10 @@ class Compiler:
 			dobj.removeColumnFromSpec(colorAttr)
 			
 			dobj.mark = "scatter"
+			autoChannel = {"x": dobj.spec[0],
+				"y":dobj.spec[1]}
 			# TODO: Generalize to breakdown by? 
 			chart.chart = chart.chart.encode(color=colorAttr)
+
 		dobj = enforceSpecifiedChannel(dobj,autoChannel)
 		return dobj

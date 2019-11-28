@@ -35,3 +35,14 @@ def test_channelEnforcingScatter():
 		# Should throw error because there should not be columns with the same channel specified
 		dobj = DataObj(dataset,[Column("MilesPerGal", channel="x"),Column("Weight", channel="x")])
 
+def test_channelEnforcingHistogram():
+	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	
+	# Partial channel specified
+	dobj = DataObj(dataset,[Column("MilesPerGal",channel="y")])
+	assert dobj.compiled.spec[0].channel =="y"
+
+	# Fail: need to debug
+	# dobj = DataObj(dataset,[Column("MilesPerGal", channel="x")])
+	# assert dobj.compiled.spec[0].channel =="x"
+
