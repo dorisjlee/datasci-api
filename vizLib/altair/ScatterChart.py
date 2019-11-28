@@ -8,10 +8,11 @@ class ScatterChart():
 	def initializeChart(self):
 		# UP TO HERE: Broken because self.expandUnderspecified() in dataObj does not run when there are multiple object, we should not rely on spec
 		# measures = list(filter(lambda x: x.dataModel=="measure" if hasattr(x,"dataModel") else False,self.dobj.spec))
-		measures = self.dobj.spec
+		xAttr = list(filter(lambda x: x.channel =="x",self.dobj.spec))[0].columnName
+		yAttr = list(filter(lambda x: x.channel =="y",self.dobj.spec))[0].columnName
 		chart = alt.Chart(self.dobj.dataset.df).mark_circle().encode(
-		    x=alt.X(measures[0].columnName),
-		    y=alt.Y(measures[1].columnName)
+		    x=alt.X(xAttr),
+		    y=alt.Y(yAttr)
 		)
 		chart = chart.configure_mark(tooltip=alt.TooltipContent('encoding')) # Setting tooltip as non-null
 		chart = chart.interactive() # If you want to enable Zooming and Panning

@@ -101,6 +101,31 @@ class Compiler:
 			return chart
 		def filterDataModel(dobj,dmodel):       
 			return list(filter(lambda x: x.dataModel==dmodel if hasattr(x,"dataModel") else False,dobj.spec))
+		def enforceSpecifiedChannel(dobj, autoChannel):
+			available_channels = list(autoChannel.keys()) 
+			# create a dictionary of specified channels in the given dobj
+			specifiedDict = {} # specifiedDict={"x":[],"y":[list of Dobj with y specified as channel]}
+			import copy
+			specifiedChannel = copy.deepcopy(autoChannel)
+			for val in available_channels:
+				specifiedDict[val]=dobj.getObjFromChannel(val)
+				specifiedChannel[val].channel = val # populate initially with the auto-values, will be overridden later if necessary
+			# for every specified element, swap with channel that originally contained that element in the autoChannel
+			for sVal,sAttr in specifiedDict.items():
+				if (len(sAttr)==1): #if specified in dobj
+					# remove the specified channel from available channels
+					if (len(available_channels)>0):
+						available_channels.remove(sVal)
+						swapWithChannel = available_channels[0] # pick any
+						specifiedChannel[swapWithChannel].channel = sVal
+						specifiedChannel[sVal].channel = swapWithChannel
+						available_channels.remove(swapWithChannel)
+				elif (len(sAttr)>1):
+					raise ValueError("There should not be more than one attribute specified in the same channel.")
+				# elif (len(sAttr)==0): # if unspecified, then populate the channel value with the showMe default
+				# 	specifiedChannel[sVal].channel = sVal
+			dobj.spec = list(specifiedChannel.values())
+			return dobj
 		# ShowMe logic + additional heuristics
 		countCol = Column("count()",dataModel="measure")
 		# print (Ndim,Nmsr)
@@ -145,7 +170,8 @@ class Compiler:
 		elif (Ndim ==0 and Nmsr==2):
 			# Scatterplot
 			dobj.mark = "scatter"
-
+			autoChannel = {"x": dobj.spec[0],
+				"y":dobj.spec[1]}
 		elif (Ndim ==1 and Nmsr ==2):
 			# Scatterplot broken down by the dimension
 			measure = filterDataModel(dobj,"measure")
@@ -158,4 +184,5 @@ class Compiler:
 			dobj.mark = "scatter"
 			# TODO: Generalize to breakdown by? 
 			chart.chart = chart.chart.encode(color=colorAttr)
+		dobj = enforceSpecifiedChannel(dobj,autoChannel)
 		return dobj
