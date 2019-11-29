@@ -15,7 +15,7 @@ def test_underspecifiedVisCollection():
 	# TODO write test for visualization collection
 	assert True
 
-def test_channelEnforcingScatter():
+def test_autoencodingScatter():
 	# No channel specified
 	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
 	dobj = DataObj(dataset,[Column("MilesPerGal"),Column("Weight")])
@@ -36,7 +36,7 @@ def test_channelEnforcingScatter():
 		dobj = DataObj(dataset,[Column("MilesPerGal", channel="x"),Column("Weight", channel="x")])
 
 	
-def test_channelEnforcingHistogram():
+def test_autoencodingHistogram():
 	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
 	
 	# Partial channel specified
@@ -47,7 +47,7 @@ def test_channelEnforcingHistogram():
 	assert dobj.compiled.getByColumnName("MilesPerGal")[0].channel == "x"
 	assert dobj.compiled.getByColumnName("count()")[0].channel == "y"
 
-def test_channelEnforcingLineChart():
+def test_autoencodingLineChart():
 	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
 	dobj = DataObj(dataset,[Column("Year"),Column("Acceleration")])
 	assert dobj.compiled.getByColumnName("Year")[0].channel == "x"
@@ -66,3 +66,6 @@ def test_channelEnforcingLineChart():
 		# Should throw error because there should not be columns with the same channel specified
 		dobj = DataObj(dataset,[Column("Year", channel="x"),Column("Acceleration", channel="x")])
 
+def test_autoencodingColorLineChart():
+	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = DataObj(dataset,[Column("Year"),Column("Acceleration"),Column("Origin")])

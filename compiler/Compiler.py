@@ -101,51 +101,33 @@ class Compiler:
 				# TODO: if cardinality large than 6 then sort bars
 			return chart
 		
-		def enforceSpecifiedChannel(dobj, autoChannel):
-			available_channels = list(autoChannel.keys()) 
-			print ("available_channels:",available_channels)
-			print ("autoChannel:",autoChannel)
-			# create a dictionary of specified channels in the given dobj
+		def enforceSpecifiedChannel(dobj, autoChannel):		
+			resultDict = {} # result of enforcing specified channel will be stored in resultDict
 			specifiedDict = {} # specifiedDict={"x":[],"y":[list of Dobj with y specified as channel]}
-			# import copy
-			# specifiedChannel = copy.deepcopy(autoChannel)
-			specifiedChannel = {}
-			for val in available_channels:
-			    specifiedDict[val]= dobj.getObjFromChannel(val)
-			    specifiedChannel[val] = ""
-			    #specifiedChannel[val].channel = val # populate initially with the auto-values, will be overridden later if necessary
-			# for every specified element, swap with channel that originally contained that element in the autoChannel
-			print ("specifiedDict:",specifiedDict)
+			# create a dictionary of specified channels in the given dobj
+			for val in autoChannel.keys():
+				specifiedDict[val]= dobj.getObjFromChannel(val)
+				resultDict[val] = ""
+
+			# for every element, replace with what's in specifiedDict if specified
 			for sVal,sAttr in specifiedDict.items():
-			    if (len(sAttr)==1): #if specified in dobj
-			        # remove the specified channel from available channels
-			        if (len(available_channels)>0):
-			#             print (sVal)
-			#             available_channels.remove(sVal)
-			            for i in list(autoChannel.keys()):
-			                if (autoChannel[i].columnName==sAttr[0].columnName):
-			                    autoChannel.pop(i)
-			            sAttr[0].channel=sVal
-			            specifiedChannel[sVal] = sAttr[0]
-			#             swapWithChannel = available_channels[0] # pick any
-			            #if (specifiedChannel[sVal].channel!=sVal):
-			                #print ("compare:",specifiedChannel[sVal].channel,sVal)
-			#             specifiedChannel[swapWithChannel].channel = sVal
-			#             specifiedChannel[sVal].channel = swapWithChannel
-			            # available_channels.remove(swapWithChannel)
-			    elif (len(sAttr)>1):
-			        raise ValueError("There should not be more than one attribute specified in the same channel.")
-			    # elif (len(sAttr)==0): # if unspecified, then populate the channel value with the showMe default
-			    # 	specifiedChannel[sVal].channel = sVal
-			# for the leftover channels that are still available, look up their autoChannel specification and fill it in.
-			print ("autoChannel:",autoChannel)
-			print ("specifiedChannel:",specifiedChannel)
-			leftover_channels = list(filter(lambda x: specifiedChannel[x] =='',specifiedChannel))
+				if (len(sAttr)==1): #if specified in dobj
+					# remove the specified channel from autoChannel (matching by value, since channel key may not be same)
+					for i in list(autoChannel.keys()):
+						if (autoChannel[i].columnName==sAttr[0].columnName):
+							autoChannel.pop(i)
+					sAttr[0].channel=sVal
+					resultDict[sVal] = sAttr[0]
+				elif (len(sAttr)>1):
+					raise ValueError("There should not be more than one attribute specified in the same channel.")
+			# For the leftover channels that are still unspecified in resultDict,
+			# and the leftovers in the autoChannel specification,
+			# step through them together and fill it automatically.
+			leftover_channels = list(filter(lambda x: resultDict[x] =='',resultDict))
 			for leftover_channel,leftover_encoding in zip(leftover_channels,autoChannel.values()):
-			    print (leftover_channel)
-			    leftover_encoding.channel = leftover_channel
-			    specifiedChannel[leftover_channel] = leftover_encoding
-			dobj.spec = list(specifiedChannel.values())
+				leftover_encoding.channel = leftover_channel
+				resultDict[leftover_channel] = leftover_encoding
+			dobj.spec = list(resultDict.values())
 			return dobj
 		# ShowMe logic + additional heuristics
 		countCol = Column("count()",dataModel="measure")
@@ -179,20 +161,23 @@ class Compiler:
 				# d1.channel = "color"
 				dobj.removeColumnFromSpec(d1.columnName)
 				dimension = d2.columnName
-				colorAttr = d1.columnName
+				colorAttr = d1
 			else:
 				# d2.channel = "color"
 				dobj.removeColumnFromSpec(d2.columnName)
 				dimension = d1.columnName
-				colorAttr = d2.columnName
+				colorAttr = d2
 			# Colored Bar/Line chart with Count as default measure
 			if (Nmsr==0):
 				dobj.spec.append(countCol)
 			# print (dobj)
 			dobj.mark, autoChannel = lineOrBar(dobj)
 			measure = dobj.getObjByDataModel("measure")[0]
+			print (autoChannel)
+			autoChannel["color"] = colorAttr
+			print (autoChannel)
 			# TODO: Generalize to breakdown by? 
-			chart.chart = chart.chart.encode(color=colorAttr)
+			# chart.chart = chart.chart.encode(color=colorAttr)
 		elif (Ndim ==0 and Nmsr==2):
 			# Scatterplot
 			dobj.mark = "scatter"
