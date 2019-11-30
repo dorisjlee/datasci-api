@@ -5,12 +5,10 @@ from vizLib.altair.Histogram import Histogram
 
 class AltairRenderer:
 	'''
-	Chart Object represents one Altair chart
+	Renderer for Altair Charts
 	'''
 	def __init__(self):
 		pass
-		# self.spec = spec
-		# self.chart = self.initializeChart()
 	def __repr__(self):
 		return f"AltairRenderer <{str(self.dobj)}>"
 	def createVis(self,dobj):
@@ -23,5 +21,3 @@ class AltairRenderer:
 		elif (dobj.mark =="line"):
 			chart = LineChart(dobj)
 		return chart.chart
-	def initializeChart(self):
-		return NotImplemented
