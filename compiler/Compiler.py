@@ -45,6 +45,7 @@ class Compiler:
 		rowSpecs = list(filter(lambda x: x.className=="Row", dobj.spec))
 		col1Attrs = []
 		col2Attrs = []
+		rowVals = []
 		# TODO: This needs to be rewritten in a recursive manner so that the channel and other specification can be inheritted
 		if len(colSpecs)>0:
 			col1Attrs = convert2List(colSpecs[0].columnName)
