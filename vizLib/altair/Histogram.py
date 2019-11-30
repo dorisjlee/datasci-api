@@ -1,9 +1,8 @@
-# from vizLib.altair.AltairChart import AltairChart
+from vizLib.altair.AltairChart import AltairChart
 import altair as alt
-class Histogram():
+class Histogram(AltairChart):
 	def __init__(self,dobj):
-		self.dobj = dobj
-		self.chart = self.initializeChart()
+		super(Histogram,self).__init__(dobj)
 	def __repr__(self):
 		return f"Histogram <{str(self.dobj)}>"
 	def initializeChart(self):

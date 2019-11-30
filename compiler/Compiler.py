@@ -153,7 +153,7 @@ class Compiler:
 			# measure.channel = "x"
 			dobj.mark, autoChannel = lineOrBar(dobj)
 		elif (Ndim ==2 and (Nmsr==0 or Nmsr==1)):
-			
+			# Line or Bar chart broken down by the dimension
 			dimensions = dobj.getObjByDataModel("dimension")
 			d1 = dimensions[0]
 			d2 = dimensions[1]
@@ -173,11 +173,7 @@ class Compiler:
 			# print (dobj)
 			dobj.mark, autoChannel = lineOrBar(dobj)
 			measure = dobj.getObjByDataModel("measure")[0]
-			print (autoChannel)
 			autoChannel["color"] = colorAttr
-			print (autoChannel)
-			# TODO: Generalize to breakdown by? 
-			# chart.chart = chart.chart.encode(color=colorAttr)
 		elif (Ndim ==0 and Nmsr==2):
 			# Scatterplot
 			dobj.mark = "scatter"
@@ -189,14 +185,13 @@ class Compiler:
 			m1 = measure[0]
 			m2 = measure[1]
 
-			colorAttr = dobj.getObjByDataModel("dimension")[0].columnName
+			colorAttr = dobj.getObjByDataModel("dimension")[0]
 			dobj.removeColumnFromSpec(colorAttr)
 			
 			dobj.mark = "scatter"
 			autoChannel = {"x": dobj.spec[0],
-				"y":dobj.spec[1]}
-			# TODO: Generalize to breakdown by? 
-			chart.chart = chart.chart.encode(color=colorAttr)
+							"y":dobj.spec[1],
+							"color":colorAttr}
 
 		dobj = enforceSpecifiedChannel(dobj,autoChannel)
 		return dobj

@@ -1,8 +1,8 @@
+from vizLib.altair.AltairChart import AltairChart
 import altair as alt
-class BarChart():
+class BarChart(AltairChart):
 	def __init__(self,dobj):
-		self.dobj = dobj
-		self.chart = self.initializeChart()
+		super(BarChart,self).__init__(dobj)
 	def __repr__(self):
 		return f"Bar Chart <{str(self.dobj)}>"
 	def initializeChart(self):

@@ -50,17 +50,17 @@ def test_autoencodingHistogram():
 def test_autoencodingLineChart():
 	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
 	dobj = DataObj(dataset,[Column("Year"),Column("Acceleration")])
-	assert dobj.compiled.getByColumnName("Year")[0].channel == "x"
-	assert dobj.compiled.getByColumnName("Acceleration")[0].channel == "y"
+	checkAttributeOnChannel(dobj,"Year","x")
+	checkAttributeOnChannel(dobj,"Acceleration","y")
 	# Partial channel specified
 	dobj = DataObj(dataset,[Column("Year", channel="y"),Column("Acceleration")])
-	assert dobj.compiled.getByColumnName("Year")[0].channel == "y"
-	assert dobj.compiled.getByColumnName("Acceleration")[0].channel == "x"
+	checkAttributeOnChannel(dobj,"Year","y")
+	checkAttributeOnChannel(dobj,"Acceleration","x")
 
 	# Full channel specified
 	dobj = DataObj(dataset,[Column("Year", channel="y"),Column("Acceleration", channel="x")])
-	assert dobj.compiled.getByColumnName("Year")[0].channel == "y"
-	assert dobj.compiled.getByColumnName("Acceleration")[0].channel == "x"
+	checkAttributeOnChannel(dobj,"Year","y")
+	checkAttributeOnChannel(dobj,"Acceleration","x")
 	# Duplicate channel specified
 	with pytest.raises(ValueError):
 		# Should throw error because there should not be columns with the same channel specified
@@ -69,3 +69,14 @@ def test_autoencodingLineChart():
 def test_autoencodingColorLineChart():
 	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
 	dobj = DataObj(dataset,[Column("Year"),Column("Acceleration"),Column("Origin")])
+	checkAttributeOnChannel(dobj,"Year","x")
+	checkAttributeOnChannel(dobj,"Acceleration","y")
+	checkAttributeOnChannel(dobj,"Origin","color")
+def test_autoencodingColorScatterChart():
+	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = DataObj(dataset,[Column("Horsepower"),Column("Acceleration"),Column("Origin")])
+	checkAttributeOnChannel(dobj,"Origin","color")
+	dobj = DataObj(dataset,[Column("Horsepower"),Column("Acceleration",channel="color"),Column("Origin")])
+	checkAttributeOnChannel(dobj,"Acceleration","color")
+def checkAttributeOnChannel(dobj,attrName,channelName):
+	assert dobj.compiled.getByColumnName(attrName)[0].channel == channelName
