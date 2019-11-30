@@ -16,11 +16,11 @@ def test_underspecifiedVisCollection():
 	assert True
 
 def test_underspecifiedVisCollection_Z():
+	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
 	dobj = DataObj(dataset,[Column("Horsepower"),Column("Brand"),Row("Origin",["Japan","USA"])])
 	assert type(dobj.compiled).__name__ == "DataObjCollection"
 	assert len(dobj.compiled.collection) == 2
 
-	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
 	dobj = DataObj(dataset,[Column(["Horsepower","Weight"]),Column("Brand"),Row("Origin",["Japan","USA"])])
 	assert type(dobj.compiled).__name__ == "DataObjCollection"
 	assert len(dobj.compiled.collection) == 4
