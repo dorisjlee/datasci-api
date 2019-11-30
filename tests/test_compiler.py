@@ -15,6 +15,16 @@ def test_underspecifiedVisCollection():
 	# TODO write test for visualization collection
 	assert True
 
+def test_underspecifiedVisCollection_Z():
+	dobj = DataObj(dataset,[Column("Horsepower"),Column("Brand"),Row("Origin",["Japan","USA"])])
+	assert type(dobj.compiled).__name__ == "DataObjCollection"
+	assert len(dobj.compiled.collection) == 2
+
+	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = DataObj(dataset,[Column(["Horsepower","Weight"]),Column("Brand"),Row("Origin",["Japan","USA"])])
+	assert type(dobj.compiled).__name__ == "DataObjCollection"
+	assert len(dobj.compiled.collection) == 4
+
 def test_autoencodingScatter():
 	# No channel specified
 	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])

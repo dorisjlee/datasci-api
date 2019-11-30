@@ -83,7 +83,7 @@ class DataObj:
 		chart = renderer.createVis(self.compiled)
 		return chart
 	def getObjFromChannel(self,channel):
-		specObj =  list(filter(lambda x: x.channel ==channel,self.spec))
+		specObj =  list(filter(lambda x: x.channel ==channel if hasattr(x,"channel") else False ,self.spec))
 		return specObj
 	def getObjByDataModel(self,dmodel):       
 		return list(filter(lambda x: x.dataModel==dmodel if hasattr(x,"dataModel") else False,self.spec))
