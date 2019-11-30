@@ -1,6 +1,7 @@
 var widgets = require('@jupyter-widgets/base');
 var _ = require('lodash');
 var vegaEmbed = require('vega-embed');
+require("./main.css");
 
 // Custom Model. Custom widgets models must at least provide default values
 // for model attributes, including
@@ -64,12 +65,9 @@ var MockupView = widgets.DOMWidgetView.extend({
         this.input = i;  
         this.title = title;
 
+        //displayDiv.className = "recommendationContentOuter";
+
         //create a div element for each graph in _graph_specs
-        for(let num = 0; num < this.model.get('numGraphs'); num++){
-            newDiv = document.createElement('div');
-            newDiv.id = "graph-container-".concat(num.toString());
-            this.el.appendChild(newDiv);
-        }
     },
 
 
@@ -80,6 +78,21 @@ var MockupView = widgets.DOMWidgetView.extend({
         // access to the 'h3' DOM element
         this.title.textContent = this.model.get('value')
 
+        staticDiv = document.createElement('div');
+        staticDiv.id = "staticOuterDiv";
+        staticDiv.className = "recommendationStaticContentOuter";
+        this.el.appendChild(staticDiv);
+
+        displayDiv = document.createElement('div');
+        displayDiv.id = "mult-graph-container";
+        displayDiv.className = "recommendationContentInner";
+        document.getElementById("staticOuterDiv").appendChild(displayDiv);
+
+        for(let num = 0; num < this.model.get('numGraphs'); num++){
+            newDiv = document.createElement('div');
+            newDiv.id = "graph-container-".concat(num.toString());
+            document.getElementById("mult-graph-container").appendChild(newDiv);
+        }
         //read in vega specifications and add them to their div containers
         for(let num = 0; num < this.model.get('numGraphs'); num++){
             var spec = JSON.parse(this.model.get('_graph_specs')[num]);
