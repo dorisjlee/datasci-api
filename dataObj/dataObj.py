@@ -18,7 +18,10 @@ class DataObj:
 	def __repr__(self):
 		# TODO: figure out a way to call display when printing out a data obj
 		# currently repr can not be used for printing out non-string values. (Ref to how Dataframe is displayed by default in Pandas)
-		return f"<Data Obj: {str(self.dataset)} -- {str(self.spec)}>"
+		if hasattr(self,"score"):
+			return f"<Data Obj: {str(self.dataset)} -- {str(self.spec)} -- {self.score:.2f}>"
+		else:
+			return f"<Data Obj: {str(self.dataset)} -- {str(self.spec)}>"
 
 	# def __str__(self):
 	# 	vis = self.display()
@@ -92,3 +95,9 @@ class DataObj:
 	def removeColumnFromSpec(self,columnName):
 		self.spec = list(filter(lambda x: x.columnName!=columnName,self.spec))
 	
+
+	# Mappers to Action classes
+	def correlation(self):
+		from action.Correlation import Correlation
+		corr = Correlation()
+		corr.compute(self)
