@@ -8,9 +8,10 @@ class DataObj:
 	This can be based on what the user has specified or what is created as outputs.
 	It can be a visualization, group of data points, column, etc and does not have to be fully specified.
 	'''
-	def __init__(self, dataset, spec = [] ):
+	def __init__(self, dataset, spec = [], title = "" ):
 		self.dataset = dataset # may be inefficient use of memory
 		self.spec =spec #list of Row and Column objects
+		self.title = title
 		self.type = ""
 		self.mark = ""
 		self.compile()

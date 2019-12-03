@@ -1,5 +1,6 @@
 from dataObj.Row import Row
 from dataObj.Column import Column
+from dataset.Dataset import Dataset
 class Compiler:
 	def __init__(self):
 		self.name = "Compiler"
@@ -22,10 +23,10 @@ class Compiler:
 
 
 
-	def applyDataTransformations(self, dataset, fAttribute, fVals):
-		if fVals[0] != "?":
-			dataset.df = dataset.df[dataset.df[fAttribute].isin(fVals)]
-		return dataset
+	def applyDataTransformations(self, dataset, fAttribute, fVal):
+		transformedDataset = Dataset(dataset.filename, dataset.schema)
+		transformedDataset.df = dataset.df[dataset.df[fAttribute] == fVal]
+		return transformedDataset
 
 	def enumerateCollection(self,dobj):
 		from dataObj.dataObj import DataObj
@@ -53,19 +54,23 @@ class Compiler:
 			col2Attrs = convert2List(colSpecs[1].columnName)
 		if len(rowSpecs)>0:
 			rowVals = convert2List(rowSpecs[0].fVal)
+			if rowVals[0] == "?":
+				rowVals = dobj.dataset.df[rowSpecs[0].fAttribute].unique()
+				#populate rowvals with all unique possibilities
 		# Generate Collection
 		collection = []
 		if (len(col1Attrs)<=1 and len(col2Attrs)<=1 and len(rowSpecs)<=1):
-			# If DataObj does not represent a collection, return False. 
+			# If DataObj does not represent a collection, return False.
 			return False
 		else:
 			for col1 in col1Attrs:
 				for col2 in col2Attrs:
 					if len(rowVals)>0:
 						# create the data objects
-						transformedDataset = self.applyDataTransformations(dobj.dataset, rowSpecs[0].fAttribute,rowVals) #rename?
-						dataObj = DataObj(transformedDataset,[Column(col1), Column(col2)])
-						collection.append(dataObj)
+						for row in rowVals:
+							transformedDataset = self.applyDataTransformations(dobj.dataset, rowSpecs[0].fAttribute,row) #rename?
+							dataObj = DataObj(transformedDataset,[Column(col1), Column(col2)],row)
+							collection.append(dataObj)
 					else:
 						dataObj = DataObj(dobj.dataset, [Column(col1), Column(col2)])
 						collection.append(dataObj)

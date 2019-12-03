@@ -7,6 +7,7 @@ class AltairChart:
 		self.dobj = dobj
 		self.chart = self.initializeChart()
 		self.encodeColor()
+		self.addTitle()
 	def __repr__(self):
 		return f"AltairChart <{str(self.dobj)}>"
 	def encodeColor(self):
@@ -15,6 +16,12 @@ class AltairChart:
 			self.chart = self.chart.encode(color=colorAttr[0].columnName)
 		elif (len(colorAttr)>1):
 			raise ValueError("There should not be more than one attribute specified in the same channel.")
+	def addTitle(self):
+		chartTitle = self.dobj.title
+		if chartTitle:
+			self.chart = self.chart.encode().properties(
+				title = chartTitle
+			)
 
 	def initializeChart(self):
 		return NotImplemented
