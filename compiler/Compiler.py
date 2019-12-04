@@ -7,40 +7,21 @@ class Compiler:
 	def __repr__(self):
 		return f"<Compiler>"
 
-
 	def expandUnderspecified(self,dobj):
 		# Automatic type conversion (only for single attributes not lists of attributes)
 		import copy
 		expandedDobj = copy.deepcopy(dobj) # Preserve the original dobj
 		for rcObj in expandedDobj.spec:
-			if( rcObj.className == "Column"):
+			if(rcObj.className == "Column" and rcObj.columnName !="?"):
 				if (rcObj.dataType==""):
 					rcObj.dataType = expandedDobj.dataset.dataTypeLookup[rcObj.columnName]
 				if (rcObj.dataModel==""):
-
 					rcObj.dataModel = expandedDobj.dataset.dataModelLookup[rcObj.columnName]
 		return expandedDobj
-
-
-
-	def applyDataTransformations(self, dataset, fAttribute, fVal):
-		transformedDataset = Dataset(dataset.filename, dataset.schema)
-		transformedDataset.df = dataset.df[dataset.df[fAttribute] == fVal]
-		return transformedDataset
 
 	def enumerateCollection(self,dobj):
 		from dataObj.dataObj import DataObj
 		from dataObj.DataObjCollection import DataObjCollection
-
-		def convert2List(x):
-			'''
-			"a" --> ["a"]
-			["a","b"] --> ["a","b"]
-			'''
-			if type(x)!=list:
-				return [x]
-			else:
-				return x
 		# Get all the column and row object, assign the attribute names to variables
 		colSpecs = list(filter(lambda x: x.className=="Column", dobj.spec))
 		rowSpecs = list(filter(lambda x: x.className=="Row", dobj.spec))
@@ -49,14 +30,15 @@ class Compiler:
 		rowVals = []
 		# TODO: This needs to be rewritten in a recursive manner so that the channel and other specification can be inheritted
 		if len(colSpecs)>0:
-			col1Attrs = convert2List(colSpecs[0].columnName)
+			col1Attrs = populateOptions(dobj,colSpecs[0])
+			# TODO: Note that this needs to be modified so that we can put in constraints such as: 
+			# Column("?", dataModel = "measure") --> enumerate over all the attributes that are measures
+			#if colSpecs[0].columnName =="?": populateOptions(colSpecs[0])
 		if len(colSpecs)>1:
-			col2Attrs = convert2List(colSpecs[1].columnName)
+			col2Attrs = populateOptions(dobj,colSpecs[1])
 		if len(rowSpecs)>0:
-			rowVals = convert2List(rowSpecs[0].fVal)
-			if rowVals[0] == "?":
-				rowVals = dobj.dataset.df[rowSpecs[0].fAttribute].unique()
-				#populate rowvals with all unique possibilities
+			rowVals = populateOptions(dobj,rowSpecs[0]) #populate rowvals with all unique possibilities
+				
 		# Generate Collection
 		collection = []
 		if (len(col1Attrs)<=1 and len(col2Attrs)<=1 and len(rowSpecs)<=1):
@@ -208,3 +190,34 @@ class Compiler:
 
 		dobj = enforceSpecifiedChannel(dobj,autoChannel)
 		return dobj
+def convert2List(x):
+	'''
+	"a" --> ["a"]
+	["a","b"] --> ["a","b"]
+	'''
+	if type(x)!=list:
+		return [x]
+	else:
+		return x
+def applyDataTransformations(dataset, fAttribute, fVal):
+	transformedDataset = Dataset(dataset.filename, dataset.schema)
+	transformedDataset.df = dataset.df[dataset.df[fAttribute] == fVal]
+	return transformedDataset
+def populateOptions(dobj,rowCol):
+	if rowCol.className =="Column":
+		if rowCol.columnName =="?":
+			options = set(dobj.dataset.attrList) # all attributes
+			if (rowCol.dataType !=""):
+				options = options.intersection(set(dobj.dataset.dataType[rowCol.dataType]))
+			if (rowCol.dataModel !=""):
+				options = options.intersection(set(dobj.dataset.dataModel[rowCol.dataModel]))
+			options = list(options)
+		else: 
+			options = convert2List(rowCol.columnName)
+	elif rowCol.className =="Row":
+		if rowCol.columnName =="?":
+			options = dobj.dataset.df[rowCol.fAttribute].unique()
+		else: 
+			options = convert2List(rowCol.fVal)
+	return options
+	
