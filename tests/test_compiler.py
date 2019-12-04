@@ -88,5 +88,17 @@ def test_autoencodingColorScatterChart():
 	checkAttributeOnChannel(dobj,"Origin","color")
 	dobj = DataObj(dataset,[Column("Horsepower"),Column("Acceleration",channel="color"),Column("Origin")])
 	checkAttributeOnChannel(dobj,"Acceleration","color")
+def test_populateOptions():
+	from compiler.Compiler import populateOptions
+	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = DataObj(dataset,[Column("?"),Column("MilesPerGal")])
+	assert listEqual(populateOptions(dobj, dobj.spec[0]), list(dobj.dataset.df.columns))
+	dobj = DataObj(dataset,[Column("?",dataModel="measure"),Column("MilesPerGal")])
+	assert listEqual(populateOptions(dobj, dobj.spec[0]), ['Acceleration','Weight','Horsepower','MilesPerGal','Cylinders','Displacement'])
+
+def listEqual(l1,l2):
+    l1.sort()
+    l2.sort()
+    return l1==l2
 def checkAttributeOnChannel(dobj,attrName,channelName):
 	assert dobj.compiled.getByColumnName(attrName)[0].channel == channelName
