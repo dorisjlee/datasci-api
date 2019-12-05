@@ -44,56 +44,34 @@ var MockupView = widgets.DOMWidgetView.extend({
         this.model.on('change:value', this.value_changed, this);
 
         let view = this;
-        
-        // standard HTML DOM change from JS
-        let f = document.createElement("form");
-        let i = document.createElement("input"); // input element, text            
-        i.setAttribute('type',"text");              
-        f.appendChild(i);
-        this.el.appendChild(f);
-        
-        // initializing the form and the title values  
-        i.setAttribute('value', this.model.get('value'));
-        
-        // Listening to changes in the frontend input
-        f.addEventListener("input", (inputEvent => view.callback(inputEvent, f)), false);
-
-        // handle to access the DOM elements directly
-        this.input = i;  
 
         //displayDiv.className = "recommendationContentOuter";
-
-        //create a div element for each graph in _graph_specs
-    },
-
-
-
-    value_changed: function() {
-        // access to the 'input' DOM element
-        this.input.setAttribute('value', this.model.get('value'))
-
-        staticDiv = document.createElement('div');
+        let staticDiv = document.createElement('div');
         staticDiv.id = "staticOuterDiv";
         staticDiv.className = "recommendationStaticContentOuter";
         this.el.appendChild(staticDiv);
 
-        displayDiv = document.createElement('div');
+        let displayDiv = document.createElement('div');
         displayDiv.id = "mult-graph-container";
         displayDiv.className = "recommendationContentInner";
-        document.getElementById("staticOuterDiv").appendChild(displayDiv);
+        //document.getElementById("staticOuterDiv").appendChild(displayDiv);
+        staticDiv.appendChild(displayDiv);
 
         for(let num = 0; num < this.model.get('numGraphs'); num++){
-            newDiv = document.createElement('div');
+            //creates div object to hold each individual graph
+            let newDiv = document.createElement('div');
             newDiv.id = "graph-container-".concat(num.toString());
-            document.getElementById("mult-graph-container").appendChild(newDiv);
-        }
-        //read in vega specifications and add them to their div containers
-        for(let num = 0; num < this.model.get('numGraphs'); num++){
+            displayDiv.appendChild(newDiv);
+
+            //parses each JSON spec, generates VEGA graphs, and inputs them into appropriate div object
             var spec = JSON.parse(this.model.get('_graph_specs')[num]);
-            vegaEmbed.default("#graph-container-".concat(num.toString()), spec);
+            console.log(spec);
+            vegaEmbed.default(newDiv, spec);
         }
 
-    }
+        console.log(vegaEmbed);
+    },
+
 });
 
 module.exports = {
