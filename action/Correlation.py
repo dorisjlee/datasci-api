@@ -30,7 +30,7 @@ class Correlation(Action):
 		    msr2Vals = list(obj.dataset.df[msr2])
 		    
 		    obj.score = np.abs(scipy.stats.pearsonr(msr1Vals,msr2Vals)[0])
-		print (dobj.compiled)
+		# print (dobj.compiled)
 	def displayAsWidget(self,dobj):
 		# display result in widget
 		raise NotImplementedError
