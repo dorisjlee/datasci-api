@@ -215,7 +215,7 @@ def populateOptions(dobj,rowCol):
 		else: 
 			options = convert2List(rowCol.columnName)
 	elif rowCol.className =="Row":
-		if rowCol.columnName =="?":
+		if rowCol.fVal =="?":
 			options = dobj.dataset.df[rowCol.fAttribute].unique()
 		else: 
 			options = convert2List(rowCol.fVal)
