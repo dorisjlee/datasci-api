@@ -1,12 +1,12 @@
 {
-  "name": "jupyter-widget-mockup",
+  "name": "widgetDisplay",
   "version": "0.1.0",
   "description": "A Custom Jupyter Widget Library",
   "author": "Thyne Boonmark",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com//jupyter-widget-mockup.git"
+    "url": "https://github.com//widgetDisplay.git"
   },
   "keywords": [
     "jupyter",

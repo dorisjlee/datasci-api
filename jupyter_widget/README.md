@@ -1,4 +1,4 @@
-jupyter-widget-mockup
+widgetDisplay
 ===============================
 
 A Custom Jupyter Widget Library
@@ -8,20 +8,20 @@ Installation
 
 To install use pip:
 
-    $ pip install jupyter_widget_mockup
-    $ jupyter nbextension enable --py --sys-prefix jupyter_widget_mockup
+    $ pip install widgetDisplay
+    $ jupyter nbextension enable --py --sys-prefix widgetDisplay
 
 To install for jupyterlab
 
-    $ jupyter labextension install jupyter_widget_mockup
+    $ jupyter labextension install widgetDisplay
 
 For a development installation (requires npm),
 
-    $ git clone https://github.com//jupyter-widget-mockup.git
-    $ cd jupyter-widget-mockup
+    $ git clone https://github.com//widgetDisplay.git
+    $ cd widgetDisplay
     $ pip install -e .
-    $ jupyter nbextension install --py --symlink --sys-prefix jupyter_widget_mockup
-    $ jupyter nbextension enable --py --sys-prefix jupyter_widget_mockup
+    $ jupyter nbextension install --py --symlink --sys-prefix widgetDisplay
+    $ jupyter nbextension enable --py --sys-prefix widgetDisplay
     $ jupyter labextension install js
 
 When actively developing your extension, build Jupyter Lab with the command:

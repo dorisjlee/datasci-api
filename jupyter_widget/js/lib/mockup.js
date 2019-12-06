@@ -25,8 +25,8 @@ var MockupModel = widgets.DOMWidgetModel.extend({
     defaults: _.extend(widgets.DOMWidgetModel.prototype.defaults(), {
         _model_name : 'MockupModel',
         _view_name : 'MockupView',
-        _model_module : 'jupyter-widget-mockup',
-        _view_module : 'jupyter-widget-mockup',
+        _model_module : 'widgetDisplay',
+        _view_module : 'widgetDisplay',
         _model_module_version : '^0.1.0',
         _view_module_version : '^0.1.0',
 

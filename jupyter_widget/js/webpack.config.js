@@ -20,7 +20,7 @@ module.exports = [
         entry: './lib/extension.js',
         output: {
             filename: 'extension.js',
-            path: path.resolve(__dirname, '..', 'jupyter_widget_mockup', 'static'),
+            path: path.resolve(__dirname, '..', 'widgetDisplay', 'static'),
             libraryTarget: 'amd'
         }
     },
@@ -33,7 +33,7 @@ module.exports = [
         entry: './lib/index.js',
         output: {
             filename: 'index.js',
-            path: path.resolve(__dirname, '..', 'jupyter_widget_mockup', 'static'),
+            path: path.resolve(__dirname, '..', 'widgetDisplay', 'static'),
             libraryTarget: 'amd'
         },
         devtool: 'source-map',
@@ -42,7 +42,7 @@ module.exports = [
         },
         externals: ['@jupyter-widgets/base']
     },
-    {// Embeddable jupyter-widget-mockup bundle
+    {// Embeddable widgetDisplay bundle
      //
      // This bundle is generally almost identical to the notebook bundle
      // containing the custom widget views and models.
@@ -61,7 +61,7 @@ module.exports = [
             filename: 'index.js',
             path: path.resolve(__dirname, 'dist'),
             libraryTarget: 'amd',
-            publicPath: 'https://unpkg.com/jupyter-widget-mockup@' + version + '/dist/'
+            publicPath: 'https://unpkg.com/widgetDisplay@' + version + '/dist/'
         },
         devtool: 'source-map',
         module: {

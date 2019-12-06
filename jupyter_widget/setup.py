@@ -66,8 +66,8 @@ class NPM(Command):
     node_modules = os.path.join(node_root, 'node_modules')
 
     targets = [
-        os.path.join(here, 'jupyter_widget_mockup', 'static', 'extension.js'),
-        os.path.join(here, 'jupyter_widget_mockup', 'static', 'index.js')
+        os.path.join(here, 'widgetDisplay', 'static', 'extension.js'),
+        os.path.join(here, 'widgetDisplay', 'static', 'index.js')
     ]
 
     def initialize_options(self):
@@ -121,22 +121,22 @@ class NPM(Command):
         update_package_data(self.distribution)
 
 version_ns = {}
-with open(os.path.join(here, 'jupyter_widget_mockup', '_version.py')) as f:
+with open(os.path.join(here, 'widgetDisplay', '_version.py')) as f:
     exec(f.read(), {}, version_ns)
 
 setup_args = {
-    'name': 'jupyter_widget_mockup',
+    'name': 'widgetDisplay',
     'version': version_ns['__version__'],
     'description': 'A Custom Jupyter Widget Library',
     'long_description': LONG_DESCRIPTION,
     'include_package_data': True,
     'data_files': [
-        ('share/jupyter/nbextensions/jupyter-widget-mockup', [
-            'jupyter_widget_mockup/static/extension.js',
-            'jupyter_widget_mockup/static/index.js',
-            'jupyter_widget_mockup/static/index.js.map',
+        ('share/jupyter/nbextensions/widgetDisplay', [
+            'widgetDisplay/static/extension.js',
+            'widgetDisplay/static/index.js',
+            'widgetDisplay/static/index.js.map',
         ],),
-        ('etc/jupyter/nbconfig/notebook.d' ,['jupyter-widget-mockup.json'])
+        ('etc/jupyter/nbconfig/notebook.d' ,['widgetDisplay.json'])
     ],
     'install_requires': [
         'ipywidgets>=7.0.0',
@@ -152,7 +152,7 @@ setup_args = {
 
     'author': 'Thyne Boonmark',
     'author_email': 'thyne.boonmark@gmail.com',
-    'url': 'https://github.com//jupyter-widget-mockup',
+    'url': 'https://github.com//widgetDisplay',
     'keywords': [
         'ipython',
         'jupyter',

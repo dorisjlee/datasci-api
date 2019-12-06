@@ -2,11 +2,11 @@ var plugin = require('./index');
 var base = require('@jupyter-widgets/base');
 
 module.exports = {
-  id: 'jupyter-widget-mockup',
+  id: 'widgetDisplay',
   requires: [base.IJupyterWidgetRegistry],
   activate: function(app, widgets) {
       widgets.registerWidget({
-          name: 'jupyter-widget-mockup',
+          name: 'widgetDisplay',
           version: plugin.version,
           exports: plugin
       });
