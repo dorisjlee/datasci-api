@@ -99,6 +99,5 @@ class DataObj:
 
 	# Mappers to Action classes
 	def correlation(self):
-		from action.Correlation import Correlation
-		corr = Correlation()
-		corr.compute(self)
+		from action.Correlation import correlation
+		correlation(self)
