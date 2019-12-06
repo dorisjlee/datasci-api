@@ -2,6 +2,7 @@
 cd js/
 npm install
 cd ..
-pip install -e .
-jupyter nbextension install --py --symlink --sys-prefix jupyter_widget_mockup
-jupyter nbextension enable --py --sys-prefix jupyter_widget_mockup
+pip install .
+#pip install -e .
+#jupyter nbextension install --py --symlink --sys-prefix widgetDisplay
+#jupyter nbextension enable --py --sys-prefix widgetDisplay

@@ -58,14 +58,14 @@ class DataObj:
 			
 	def display(self,renderer="altair"): 
 		# render this data object as: vis, columns, etc.?
-		# import jupyter_widget_mockup
+		# import widgetDisplay
 		# if (renderer=="altair"):
 		# 	renderer = AltairRenderer()
 		# chart = renderer.createVis(self.compiled)
-		# widget = jupyter_widget_mockup.Mockup(graphSpecs = [chart.to_dict()])
+		# widget = widgetDisplay.Mockup(graphSpecs = [chart.to_dict()])
 		# return widget
 		# return chart
-		import jupyter_widget_mockup
+		import widgetDisplay
 		chartSpecs = []
 		if (renderer=="altair"):
 			renderer = AltairRenderer()
@@ -77,7 +77,7 @@ class DataObj:
 		for viz in collection:
 			chart = renderer.createVis(viz.compiled).to_dict()
 			chartSpecs.append(chart)
-		widget = jupyter_widget_mockup.Mockup(graphSpecs = chartSpecs)	
+		widget = widgetDisplay.Mockup(graphSpecs = chartSpecs)	
 		return widget
 	def singleDisplay(self,renderer="altair"): 
 		# For debugging only: 
@@ -95,7 +95,6 @@ class DataObj:
 		return list(filter(lambda x: x.columnName == columnName, self.spec))
 	def removeColumnFromSpec(self,columnName):
 		self.spec = list(filter(lambda x: x.columnName!=columnName,self.spec))
-	
 
 	# Mappers to Action classes
 	def correlation(self):
