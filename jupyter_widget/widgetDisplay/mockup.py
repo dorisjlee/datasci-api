@@ -18,6 +18,7 @@ class Mockup(widgets.DOMWidget):
 
     _opt_source = Unicode('null').tag(sync=True)
     value = Unicode('null').tag(sync=True)
+    selected_graphID = List([]).tag(sync=True)
     numGraphs = Int(0).tag(sync=True)
     _graph_specs = List([]).tag(sync=True)
     

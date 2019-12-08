@@ -44,6 +44,12 @@ var MockupView = widgets.DOMWidgetView.extend({
         this.model.on('change:value', this.value_changed, this);
 
         let view = this;
+        let clickTriggerEvent = function(graphID){
+            var current_selected_graphID_list = view.model.get('selected_graphID')
+            // current_selected_graphID+[graphID]
+            current_selected_graphID_list.push(graphID)
+            view.model.set({'selected_graphID': current_selected_graphID_list})
+        }
 
         //displayDiv.className = "recommendationContentOuter";
         let staticDiv = document.createElement('div');
@@ -54,6 +60,7 @@ var MockupView = widgets.DOMWidgetView.extend({
         let displayDiv = document.createElement('div');
         displayDiv.id = "mult-graph-container";
         displayDiv.className = "recommendationContentInner";
+
         //document.getElementById("staticOuterDiv").appendChild(displayDiv);
         staticDiv.appendChild(displayDiv);
 
@@ -61,6 +68,7 @@ var MockupView = widgets.DOMWidgetView.extend({
             //creates div object to hold each individual graph
             let newDiv = document.createElement('div');
             newDiv.id = "graph-container-".concat(num.toString());
+            newDiv.onclick = function(){clickTriggerEvent(num)}
             displayDiv.appendChild(newDiv);
 
             //parses each JSON spec, generates VEGA graphs, and inputs them into appropriate div object
@@ -70,8 +78,7 @@ var MockupView = widgets.DOMWidgetView.extend({
         }
 
         console.log(vegaEmbed);
-    },
-
+    }
 });
 
 module.exports = {
