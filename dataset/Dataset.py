@@ -1,9 +1,12 @@
 import pandas as pd
 import json
 class Dataset:
-	def __init__(self,filename, schema=[]):
+	def __init__(self,filename="",df="", schema=[]):
 		self.filename = filename
-		self.df = self.loadCSV()
+		if (self.filename!=""):
+			self.df = self.loadCSV()
+		else:
+			self.df = df
 		self.attrList = list(self.df.columns)
 		self.schema = schema
 		# self.df_json  = self.df.to_json(orient='records')

@@ -95,7 +95,18 @@ class DataObj:
 		return list(filter(lambda x: x.columnName == columnName, self.spec))
 	def removeColumnFromSpec(self,columnName):
 		self.spec = list(filter(lambda x: x.columnName!=columnName,self.spec))
-
+	# TODO: move to global class method when there is an overall module for API
+	# def fromDataFrame(df):
+	# 	'''
+	#	Example
+	# 	import pandas as pd
+	# 	df = pd.read_csv("data/cars.csv")
+	# 	[name of package].fromDataFrame(df)
+	#   e.g. pd.Dataframe
+	# 	'''
+	# 	from dataset.Dataset import Dataset
+	# 	dataset = Dataset(df = df)
+	# 	return DataObj(dataset)
 	# Mappers to Action classes
 	def correlation(self):
 		from action.Correlation import correlation
