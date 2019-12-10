@@ -41,17 +41,26 @@ class Compiler:
 				
 		# Generate Collection
 		collection = []
-		if (len(col1Attrs)<=1 and len(col2Attrs)<=1 and len(rowSpecs)<=1):
+		if (len(col1Attrs)<=1 and len(col2Attrs)<=1 and len(rowVals)<=1):
 			# If DataObj does not represent a collection, return False.
 			return False
 		else:
+			#print (col1Attrs,col2Attrs)
+			# The triple for loop is not great because if any of col1Attrs or col2Attrs is empty then we never iterate over rowvals
+			# These examples for Z-enumeration is not working
+			# dobj = DataObj(dataset,[Column("MilesPerGal"),Row("Origin","?")])
+			# # dobj = DataObj(dataset,[Column("Horsepower"),Column("Year",channel="x"),Row("Origin","?")])
+			# dobj.display()
 			for col1 in col1Attrs:
 				for col2 in col2Attrs:
+					print (col1,col2)
 					if len(rowVals)>0:
 						# create the data objects
+						fAttr = rowSpecs[0].fAttribute
 						for row in rowVals:
-							transformedDataset = self.applyDataTransformations(dobj.dataset, rowSpecs[0].fAttribute,row) #rename?
-							dataObj = DataObj(transformedDataset,[Column(col1), Column(col2)],row)
+							fVal = row
+							transformedDataset = applyDataTransformations(dobj.dataset, fAttr,fVal) #rename?
+							dataObj = DataObj(transformedDataset,[Column(col1), Column(col2)],title = f"{fAttr}={fVal}")
 							collection.append(dataObj)
 					else:
 						dataObj = DataObj(dobj.dataset, [Column(col1), Column(col2)])
