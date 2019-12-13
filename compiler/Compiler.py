@@ -46,6 +46,7 @@ class Compiler:
 			return False
 		else:
 			#print (col1Attrs,col2Attrs)
+			# Might have to rewrite this with recursion.
 			# The triple for loop is not great because if any of col1Attrs or col2Attrs is empty then we never iterate over rowvals
 			# These examples for Z-enumeration is not working
 			# dobj = DataObj(dataset,[Column("MilesPerGal"),Row("Origin","?")])
