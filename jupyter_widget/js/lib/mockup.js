@@ -42,13 +42,16 @@ var MockupView = widgets.DOMWidgetView.extend({
 
     render: function() {
         this.model.on('change:value', this.value_changed, this);
-
+        // this.listenTo(this.model, 'change:selected_graphID', this.selected_graphID, this);
         let view = this;
         let clickTriggerEvent = function(graphID){
-            var current_selected_graphID_list = view.model.get('selected_graphID')
+            var current_selected_graphID_list = view.model.get('_selected_graphID')
             // current_selected_graphID+[graphID]
             current_selected_graphID_list.push(graphID)
-            view.model.set({'selected_graphID': current_selected_graphID_list})
+            // view.model.set('numGraphs',5) // working (as a number)
+            // view.model.set('_graph_specs',current_selected_graphID_list) // working (as a list)
+            view.model.set('_selected_graphID',current_selected_graphID_list)
+            view.touch() 
         }
 
         //displayDiv.className = "recommendationContentOuter";
