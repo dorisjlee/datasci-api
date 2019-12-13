@@ -44,14 +44,18 @@ var MockupView = widgets.DOMWidgetView.extend({
         this.model.on('change:value', this.value_changed, this);
         // this.listenTo(this.model, 'change:selected_graphID', this.selected_graphID, this);
         let view = this;
+        var current_selected_graphID_list = []
         let clickTriggerEvent = function(graphID){
-            var current_selected_graphID_list = view.model.get('_selected_graphID')
-            // current_selected_graphID+[graphID]
-            current_selected_graphID_list.push(graphID)
-            // view.model.set('numGraphs',5) // working (as a number)
-            // view.model.set('_graph_specs',current_selected_graphID_list) // working (as a list)
-            view.model.set('_selected_graphID',current_selected_graphID_list)
-            view.touch() 
+            // Note weird bug here, the object that is modified is REQUIRED to be a new object, otherwise the update does not happen, update only on a object replacement basis
+            var newLst = []
+            for (var i = 0 ; i<current_selected_graphID_list.length; i++){
+                newLst[i] = current_selected_graphID_list[i]
+            }
+            newLst.push(graphID)
+            current_selected_graphID_list = newLst
+            // Could probably replace this with jquery get all checked vizzes
+            view.model.set('selected_graphID',newLst) // working (as a list)
+            view.touch()
         }
 
         //displayDiv.className = "recommendationContentOuter";

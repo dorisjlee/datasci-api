@@ -18,10 +18,9 @@ class Mockup(widgets.DOMWidget):
 
     _opt_source = Unicode('null').tag(sync=True)
     value = Unicode('null').tag(sync=True)
-    _selected_graphID = List([]).tag(sync=True)
+    selected_graphID = List([]).tag(sync=True)
     numGraphs = Int(0).tag(sync=True)
     _graph_specs = List([]).tag(sync=True)
-    
     def __init__(self, graphSpecs = None, spec=None, opt=None, **kwargs):
         super().__init__(**kwargs)
         self._opt_source = json.dumps(opt)
@@ -30,6 +29,6 @@ class Mockup(widgets.DOMWidget):
             #you cannot append to self._graph_specs, must fill out a list of graphs first
             #then set self._graph_specs to graphs
             graphs.append(json.dumps(graphSpecs[i]))
-        self._selected_graphID = []
+        self.selected_graphID = []
         self._graph_specs = graphs
         self.numGraphs = len(graphSpecs)
