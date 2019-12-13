@@ -15,16 +15,34 @@ def test_underspecifiedVisCollection():
 	# TODO write test for visualization collection
 	assert True
 
-# TEST FAILING: NEED TO FIX Z enumeration logic
-# def test_underspecifiedVisCollection_Z():
-# 	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
-# 	dobj = DataObj(dataset,[Column("Horsepower"),Column("Brand"),Row("Origin",["Japan","USA"])])
-# 	assert type(dobj.compiled).__name__ == "DataObjCollection"
-# 	assert len(dobj.compiled.collection) == 2
+def test_underspecifiedVisCollection_Z():
+	# check if the number of charts is correct
+	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = DataObj(dataset,[Column("Horsepower"),Column("Brand"),Row("Origin",["Japan","USA"])])
+	assert type(dobj.compiled).__name__ == "DataObjCollection"
+	assert len(dobj.compiled.collection) == 2
 
-# 	dobj = DataObj(dataset,[Column(["Horsepower","Weight"]),Column("Brand"),Row("Origin",["Japan","USA"])])
-# 	assert type(dobj.compiled).__name__ == "DataObjCollection"
-# 	assert len(dobj.compiled.collection) == 4
+	dobj = DataObj(dataset,[Column(["Horsepower","Weight"]),Column("Brand"),Row("Origin",["Japan","USA"])])
+	assert len(dobj.compiled.collection) == 4
+
+	# test ? command
+	dobj = DataObj(dataset,[Column(["Horsepower","Weight"]),Column("Brand"),Row("Origin","?")])
+	assert len(dobj.compiled.collection) == 6
+
+	# test if z axis has been filtered correctly
+	dobj = DataObj(dataset,[Column(["Horsepower","Weight"]),Column("Brand"),Row("Origin",["Japan","USA"])])
+	chartTitles = list(dobj.compiled.get("title"))
+	assert "Origin=USA" and "Origin=Japan" in chartTitles
+	assert "Origin=Europe" not in chartTitles
+
+	# test number of data points makes sense
+	dobj = DataObj(dataset,[Column(["Horsepower"]),Column("Brand"),Row("Origin","?")])
+	def getNumDataPoints(dObj):
+		numRows = getattr(dObj, "dataset").df.shape[0]
+		# Might want to write catch error if key not in field
+		return numRows
+	totalNumRows= sum(list(dobj.compiled.map(getNumDataPoints)))
+	assert totalNumRows == 392
 
 def test_autoencodingScatter():
 	# No channel specified
