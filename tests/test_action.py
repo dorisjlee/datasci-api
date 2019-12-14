@@ -13,4 +13,4 @@ def test_correlation():
 
 	dobj = DataObj(dataset,[Column(["MilesPerGal","Horsepower"]),Column("MilesPerGal")])
 	dobj.correlation()
-	assert dobj.compiled.collection[0].score == 1.0 # identity test
+	assert dobj.compiled.collection[0].score == -1 # identity test

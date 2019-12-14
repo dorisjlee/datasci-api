@@ -54,7 +54,6 @@ class Compiler:
 			# dobj.display()
 			for col1 in col1Attrs:
 				for col2 in col2Attrs:
-					print (col1,col2)
 					if len(rowVals)>0:
 						# create the data objects
 						fAttr = rowSpecs[0].fAttribute
