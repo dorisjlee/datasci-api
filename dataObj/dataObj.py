@@ -14,15 +14,16 @@ class DataObj:
 		self.title = title
 		self.type = ""
 		self.mark = ""
+		self.score = -1
 		self.compile()
 
 	def __repr__(self):
 		# TODO: figure out a way to call display when printing out a data obj
 		# currently repr can not be used for printing out non-string values. (Ref to how Dataframe is displayed by default in Pandas)
 		if hasattr(self,"score"):
-			return f"<Data Obj: {str(self.dataset)} -- {str(self.spec)} -- {self.score:.2f}>"
+			return f"<Data Obj: {str(self.spec)} -- {self.score:.2f}>"
 		else:
-			return f"<Data Obj: {str(self.dataset)} -- {str(self.spec)}>"
+			return f"<Data Obj: {str(self.spec)}>"
 
 	# def __str__(self):
 	# 	vis = self.display()
