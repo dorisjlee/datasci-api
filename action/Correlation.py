@@ -10,7 +10,11 @@ def correlation(dobj,ignoreIdentity=True,ignoreTranspose=True):
 	vizCollection = dobj.compiled.collection
 	if (ignoreIdentity): vizCollection =  filter(lambda x: x.spec[0].columnName!=x.spec[1].columnName,dobj.compiled.collection)
 	def checkTransposeNotComputed(dobj,a,b):
-		return list(filter(lambda x:(x.spec[0].columnName==b) and (x.spec[1].columnName==a),dobj.compiled.collection))[0].score==-1
+		transposeExist = list(filter(lambda x:(x.spec[0].columnName==b) and (x.spec[1].columnName==a),dobj.compiled.collection))
+		if (len(transposeExist)>0):
+			return transposeExist[0].score==-1
+		else:
+			return False
 	for obj in vizCollection:
 		measures = obj.getObjByDataModel("measure")
 		if len(measures)<2 : raise ValueError(f"Can not compute correlation between {[x.columnName for x in obj.spec]} since less than 2 measure values present.")
