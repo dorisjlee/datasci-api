@@ -25,6 +25,8 @@ class DataObjCollection:
 		return NotImplemented
 
 	def sort(self, descending = True):
+		# remove the items that have invalid (-1) score
+		self.collection = list(filter(lambda x: x.score!=-1,self.collection))
 		# sort in-place by “score” by default if available, otherwise user-specified field to sort by
 		self.collection.sort(key=lambda x: x.score, reverse=descending)
 
