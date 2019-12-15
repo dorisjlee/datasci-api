@@ -103,9 +103,7 @@ class Compiler:
 					Nmsr +=1
 		# print ("Ndim,Nmsr:",Ndim,Nmsr)
 		# Helper function (TODO: Move this into utils)
-		def lineOrBar(dobj):
-			measure = dobj.getObjByDataModel("measure")[0]
-			dimension = dobj.getObjByDataModel("dimension")[0]
+		def lineOrBar(dimension,measure):
 			dimType = dimension.dataType
 			if (dimType =="date" or dimType == "oridinal"):
 				# chart = LineChart(dobj)
@@ -114,7 +112,6 @@ class Compiler:
 				# chart = BarChart(dobj)
 				return "bar", {"x": measure, "y": dimension}
 				# TODO: if cardinality large than 6 then sort bars
-			return chart
 		
 		def enforceSpecifiedChannel(dobj, autoChannel):		
 			resultDict = {} # result of enforcing specified channel will be stored in resultDict
@@ -123,7 +120,6 @@ class Compiler:
 			for val in autoChannel.keys():
 				specifiedDict[val]= dobj.getObjFromChannel(val)
 				resultDict[val] = ""
-
 			# for every element, replace with what's in specifiedDict if specified
 			for sVal,sAttr in specifiedDict.items():
 				if (len(sAttr)==1): #if specified in dobj
@@ -166,7 +162,7 @@ class Compiler:
 			dimension = dobj.getObjByDataModel("dimension")[0]
 			measure = dobj.getObjByDataModel("measure")[0]
 			# measure.channel = "x"
-			dobj.mark, autoChannel = lineOrBar(dobj)
+			dobj.mark, autoChannel = lineOrBar(dimension,measure)
 		elif (Ndim ==2 and (Nmsr==0 or Nmsr==1)):
 			# Line or Bar chart broken down by the dimension
 			dimensions = dobj.getObjByDataModel("dimension")
@@ -175,19 +171,20 @@ class Compiler:
 			if (dobj.dataset.cardinality[d1.columnName]<dobj.dataset.cardinality[d2.columnName]):
 				# d1.channel = "color"
 				dobj.removeColumnFromSpec(d1.columnName)
-				dimension = d2.columnName
+				dimension = d2
 				colorAttr = d1
 			else:
-				# d2.channel = "color"
-				dobj.removeColumnFromSpec(d2.columnName)
-				dimension = d1.columnName
+				if (d1.columnName == d2.columnName):
+					dobj.spec.pop(0) # if same attribute then removeColumnFromSpec will remove both dims, we only want to remove one
+				else:
+					dobj.removeColumnFromSpec(d2.columnName)
+				dimension = d1
 				colorAttr = d2
 			# Colored Bar/Line chart with Count as default measure
 			if (Nmsr==0):
 				dobj.spec.append(countCol)
-			# print (dobj)
-			dobj.mark, autoChannel = lineOrBar(dobj)
 			measure = dobj.getObjByDataModel("measure")[0]
+			dobj.mark, autoChannel = lineOrBar(dimension,measure)
 			autoChannel["color"] = colorAttr
 		elif (Ndim ==0 and Nmsr==2):
 			# Scatterplot
@@ -204,8 +201,8 @@ class Compiler:
 			dobj.removeColumnFromSpec(colorAttr)
 			
 			dobj.mark = "scatter"
-			autoChannel = {"x": dobj.spec[0],
-							"y":dobj.spec[1],
+			autoChannel = {"x": m1,
+							"y":m2,
 							"color":colorAttr}
 
 		dobj = enforceSpecifiedChannel(dobj,autoChannel)

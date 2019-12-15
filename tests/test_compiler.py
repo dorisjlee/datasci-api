@@ -12,9 +12,26 @@ def test_underspecifiedSingleVis():
 	assert dobj.compiled.spec[0].dataType=="quantitative"
 	assert dobj.compiled.spec[0].dataModel=="measure"
 def test_underspecifiedVisCollection():
-	# TODO write test for visualization collection
-	assert True
+	
+	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = DataObj(dataset,[Column(["Horsepower","Weight","Acceleration"]),Column(["Year"],channel="x")])
+	assert len(dobj.compiled.collection) ==3
+	for obj in dobj.compiled.collection: 
+		assert obj.getObjFromChannel("x")[0].columnName == "Year"
 
+	dobj = DataObj(dataset,[Column("?"),Column("Year",channel="x")])
+	assert len(dobj.compiled.collection) == len(dobj.dataset.df.columns)
+	# TODO: Doris need to debug showMe enforceSpecifiedChannel 2 dim, 0 msr (count()) cases
+	# for obj in dobj.compiled.collection: 
+	# 	assert obj.getObjFromChannel("x")[0].columnName == "Year"
+
+	dobj = DataObj(dataset,[Column("?",dataModel="measure"),Column("MilesPerGal",channel="y")])
+	for obj in dobj.compiled.collection: 
+		assert obj.getObjFromChannel("y")[0].columnName == "MilesPerGal"
+	
+	# dobj = DataObj(dataset,[Column("?",dataModel="measure"),Column("?",dataModel="measure")])
+	# assert len(dobj.compiled.collection) == 100
+	# TODO: Jay: this example is not working, need pairwise combination of measure values (mostly counts now?)	
 def test_underspecifiedVisCollection_Z():
 	# check if the number of charts is correct
 	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
