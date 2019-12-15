@@ -1,6 +1,8 @@
 from dataObj.Row import Row
 from dataObj.Column import Column
 from dataset.Dataset import Dataset
+
+
 class Compiler:
 	def __init__(self):
 		self.name = "Compiler"
@@ -19,53 +21,62 @@ class Compiler:
 					rcObj.dataModel = expandedDobj.dataset.dataModelLookup[rcObj.columnName]
 		return expandedDobj
 
-	def enumerateCollection(self,dobj):
+	def generateCollection(self, colAttrs,rowVals,fAttr,dobj): #[["a","b","c"],["c","d","f"]]
+		# TODO: add logic for picking x and y axis
+
 		from dataObj.dataObj import DataObj
 		from dataObj.DataObjCollection import DataObjCollection
+
+		collection = []
+
+		def combine(colAttrs, accum):
+			last = (len(colAttrs) == 1)
+			n = len(colAttrs[0])
+			for i in range(n):
+				accum.append(colAttrs[0][i])
+				item = accum
+				accum = []
+				if last:
+					columnList = list(map(Column,item))
+					if len(rowVals) > 0:
+						for row in rowVals:
+							fVal = row
+							transformedDataset = applyDataTransformations(dobj.dataset, fAttr, fVal)  # rename?
+							dataObj = DataObj(transformedDataset, columnList, title=f"{fAttr}={fVal}")
+							collection.append(dataObj)
+					else:
+						dataObj = DataObj(dobj.dataset, columnList)
+						collection.append(dataObj)
+				else:
+					combine(colAttrs[1:], item)
+
+		combine(colAttrs, [])
+		return DataObjCollection(collection)
+
+	def enumerateCollection(self,dobj):
 		# Get all the column and row object, assign the attribute names to variables
 		colSpecs = list(filter(lambda x: x.className=="Column", dobj.spec))
 		rowSpecs = list(filter(lambda x: x.className=="Row", dobj.spec))
-		col1Attrs = []
-		col2Attrs = []
+		colAttrs = []
 		rowVals = []
+		fAttr = ''
 		# TODO: This needs to be rewritten in a recursive manner so that the channel and other specification can be inheritted
 		if len(colSpecs)>0:
-			col1Attrs = populateOptions(dobj,colSpecs[0])
+			colAttrs.append(populateOptions(dobj,colSpecs[0]))
+
 			# TODO: Note that this needs to be modified so that we can put in constraints such as: 
 			# Column("?", dataModel = "measure") --> enumerate over all the attributes that are measures
 			#if colSpecs[0].columnName =="?": populateOptions(colSpecs[0])
 		if len(colSpecs)>1:
-			col2Attrs = populateOptions(dobj,colSpecs[1])
+			colAttrs.append(populateOptions(dobj,colSpecs[1]))
 		if len(rowSpecs)>0:
 			rowVals = populateOptions(dobj,rowSpecs[0]) #populate rowvals with all unique possibilities
-				
-		# Generate Collection
-		collection = []
-		if (len(col1Attrs)<=1 and len(col2Attrs)<=1 and len(rowVals)<=1):
+			fAttr = rowSpecs[0].fAttribute
+		if all(len(attrs) <= 1 for attrs in colAttrs) and len(rowVals)<=1: # changed condition to check if every column attribute has at least one attribute
 			# If DataObj does not represent a collection, return False.
 			return False
 		else:
-			#print (col1Attrs,col2Attrs)
-			# The triple for loop is not great because if any of col1Attrs or col2Attrs is empty then we never iterate over rowvals
-			# These examples for Z-enumeration is not working
-			# dobj = DataObj(dataset,[Column("MilesPerGal"),Row("Origin","?")])
-			# # dobj = DataObj(dataset,[Column("Horsepower"),Column("Year",channel="x"),Row("Origin","?")])
-			# dobj.display()
-			for col1 in col1Attrs:
-				for col2 in col2Attrs:
-					print (col1,col2)
-					if len(rowVals)>0:
-						# create the data objects
-						fAttr = rowSpecs[0].fAttribute
-						for row in rowVals:
-							fVal = row
-							transformedDataset = applyDataTransformations(dobj.dataset, fAttr,fVal) #rename?
-							dataObj = DataObj(transformedDataset,[Column(col1), Column(col2)],title = f"{fAttr}={fVal}")
-							collection.append(dataObj)
-					else:
-						dataObj = DataObj(dobj.dataset, [Column(col1), Column(col2)])
-						collection.append(dataObj)
-			return  DataObjCollection(collection)
+			return self.generateCollection(colAttrs, rowVals, fAttr, dobj)
 
 	def determineEncoding(self,dobj):
 		'''
