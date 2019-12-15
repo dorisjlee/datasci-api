@@ -1,7 +1,5 @@
-25/* index.css */
-
-
-
+/* index.css */
+/* @import "../node_modules/@fortawesome/fontawesome-free/css/all.css";  */
 body {
   overflow-y: hidden;
   height: 100% !important;
@@ -63,4 +61,16 @@ font-family: open sans;*/
   /* width: max-content;
   overflow-x: auto; */
   /* height: 100px; */
+}
+
+.toolDiv{
+  position: relative;
+  top: -20px;
+  left: -5px;
+}
+.fas {
+  color:gray;
+}
+.fas:hover{
+  color:black;
 }

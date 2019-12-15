@@ -38,7 +38,8 @@
     "style-loader": "^1.0.0",
     "vega": "^5.8.0",
     "vega-embed": "^6.0.0",
-    "vega-lite": "3.4.0"
+    "vega-lite": "3.4.0",
+    "@fortawesome/fontawesome-free": "5.6.3"
   },
   "jupyterlab": {
     "extension": "lib/labplugin"

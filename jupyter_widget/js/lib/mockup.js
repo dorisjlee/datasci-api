@@ -1,7 +1,9 @@
 var widgets = require('@jupyter-widgets/base');
 var _ = require('lodash');
 var vegaEmbed = require('vega-embed');
+require("@fortawesome/fontawesome-free");
 require("./main.css");
+
 
 // Custom Model. Custom widgets models must at least provide default values
 // for model attributes, including
@@ -47,16 +49,35 @@ var MockupView = widgets.DOMWidgetView.extend({
         var current_selected_graphID_list = []
         let clickTriggerEvent = function(graphID){
             // Note weird bug here, the object that is modified is REQUIRED to be a new object, otherwise the update does not happen, update only on a object replacement basis
-            var newLst = []
-            for (var i = 0 ; i<current_selected_graphID_list.length; i++){
-                newLst[i] = current_selected_graphID_list[i]
-            }
+            var newLst = current_selected_graphID_list.slice()
             newLst.push(graphID)
             current_selected_graphID_list = newLst
             // Could probably replace this with jquery get all checked vizzes
             view.model.set('selected_graphID',newLst) // working (as a list)
             view.touch()
         }
+        let starVis = function(node){
+            console.log("starVis")
+            var graphID = parseInt(node.parentElement.id.replace("toolDiv-",""))
+            var isStarred = node.getAttribute("isStarred") === 'true'
+            isStarred = !isStarred;
+            var newLst = current_selected_graphID_list.slice()
+            if (isStarred){
+                // Add to list of selected ID
+                newLst.push(graphID)
+                node.style.color = "#ffc000"
+            }else{
+                //remove starred vis
+                // TODO modify selected_graphID
+                var index = newLst.indexOf(graphID);
+                if (index > -1) {newLst.splice(index, 1);}
+                node.style.color = "grey"
+            }
+            current_selected_graphID_list = newLst
+            node.setAttribute("isStarred",isStarred)
+            view.model.set('selected_graphID',newLst)
+            view.touch()
+          }
 
         //displayDiv.className = "recommendationContentOuter";
         let staticDiv = document.createElement('div');
@@ -77,6 +98,14 @@ var MockupView = widgets.DOMWidgetView.extend({
             newDiv.id = "graph-container-".concat(num.toString());
             newDiv.onclick = function(){clickTriggerEvent(num)}
             displayDiv.appendChild(newDiv);
+
+            // add star as favorite
+            var tools = document.createElement("div");
+            tools.className = "toolDiv"
+            tools.id = "toolDiv-".concat(num.toString());
+            tools.innerHTML="<i class='fas fa-star' style='margin: 0 5px 0 5px;font-size: 18px;' title='Mark visualization as Favorite'></i>"
+            tools.firstChild.onclick = function(){starVis(this)}
+            displayDiv.appendChild(tools)
 
             //parses each JSON spec, generates VEGA graphs, and inputs them into appropriate div object
             var spec = JSON.parse(this.model.get('_graph_specs')[num]);
