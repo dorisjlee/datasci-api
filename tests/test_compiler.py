@@ -18,6 +18,10 @@ def test_underspecifiedVisCollection():
 def test_underspecifiedVisCollection_Z():
 	# check if the number of charts is correct
 	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = DataObj(dataset, [Column("MilesPerGal"), Row("Origin", "?")])
+	assert type(dobj.compiled).__name__ == "DataObjCollection"
+	assert len(dobj.compiled.collection) == 3
+
 	dobj = DataObj(dataset,[Column("Horsepower"),Column("Brand"),Row("Origin",["Japan","USA"])])
 	assert type(dobj.compiled).__name__ == "DataObjCollection"
 	assert len(dobj.compiled.collection) == 2
