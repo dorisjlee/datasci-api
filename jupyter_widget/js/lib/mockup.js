@@ -1,7 +1,6 @@
 var widgets = require('@jupyter-widgets/base');
 var _ = require('lodash');
 var vegaEmbed = require('vega-embed');
-require("@fortawesome/fontawesome-free");
 require("./main.css");
 
 
@@ -96,14 +95,14 @@ var MockupView = widgets.DOMWidgetView.extend({
             //creates div object to hold each individual graph
             let newDiv = document.createElement('div');
             newDiv.id = "graph-container-".concat(num.toString());
-            newDiv.onclick = function(){clickTriggerEvent(num)}
+            // newDiv.onclick = function(){clickTriggerEvent(num)}
             displayDiv.appendChild(newDiv);
 
             // add star as favorite
             var tools = document.createElement("div");
             tools.className = "toolDiv"
             tools.id = "toolDiv-".concat(num.toString());
-            tools.innerHTML="<i class='fas fa-star' style='margin: 0 5px 0 5px;font-size: 18px;' title='Mark visualization as Favorite'></i>"
+            tools.innerHTML="<i class='fa-star fa' style='margin: 0px;font-size: 18px;' title='Mark visualization as Favorite'></i>"
             tools.firstChild.onclick = function(){starVis(this)}
             displayDiv.appendChild(tools)
 
