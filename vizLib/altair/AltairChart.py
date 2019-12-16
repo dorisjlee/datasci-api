@@ -6,10 +6,13 @@ class AltairChart:
 	def __init__(self, dobj):
 		self.dobj = dobj
 		self.chart = self.initializeChart()
+		self.addTooltip()
 		self.encodeColor()
 		self.addTitle()
 	def __repr__(self):
 		return f"AltairChart <{str(self.dobj)}>"
+	def addTooltip(self):
+		self.chart = self.chart.encode(tooltip=list(self.dobj.dataset.df.columns))
 	def encodeColor(self):
 		colorAttr = self.dobj.getObjFromChannel("color")
 		if (len(colorAttr)==1):

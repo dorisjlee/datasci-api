@@ -87,6 +87,9 @@ class DataObj:
 			renderer = AltairRenderer()
 		chart = renderer.createVis(self.compiled)
 		return chart
+	def getObjByRowColType(self,rowColType):
+		specObj =  list(filter(lambda x: x.className ==rowColType ,self.spec))
+		return specObj
 	def getObjFromChannel(self,channel):
 		specObj =  list(filter(lambda x: x.channel ==channel if hasattr(x,"channel") else False ,self.spec))
 		return specObj

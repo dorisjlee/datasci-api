@@ -42,7 +42,8 @@ class Compiler:
 						for row in rowVals:
 							fVal = row
 							transformedDataset = applyDataTransformations(dobj.dataset, fAttr, fVal)  # rename?
-							dataObj = DataObj(transformedDataset, columnList, title=f"{fAttr}={fVal}")
+							specLst = columnList+ [Row(fAttr,fVal)]
+							dataObj = DataObj(transformedDataset, specLst, title=f"{fAttr}={fVal}")
 							collection.append(dataObj)
 					else:
 						dataObj = DataObj(dobj.dataset, columnList)
@@ -95,12 +96,15 @@ class Compiler:
 		# Count number of measures and dimensions
 		Ndim = 0 
 		Nmsr = 0 
+		rowLst = []
 		for spec in dobj.spec:
 			if (spec.className=="Column"):
 				if (spec.dataModel == "dimension"):
 					Ndim +=1
 				elif (spec.dataModel == "measure"):
 					Nmsr +=1
+			if (spec.className=="Row"): #preserve to add back to dobj later
+				rowLst.append(spec)
 		# print ("Ndim,Nmsr:",Ndim,Nmsr)
 		# Helper function (TODO: Move this into utils)
 		def lineOrBar(dimension,measure):
@@ -206,6 +210,7 @@ class Compiler:
 							"color":colorAttr}
 
 		dobj = enforceSpecifiedChannel(dobj,autoChannel)
+		dobj.spec.extend(rowLst)#add back the preserved row objects
 		return dobj
 def convert2List(x):
 	'''

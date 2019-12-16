@@ -11,7 +11,9 @@ font-family: open sans;*/
   margin: 0;
   padding: 0;
 }
-
+#mult-graph-container{
+  display: inline-flex;
+}
 .recommendationStaticContentOuter{
   scroll-snap-align: start;
   /*no scroll outer container*/
