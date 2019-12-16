@@ -20,7 +20,7 @@ class DataObj:
 	def __repr__(self):
 		# TODO: figure out a way to call display when printing out a data obj
 		# currently repr can not be used for printing out non-string values. (Ref to how Dataframe is displayed by default in Pandas)
-		if hasattr(self,"score"):
+		if self.score!=-1:
 			return f"<Data Obj: {str(self.spec)} -- {self.score:.2f}>"
 		else:
 			return f"<Data Obj: {str(self.spec)}>"
