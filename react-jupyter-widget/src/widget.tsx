@@ -1,6 +1,3 @@
-// Copyright (c) Doris Lee
-// Distributed under the terms of the Modified BSD License.
-
 import {
   DOMWidgetModel, DOMWidgetView, ISerializers
 } from '@jupyter-widgets/base';

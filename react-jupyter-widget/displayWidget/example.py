@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# Copyright (c) Doris Lee.
-# Distributed under the terms of the Modified BSD License.
-
-"""
-TODO: Add module docstring
-"""
-
 from ipywidgets import DOMWidget
 from traitlets import Unicode
 from ._frontend import module_name, module_version
