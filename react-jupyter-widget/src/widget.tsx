@@ -12,6 +12,8 @@ import '../css/widget.css'
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
+import ToolComponent from './tool';
+
 export class ExampleModel extends DOMWidgetModel {
   defaults() {
     return {...super.defaults(),
@@ -32,18 +34,16 @@ export class ExampleModel extends DOMWidgetModel {
   static model_name = 'ExampleModel';
   static model_module = MODULE_NAME;
   static model_module_version = MODULE_VERSION;
-  static view_name = 'ExampleView';   // Set to null if no view
+  static view_name = 'JupyterWidgetView';   // Set to null if no view
   static view_module = MODULE_NAME;   // Set to null if no view
   
 }
 
-export class ExampleView extends DOMWidgetView {
+export class JupyterWidgetView extends DOMWidgetView {
   initialize(){    
     let view = this;
 
-    class Hello extends React.Component<ExampleView,{
-      value:any
-    }> {
+    class ReactWidget extends React.Component<JupyterWidgetView,{value:any}> {
       constructor(props:any){
         super(props);
         console.log("view:",props);
@@ -67,10 +67,13 @@ export class ExampleView extends DOMWidgetView {
       }
   
       render(){
-        return <input type="text" 
-                         value={this.state.value} 
-                         onChange={this.changeHandler} 
-                         placeholder={this.state.value}/>
+        return (<div id="widgetContainer">
+                  <ToolComponent />
+                  <input type="text" 
+                      value={this.state.value} 
+                      onChange={this.changeHandler} 
+                      placeholder={this.state.value}/>
+                </div>);
       }
       changeHandler(event:any){
         var inputVal = event.target.value
@@ -81,7 +84,7 @@ export class ExampleView extends DOMWidgetView {
       }
     }
     const $app = document.createElement("div");
-    const App = React.createElement(Hello,view);
+    const App = React.createElement(ReactWidget,view);
     ReactDOM.render(App,$app);
     view.el.append($app);
   }
