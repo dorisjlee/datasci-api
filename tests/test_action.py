@@ -14,3 +14,11 @@ def test_correlation():
 	dobj = DataObj(dataset,[Column(["MilesPerGal","Horsepower"]),Column("MilesPerGal")])
 	dobj.correlation()
 	assert dobj.compiled.collection[0].score == -1 # identity test
+
+def test_distribution():
+	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = DataObj(dataset,[Column(["Horsepower","Weight","Acceleration","Displacement"])])
+	dobj.correlation()
+	# Make sure that all correlation result in a single score
+	assert np.sum(list(map(lambda x: hasattr(x,"score"),dobj.compiled.collection)))==True*len(dobj.compiled.collection)
+	assert dobj.compiled.collection[0].score != 0 # identity test
