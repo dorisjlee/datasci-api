@@ -29,8 +29,8 @@ def test_underspecifiedVisCollection():
 	for obj in dobj.compiled.collection: 
 		assert obj.getObjFromChannel("y")[0].columnName == "MilesPerGal"
 	
-	# dobj = DataObj(dataset,[Column("?",dataModel="measure"),Column("?",dataModel="measure")])
-	# assert len(dobj.compiled.collection) == 100
+	dobj = DataObj(dataset,[Column("?",dataModel="measure"),Column("?",dataModel="measure")])
+	assert len(dobj.compiled.collection) == 36
 	# TODO: Jay: this example is not working, need pairwise combination of measure values (mostly counts now?)	
 def test_underspecifiedVisCollection_Z():
 	# check if the number of charts is correct
