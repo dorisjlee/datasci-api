@@ -13,6 +13,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import ToolComponent from './tool';
+import ChartGalleryComponent from './chartGallery';
 
 export class ExampleModel extends DOMWidgetModel {
   defaults() {
@@ -68,11 +69,8 @@ export class JupyterWidgetView extends DOMWidgetView {
   
       render(){
         return (<div id="widgetContainer">
+                  <ChartGalleryComponent />
                   <ToolComponent />
-                  <input type="text" 
-                      value={this.state.value} 
-                      onChange={this.changeHandler} 
-                      placeholder={this.state.value}/>
                 </div>);
       }
       changeHandler(event:any){
