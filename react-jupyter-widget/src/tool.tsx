@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-
-class ToolComponent extends Component {
-    constructor(props:any) {
+interface toolProps{
+    graphIdx:number
+}
+class ToolComponent extends Component<toolProps,any> {
+    constructor(props:toolProps) {
         super(props);
         // This binding is necessary to make `this` work in the callback
         this.starVis = this.starVis.bind(this);
@@ -10,6 +12,7 @@ class ToolComponent extends Component {
         console.log("starred")
     }
     render() {
+        let toolDivId = "toolDiv-".concat(this.props.graphIdx.toString())
         return (
             // var tools = document.createElement("div");
             // tools.className = "toolDiv"
@@ -17,7 +20,9 @@ class ToolComponent extends Component {
             // tools.innerHTML="<i class='fa-star fa' style='margin: 0px;font-size: 18px;' title='Mark visualization as Favorite'></i>"
             // tools.firstChild.onclick = function(){starVis(this)}
             // displayDiv.appendChild(tools)
-            <div>tooldiv</div>
+            <div className="toolDiv" id ={toolDivId}>
+                {toolDivId}
+            </div>
         );
     }
 }

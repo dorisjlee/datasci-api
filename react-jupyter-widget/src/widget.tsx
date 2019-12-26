@@ -12,7 +12,6 @@ import '../css/widget.css'
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import ToolComponent from './tool';
 import ChartGalleryComponent from './chartGallery';
 
 export class ExampleModel extends DOMWidgetModel {
@@ -70,7 +69,7 @@ export class JupyterWidgetView extends DOMWidgetView {
       render(){
         return (<div id="widgetContainer">
                   <ChartGalleryComponent />
-                  <ToolComponent />
+                  
                 </div>);
       }
       changeHandler(event:any){

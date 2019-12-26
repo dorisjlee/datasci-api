@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ToolComponent from './tool';
 // var vegaEmbed = require('vega-embed');
 
 class ChartGalleryComponent extends Component {
@@ -8,15 +9,20 @@ class ChartGalleryComponent extends Component {
     }
     render() {
         var graphSpecs = [4,5,2,4,2]
-        const graphSpecItems = graphSpecs.map((item,idx) =>
-                <li key={idx.toString()}
+        const galleryItems = graphSpecs.map((item,idx) =>
+                <div key={idx.toString()}
                      id={"graph-container-".concat(idx.toString())}>
                     {item}
-                </li>
+                    <ToolComponent graphIdx={idx}/>
+                </div>
+                
             );
-        console.log(graphSpecItems)
         return (
-            <ul>{graphSpecItems}</ul>
+            <div id="staticOuterDiv" className="recommendationStaticContentOuter">
+                <div id="mult-graph-container" className= "recommendationContentInner">
+                    {galleryItems}
+                </div>
+            </div>
         );
     }
 }
