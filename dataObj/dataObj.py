@@ -115,3 +115,7 @@ class DataObj:
 	def correlation(self):
 		from action.Correlation import correlation
 		correlation(self)
+
+	def distribution(self):
+		from action.Distribution import distribution
+		distribution(self)

@@ -18,5 +18,5 @@ def test_correlation():
 # def test_distribution():
 # 	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
 # 	dobj = DataObj(dataset,[Column(["Horsepower","Weight","Acceleration","Displacement"])])
-# 	distribution(dobj)
-# 	assert dobj.compiled.collection[0].score != 0 # identity test
+# 	dobj.distribution()
+# 	assert dobj.compiled.collection[0].score != 0
