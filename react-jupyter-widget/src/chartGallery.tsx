@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import ReactDOM from 'react-dom';
 import ToolComponent from './tool';
 import { VegaLite } from 'react-vega';
 // import { VisualizationSpec } from 'vega-embed';
@@ -38,12 +39,20 @@ class ChartGalleryComponent extends Component<chartGalleryProps,any> {
         console.log("this.props.graphSpec:",this.props.graphSpec)
         const galleryItems = this.props.graphSpec.map((item,idx) =>
                 <div key={idx.toString()}
+                     className="graph-container"
                      id={"graph-container-".concat(idx.toString())}>
-                    <VegaLite data={chartData} spec={item}/>,
+                    <VegaLite data={chartData} spec={item}/>
                     <ToolComponent graphIdx={idx}/>
-                </div>
-                
+                </div>  
             );
+        // this.props.graphSpec.forEach((item,idx) => {
+        //     ReactDOM.render(
+        //         <VegaLite spec={item} data={chartData} />,
+        //         document.getElementById("graph-container-".concat(idx.toString()))
+        //     );    
+        // });
+        
+            
         return (
             <div id="staticOuterDiv" className="recommendationStaticContentOuter">
                 <div id="mult-graph-container" className= "recommendationContentInner">

@@ -79,6 +79,9 @@ class DataObj:
 		for viz in collection:
 			chart = renderer.createVis(viz.compiled).to_dict()
 			chart["data"] =  { "name": 'chartData' }
+			chart["width"] = 250
+			chart["height"] = 200
+			# chart["height"] = "container"
 			chartSpecs.append(chart)
 		widget = displayWidget.ExampleWidget(data=json.loads(self.dataset.df.to_json(orient='records')),graphSpecs = chartSpecs)	
 		return widget
