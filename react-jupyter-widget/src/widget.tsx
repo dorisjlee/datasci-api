@@ -69,7 +69,6 @@ export class JupyterWidgetView extends DOMWidgetView {
       render(){
         return (<div id="widgetContainer">
                   <ChartGalleryComponent />
-                  
                 </div>);
       }
       changeHandler(event:any){
