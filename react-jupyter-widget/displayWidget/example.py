@@ -17,15 +17,11 @@ class ExampleWidget(DOMWidget):
 
     value = Unicode('Hello World').tag(sync=True)
     selected_graphID = List([]).tag(sync=True)
-    _graph_specs = List([]).tag(sync=True)
-    # def __init__(self, graphSpecs = None, spec=None, opt=None, **kwargs):
-    #     super().__init__(**kwargs)
-    #     self._opt_source = json.dumps(opt)
-    #     graphs = []
-    #     for i in range(0, len(graphSpecs)):
-    #         #you cannot append to self._graph_specs, must fill out a list of graphs first
-    #         #then set self._graph_specs to graphs
-    #         graphs.append(json.dumps(graphSpecs[i]))
-    #     self.selected_graphID = []
-    #     self._graph_specs = graphs
-    #     self.numGraphs = len(graphSpecs)
+    graph_specs = List([]).tag(sync=True)
+    data = List([]).tag(sync=True)
+    def __init__(self, data=None, graphSpecs = None, spec=None, opt=None, **kwargs):
+        super().__init__(**kwargs)
+        self._opt_source = json.dumps(opt)
+        self.selected_graphID = []
+        self.data = data
+        self.graph_specs = graphSpecs

@@ -43,13 +43,16 @@ export class JupyterWidgetView extends DOMWidgetView {
   initialize(){    
     let view = this;
 
-    class ReactWidget extends React.Component<JupyterWidgetView,{value:any}> {
+    class ReactWidget extends React.Component<JupyterWidgetView,{value:any,graphSpec:any[],data:any[]}> {
       constructor(props:any){
         super(props);
         console.log("view:",props);
         this.state = {
-          value: props.model.get("value")
+          value: props.model.get("value"),
+          graphSpec: view.model.get("graph_specs"),
+          data: view.model.get("data")
         }
+        console.log("this.state:",this.state)
         // This binding is necessary to make `this` work in the callback
         this.changeHandler = this.changeHandler.bind(this);
         
@@ -68,7 +71,7 @@ export class JupyterWidgetView extends DOMWidgetView {
   
       render(){
         return (<div id="widgetContainer">
-                  <ChartGalleryComponent />
+                  <ChartGalleryComponent data={this.state.data} graphSpec={this.state.graphSpec}/>
                 </div>);
       }
       changeHandler(event:any){

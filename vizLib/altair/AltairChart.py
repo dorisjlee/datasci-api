@@ -5,6 +5,7 @@ class AltairChart:
 	'''
 	def __init__(self, dobj):
 		self.dobj = dobj
+		self.dataURL = self.dobj.dataset.df#"chartData"
 		self.tooltip = True
 		self.chart = self.initializeChart()
 		self.addTooltip()
