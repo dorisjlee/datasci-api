@@ -34,7 +34,7 @@
     "@jupyter-widgets/base": "2.0.2",
     "@types/webpack-env": "*",
     "css-loader": "^3.2.0",
-    "npm": "^6.13.1",
+    "npm": "^6.13.4",
     "style-loader": "^1.0.0",
     "vega": "^5.8.0",
     "vega-embed": "^6.0.0",
