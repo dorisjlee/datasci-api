@@ -8,14 +8,15 @@ class LineChart(AltairChart):
 	def initializeChart(self):
 		xAttr = self.dobj.getObjFromChannel("x")[0]
 		yAttr = self.dobj.getObjFromChannel("y")[0]
+		
 		if (yAttr.dataModel == "measure"):		
-			chart = alt.Chart(self.dobj.dataset.df).mark_line().encode(
+			chart = alt.Chart(self.dataURL).mark_line().encode(
 			    x = alt.X(xAttr.columnName, type = "ordinal"),
 			    # TODO: need to change aggregate to non-default function, read aggFunc info in somewhere
 			    y = alt.Y(yAttr.columnName,type="quantitative", aggregate="mean")
 			)
 		else:
-			chart = alt.Chart(self.dobj.dataset.df).mark_line().encode(
+			chart = alt.Chart(self.dataURL).mark_line().encode(
 			    x = alt.X(xAttr.columnName,type="quantitative", aggregate="mean"),
 			    y = alt.Y(yAttr.columnName, type = "ordinal")
 			)

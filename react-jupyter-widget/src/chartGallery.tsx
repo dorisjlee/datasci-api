@@ -1,43 +1,26 @@
 import React, { Component } from 'react';
+// import ReactDOM from 'react-dom';
 import ToolComponent from './tool';
-var vegaEmbed = require('vega-embed');
-
-class ChartGalleryComponent extends Component {
+import { VegaLite } from 'react-vega';
+// import { VisualizationSpec } from 'vega-embed';
+interface chartGalleryProps{
+    graphSpec: any[]
+    data: any[]
+}
+class ChartGalleryComponent extends Component<chartGalleryProps,any> {
     constructor(props:any) {
         super(props);
-        // const numbers = props.numbers;
-    }
-    componentDidMount(){
-        // runs after the component output has been rendered to the DOM 
-        // var spec = JSON.parse(this.model.get('_graph_specs')[num]);
-        //     console.log(spec);
-        let spec = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-            "description": "A simple bar chart with embedded data.",
-            "data": {
-              "values": [
-                {"a": "A", "b": 28}, {"a": "B", "b": 55}, {"a": "C", "b": 43},
-                {"a": "D", "b": 91}, {"a": "E", "b": 81}, {"a": "F", "b": 53},
-                {"a": "G", "b": 19}, {"a": "H", "b": 87}, {"a": "I", "b": 52}
-              ]
-            },
-            "mark": "bar",
-            "encoding": {
-              "x": {"field": "a", "type": "ordinal"},
-              "y": {"field": "b", "type": "quantitative"}
-            }
-          }
-        vegaEmbed.default("#graph-container-0", spec);
     }
     render() {
-        var graphSpecs = [4,5,2,4,2]
-        const galleryItems = graphSpecs.map((item,idx) =>
+        const chartData = {chartData: this.props.data}
+        console.log("this.props.graphSpec:",this.props.graphSpec)
+        const galleryItems = this.props.graphSpec.map((item,idx) =>
                 <div key={idx.toString()}
+                     className="graph-container"
                      id={"graph-container-".concat(idx.toString())}>
-                    {item}
+                    <VegaLite data={chartData} spec={item}/>
                     <ToolComponent graphIdx={idx}/>
-                </div>
-                
+                </div>  
             );
         return (
             <div id="staticOuterDiv" className="recommendationStaticContentOuter">

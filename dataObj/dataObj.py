@@ -2,6 +2,7 @@ from dataObj.Row import Row
 from dataObj.Column import Column
 from vizLib.altair.AltairRenderer import AltairRenderer
 from compiler.Compiler import Compiler
+import json
 class DataObj:
 	'''
 	DataObj is an abstract object representing some aspect of the data. 
@@ -66,7 +67,7 @@ class DataObj:
 		# widget = widgetDisplay.Mockup(graphSpecs = [chart.to_dict()])
 		# return widget
 		# return chart
-		import widgetDisplay
+		import displayWidget
 		chartSpecs = []
 		if (renderer=="altair"):
 			renderer = AltairRenderer()
@@ -77,8 +78,12 @@ class DataObj:
 			collection = self.compiled.collection
 		for viz in collection:
 			chart = renderer.createVis(viz.compiled).to_dict()
+			chart["data"] =  { "name": 'chartData' }
+			chart["width"] = 250
+			chart["height"] = 200
+			# chart["height"] = "container"
 			chartSpecs.append(chart)
-		widget = widgetDisplay.Mockup(graphSpecs = chartSpecs)	
+		widget = displayWidget.ExampleWidget(data=json.loads(self.dataset.df.to_json(orient='records')),graphSpecs = chartSpecs)	
 		return widget
 	def singleDisplay(self,renderer="altair"): 
 		# For debugging only: 
