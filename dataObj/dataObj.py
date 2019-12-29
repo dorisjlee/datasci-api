@@ -124,3 +124,7 @@ class DataObj:
 	def distribution(self):
 		from action.Distribution import distribution
 		distribution(self)
+
+	def generalize(self):
+		from action.Generalize import generalize
+		return(generalize(self))
