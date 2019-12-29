@@ -8,11 +8,14 @@ import {
 
 // Import the CSS
 import '../css/widget.css'
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import ChartGalleryComponent from './chartGallery';
+// import {Tabs,Tab} from 'react-bootstrap';
+import TabComponent from './tab';
+import CurrentViewComponent from './currentView';
 
 export class ExampleModel extends DOMWidgetModel {
   defaults() {
@@ -43,18 +46,20 @@ export class JupyterWidgetView extends DOMWidgetView {
   initialize(){    
     let view = this;
 
-    class ReactWidget extends React.Component<JupyterWidgetView,{value:any,graphSpec:any[],data:any[]}> {
+    class ReactWidget extends React.Component<JupyterWidgetView,{value:any,graphSpec:any[],data:any[],activeTab:any}> {
       constructor(props:any){
         super(props);
         console.log("view:",props);
         this.state = {
           value: props.model.get("value"),
           graphSpec: view.model.get("graph_specs"),
-          data: view.model.get("data")
+          data: view.model.get("data"),
+          activeTab: props.activeTab | 1
         }
         console.log("this.state:",this.state)
         // This binding is necessary to make `this` work in the callback
         this.changeHandler = this.changeHandler.bind(this);
+        // this.handleSelect = this.handleSelect.bind(this);
         
       }
   
@@ -69,9 +74,28 @@ export class JupyterWidgetView extends DOMWidgetView {
         view.model.save_changes(); // instead of touch (which leads to callback issues), we have to use save_changes
       }
   
+      // handleSelect(selectedTab) {
+      //   // The active tab must be set into the state so that
+      //   // the Tabs component knows about the change and re-renders.
+      //   this.setState({
+      //     activeTab: selectedTab
+      //   });
+      // }      
+
       render(){
         return (<div id="widgetContainer">
-                  <ChartGalleryComponent data={this.state.data} graphSpec={this.state.graphSpec}/>
+                  <CurrentViewComponent data={this.state.data} currentViewSpec={this.state.graphSpec[0]}/>
+                  <div id="tabBanner">
+                    {/* <Tabs activeKey={this.state.activeTab} id="tabBannerList" onSelect={this.handleSelect}> */}
+                        {/* <Tab eventKey={1} title="Tab 1">Tab 1 content</Tab>
+                        <Tab eventKey={2} title="Tab 2">Tab 2 content</Tab>
+                        <Tab eventKey={3} title="Tab 3" disabled>Tab 3 content</Tab>
+                        <Tab eventKey={4} title="Tab 4">Tab 4 content is displayed by default</Tab>
+                        <Tab eventKey={5} title="Tab 5">Tab 5 content</Tab> */}
+                      <TabComponent actionName="Enhance" data={this.state.data} recommendedGraphSpec={this.state.graphSpec}/>
+                      <TabComponent actionName="Filter" data={this.state.data} recommendedGraphSpec={this.state.graphSpec}/> 
+                    {/* </Tabs> */}
+                  </div>
                 </div>);
       }
       changeHandler(event:any){
