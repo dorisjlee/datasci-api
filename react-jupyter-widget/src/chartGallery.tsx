@@ -22,13 +22,6 @@ class ChartGalleryComponent extends Component<chartGalleryProps,any> {
                     <ToolComponent graphIdx={idx}/>
                 </div>  
             );
-        // this.props.graphSpec.forEach((item,idx) => {
-        //     ReactDOM.render(
-        //         <VegaLite spec={item} data={chartData} />,
-        //         document.getElementById("graph-container-".concat(idx.toString()))
-        //     );    
-        // });
-            
         return (
             <div id="staticOuterDiv" className="recommendationStaticContentOuter">
                 <div id="mult-graph-container" className= "recommendationContentInner">
