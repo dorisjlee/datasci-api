@@ -18,7 +18,7 @@ def generalize(dobj):
 	rowNames = []
 	for obj in vizCollection:
 		#have to remove count() column from the specification first
-		obj.removeRowColFromSpec("count()")
+		obj.removeColumnFromSpec("count()")
 
 		columns = obj.getObjByRowColType("Column")
 		rows = obj.getObjByRowColType("Row")
@@ -32,7 +32,7 @@ def generalize(dobj):
 			if numCol > 1:
 				for column in columns:
 					tempDataObj = DataObj(obj.dataset, obj.spec)
-					tempDataObj.removeRowColFromSpec(column.columnName)
+					tempDataObj.removeColumnFromSpec(column.columnName)
 
 					if len(tempDataObj.spec) > 0 and tempDataObj.spec[0].columnName not in columnNames:
 						tempDataObj.score = valueBasedInterestingness(tempDataObj)

@@ -104,8 +104,6 @@ class DataObj:
 	def getByColumnName(self,columnName):
 		return list(filter(lambda x: x.columnName == columnName, self.spec))
 	def removeColumnFromSpec(self,columnName):
-		self.spec = list(filter(lambda x: x.columnName!=columnName,self.spec))
-	def removeRowColFromSpec(self,columnName):
 		newSpec = []
 		for i in range(0,len(self.spec)):
 			if isinstance(self.spec[i],Column):
