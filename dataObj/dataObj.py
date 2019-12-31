@@ -104,7 +104,16 @@ class DataObj:
 	def getByColumnName(self,columnName):
 		return list(filter(lambda x: x.columnName == columnName, self.spec))
 	def removeColumnFromSpec(self,columnName):
-		self.spec = list(filter(lambda x: x.columnName!=columnName,self.spec))
+		newSpec = []
+		for i in range(0,len(self.spec)):
+			if isinstance(self.spec[i],Column):
+				if self.spec[i].columnName != columnName:
+					newSpec.append(self.spec[i])
+			else:
+				newSpec.append(self.spec[i])
+		#self.spec = list(filter(lambda x: x.columnName!=columnName,self.spec))
+		self.spec = newSpec
+
 	# TODO: move to global class method when there is an overall module for API
 	# def fromDataFrame(df):
 	# 	'''
