@@ -107,11 +107,20 @@ class DataObj:
 		newSpec = []
 		for i in range(0,len(self.spec)):
 			if isinstance(self.spec[i],Column):
-				if self.spec[i].columnName != columnName:
-					newSpec.append(self.spec[i])
+				columnSpec = []
+				columnNames = self.spec[i].columnName
+				#if only one variable in a column, columnName results in a string and not a list so
+				#you need to differentiate the cases
+				if isinstance(columnNames, list):
+					for column in columnNames:
+						if column != columnName:
+							columnSpec.append(column)
+					newSpec.append(Column(columnSpec))
+				else:
+					if columnNames != columnName:
+							newSpec.append(Column(columnNames))
 			else:
 				newSpec.append(self.spec[i])
-		#self.spec = list(filter(lambda x: x.columnName!=columnName,self.spec))
 		self.spec = newSpec
 
 	# TODO: move to global class method when there is an overall module for API
