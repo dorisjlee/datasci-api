@@ -105,6 +105,19 @@ input[type=text], select {
   left: 30%;
   /* height: 42px; */
 }
+#exportBtn{
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 20px;
+}
+#alertBox{
+  position: absolute;
+  left: 33%;
+  width: 65%;
+  bottom: 0%;
+  padding: 5px 30px 5px 10px;
+}
 /* Override .fade default to show tab*/
 .fade {
   opacity:1;

@@ -13,7 +13,8 @@ import '../css/widget.css'
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import {Tabs,Tab} from 'react-bootstrap';
+import {Tabs,Tab, Alert} from 'react-bootstrap';
+// import { useAlert } from "react-alert";
 // import TabComponent from './tab';
 import ChartGalleryComponent from './chartGallery';
 import CurrentViewComponent from './currentView';
@@ -47,7 +48,7 @@ export class JupyterWidgetView extends DOMWidgetView {
   initialize(){    
     let view = this;
 
-    class ReactWidget extends React.Component<JupyterWidgetView,{value:any,graphSpec:any[],data:any[],activeTab:any}> {
+    class ReactWidget extends React.Component<JupyterWidgetView,{value:any,graphSpec:any[],data:any[],activeTab:any,showAlert:boolean}> {
       constructor(props:any){
         super(props);
         console.log("view:",props);
@@ -55,12 +56,14 @@ export class JupyterWidgetView extends DOMWidgetView {
           value: props.model.get("value"),
           graphSpec: view.model.get("graph_specs"),
           data: view.model.get("data"),
-          activeTab: props.activeTab 
+          activeTab: props.activeTab,
+          showAlert:false
         }
         console.log("this.state:",this.state)
         // This binding is necessary to make `this` work in the callback
         this.changeHandler = this.changeHandler.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
+        this.exportSelection = this.exportSelection.bind(this);
         
       }
   
@@ -82,7 +85,21 @@ export class JupyterWidgetView extends DOMWidgetView {
           activeTab: selectedTab
         });
       }      
-
+      exportSelection() {
+        console.log("export selection")
+        this.setState(
+          state => ({
+            showAlert:true
+        }));
+        // Expire alert box in 7 seconds
+        setTimeout(()=>{
+          this.setState(
+                state => ({
+                  showAlert:false
+           }));
+        },7000);
+  
+      }
       render(){
         console.log("this.state.activeTab:",this.state.activeTab)
         function shuffle(array) {
@@ -93,7 +110,15 @@ export class JupyterWidgetView extends DOMWidgetView {
           <Tab eventKey={action} title={action} >
             <ChartGalleryComponent data={this.state.data} graphSpec={shuffle(this.state.graphSpec)}/> 
           </Tab>);
-        
+        let alertBtn;
+        if (this.state.showAlert){
+          alertBtn= <Alert id="alertBox" 
+                           key="infoAlert" 
+                           variant="info" 
+                           dismissible>
+            Exported selected visualizations to Python variable `widget.selectedVis`
+          </Alert>
+        }
         return (<div id="widgetContainer">
                   <CurrentViewComponent data={this.state.data} currentViewSpec={this.state.graphSpec[0]}/>
                   <div id="tabBanner">
@@ -101,6 +126,12 @@ export class JupyterWidgetView extends DOMWidgetView {
                       {tabItems}
                     </Tabs>
                   </div>
+                  <i  id="exportBtn" 
+                      className='fa fa-upload' 
+                      title='Export selected visualization into variable'
+                      onClick={this.exportSelection}
+                  />
+                  {alertBtn}                  
                 </div>);
       }
       changeHandler(event:any){
