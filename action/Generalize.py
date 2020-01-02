@@ -13,16 +13,26 @@ def generalize(dobj):
 	output = []
 	excludedColumns = []
 	for i in range(0,len(dobj.spec)):
-		print(dobj.spec[i])
 		if dobj.spec[i].className == "Column":
 			columns = dobj.spec[i].columnName
-			for column in columns:
-				if column not in excludedColumns:
+			#have to split into two cases, if there is only a single variable in a Column, then its
+			#columnName value will be a string instead of a list and needs to be handled differently
+			if type(columns) == list:
+				for column in columns:
+					if column not in excludedColumns:
+						tempDataObj = DataObj(dobj.dataset, dobj.spec)
+						tempDataObj.removeColumnFromSpec(column)
+						excludedColumns.append(column)
+						tempDataObj.score = valueBasedInterestingness(tempDataObj)
+						output.append(tempDataObj)
+			elif type(columns) == str:
+				if columns not in excludedColumns:
 					tempDataObj = DataObj(dobj.dataset, dobj.spec)
-					tempDataObj.removeColumnFromSpec(column)
-					excludedColumns.append(column)
+					tempDataObj.removeColumnFromSpec(columns)
+					excludedColumns.append(columns)
 					tempDataObj.score = valueBasedInterestingness(tempDataObj)
 					output.append(tempDataObj)
+
 		elif dobj.spec[i].className == "Row":
 			newSpec = dobj.spec.copy()
 			newSpec.pop(i)
