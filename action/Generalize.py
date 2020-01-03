@@ -21,14 +21,14 @@ def generalize(dobj):
 				for column in columns:
 					if column not in excludedColumns:
 						tempDataObj = DataObj(dobj.dataset, dobj.spec)
-						tempDataObj.removeColumnFromSpec(column)
+						tempDataObj.removeColumnFromSpecNew(column)
 						excludedColumns.append(column)
 						tempDataObj.score = valueBasedInterestingness(tempDataObj)
 						output.append(tempDataObj)
 			elif type(columns) == str:
 				if columns not in excludedColumns:
 					tempDataObj = DataObj(dobj.dataset, dobj.spec)
-					tempDataObj.removeColumnFromSpec(columns)
+					tempDataObj.removeColumnFromSpecNew(columns)
 					excludedColumns.append(columns)
 					tempDataObj.score = valueBasedInterestingness(tempDataObj)
 					output.append(tempDataObj)
