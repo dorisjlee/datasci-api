@@ -16,6 +16,9 @@ class Compiler:
 		expandedDobj = copy.deepcopy(dobj)  # Preserve the original dobj
 		for rcObj in expandedDobj.spec:
 			if (rcObj.className == "Column" and rcObj.columnName != "?"):
+				if (type(rcObj.columnName)==list and len(rcObj.columnName)==1):
+					# Make `Column <['Horsepower']>` --> `Column <'Horsepower'>`
+					rcObj.columnName = rcObj.columnName[0]
 				if (rcObj.dataType == ""):
 					rcObj.dataType = expandedDobj.dataset.dataTypeLookup[rcObj.columnName]
 				if (rcObj.dataModel == ""):
