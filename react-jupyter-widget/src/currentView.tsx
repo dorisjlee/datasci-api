@@ -9,6 +9,7 @@ class CurrentViewComponent extends Component<currentViewProps,any> {
         super(props);
     }
     render() {
+        console.log("this.props.currentViewSpec:",this.props.currentViewSpec)
         let selectedVis = function (vizLabel:string){
             // console.log("selectedVis event:",event)
             console.log(vizLabel)

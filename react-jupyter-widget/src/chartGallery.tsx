@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { VegaLite } from 'react-vega';
 // import { VisualizationSpec } from 'vega-embed';
 interface chartGalleryProps{
-    graphSpec: any[]
+    graphSpec: object[]
     data: any[]
 }
 class ChartGalleryComponent extends Component<chartGalleryProps,any> {

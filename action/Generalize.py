@@ -1,4 +1,5 @@
 from dataObj.dataObj import DataObj
+from dataObj.DataObjCollection import DataObjCollection
 from interestingness.valueBasedInterestingness import valueBasedInterestingness
 '''
 Shows possible visualizations when one attribute or filter from the current context is removed
@@ -9,7 +10,8 @@ def generalize(dobj):
 	import scipy.stats
 	import numpy as np
 	# TODO: need to make this work for DataObject (when input is not collection and just a single DataObject)
-
+	dobj.recommendation = {"action":"Generalize",
+						   "description":"Remove one attribute or filter from the Current View"}
 	output = []
 	excludedColumns = []
 	for i in range(0,len(dobj.spec)):
@@ -21,25 +23,25 @@ def generalize(dobj):
 				for column in columns:
 					if column not in excludedColumns:
 						tempDataObj = DataObj(dobj.dataset, dobj.spec)
-						tempDataObj.removeColumnFromSpec(column)
+						tempDataObj.removeColumnFromSpecNew(column)
 						excludedColumns.append(column)
 						tempDataObj.score = valueBasedInterestingness(tempDataObj)
 						output.append(tempDataObj)
 			elif type(columns) == str:
 				if columns not in excludedColumns:
 					tempDataObj = DataObj(dobj.dataset, dobj.spec)
-					tempDataObj.removeColumnFromSpec(columns)
+					tempDataObj.removeColumnFromSpecNew(columns)
 					excludedColumns.append(columns)
-					tempDataObj.score = valueBasedInterestingness(tempDataObj)
-					output.append(tempDataObj)
-
+					tempDataObj.score = 0.5#valueBasedInterestingness(tempDataObj)
 		elif dobj.spec[i].className == "Row":
 			newSpec = dobj.spec.copy()
 			newSpec.pop(i)
 			tempDataObj = DataObj(dobj.dataset, newSpec)
 			tempDataObj.score = valueBasedInterestingness(tempDataObj)
-			output.append(tempDataObj)
-	return(output)
+		tempDataObj.compile() # need to recompile
+		output.append(tempDataObj.compiled)
+	# return(output)
+	dobj.recommendation["collection"] = DataObjCollection(output)
 
 
 	# vizCollection = dobj.compiled.collection
