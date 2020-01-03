@@ -16,6 +16,7 @@ class DataObj:
 		self.type = ""
 		self.mark = ""
 		self.score = -1
+		self.recommendation= {}
 		self.compile()
 
 	def __repr__(self):
@@ -56,8 +57,27 @@ class DataObj:
 			compiled = compiler.determineEncoding(compiled)    # autofill viz related information
 			self.compiled = compiled
 			# print ("uncompiled:",dobj)
-			# print ("compiled:",self.compiled)
-			
+			# print ("compiled:",self.compiled)	
+	def renderVSpec(self,renderer="altair"):
+		from vizLib.altair.AltairRenderer import AltairRenderer
+		if (renderer=="altair"):
+			renderer = AltairRenderer()
+		return renderer.createVis(self)
+	def toJSON(self):
+		dobj_dict = {}
+		# Current View (if any)
+		if (type(self.compiled).__name__=="DataObj"):
+			dobj_dict["currentView"] = self.compiled.renderVSpec()
+		# Recommended Collection 
+		dobj_dict["recommendations"] = []
+		self.recommendation["vspec"] = []
+		for vis in self.recommendation["collection"].collection:
+			chart = vis.renderVSpec()
+			self.recommendation["vspec"].append(chart)
+		dobj_dict["recommendations"].append(self.recommendation)
+		# delete DataObjectCollection since not JSON serializable
+		del dobj_dict["recommendations"][0]["collection"] 
+		return dobj_dict
 	def display(self,renderer="altair"): 
 		# render this data object as: vis, columns, etc.?
 		# import widgetDisplay
@@ -68,23 +88,12 @@ class DataObj:
 		# return widget
 		# return chart
 		import displayWidget
-		chartSpecs = []
-		if (renderer=="altair"):
-			renderer = AltairRenderer()
-		collection=[]
-		if (type(self.compiled).__name__=="DataObj"):
-			collection = [self]
-		elif (type(self.compiled).__name__=="DataObjCollection"):
-			collection = self.compiled.collection
-		for viz in collection:
-			chart = renderer.createVis(viz.compiled).to_dict()
-			chart["data"] =  { "name": 'chartData' }
-			chart["width"] = 200
-			chart["height"] = 180
-			# chart["width"] = "container"
-			# chart["height"] = "container"
-			chartSpecs.append(chart)
-		widget = displayWidget.ExampleWidget(data=json.loads(self.dataset.df.to_json(orient='records')),graphSpecs = chartSpecs)	
+		dobjDict = self.toJSON()
+		widget = displayWidget.ExampleWidget(
+				data=json.loads(self.dataset.df.to_json(orient='records')),
+				currentView = dobjDict["currentView"],
+				recommendations = dobjDict["recommendations"]
+			)	
 		return widget
 	def singleDisplay(self,renderer="altair"): 
 		# For debugging only: 

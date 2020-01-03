@@ -47,14 +47,22 @@ export class ExampleModel extends DOMWidgetModel {
 export class JupyterWidgetView extends DOMWidgetView {
   initialize(){    
     let view = this;
-
-    class ReactWidget extends React.Component<JupyterWidgetView,{value:any,graphSpec:any[],data:any[],activeTab:any,showAlert:boolean}> {
+    interface WidgetProps{
+      value:any,
+      currentView:object,
+      recommendations:any[],
+      data:any[],
+      activeTab:any,
+      showAlert:boolean
+    }
+    class ReactWidget extends React.Component<JupyterWidgetView,WidgetProps> {
       constructor(props:any){
         super(props);
         console.log("view:",props);
         this.state = {
           value: props.model.get("value"),
-          graphSpec: view.model.get("graph_specs"),
+          currentView :  props.model.get("current_view"),
+          recommendations:  props.model.get("recommendations"),
           data: view.model.get("data"),
           activeTab: props.activeTab,
           showAlert:false
@@ -102,13 +110,13 @@ export class JupyterWidgetView extends DOMWidgetView {
       }
       render(){
         console.log("this.state.activeTab:",this.state.activeTab)
-        function shuffle(array) {
-          return array.sort(() => Math.random() - 0.5);
-        }
-        let possibleActions = ["Enhance","Filter","Distribution"]
-        const tabItems = possibleActions.map((action,idx) =>
-          <Tab eventKey={action} title={action} >
-            <ChartGalleryComponent data={this.state.data} graphSpec={shuffle(this.state.graphSpec)}/> 
+        // function shuffle(array) {
+        //   return array.sort(() => Math.random() - 0.5);
+        // }
+        
+        const tabItems = this.state.recommendations.map((actionResult,idx) =>
+          <Tab eventKey={actionResult.action} title={actionResult.action} >
+            <ChartGalleryComponent data={this.state.data} graphSpec={actionResult.vspec}/> 
           </Tab>);
         let alertBtn;
         if (this.state.showAlert){
@@ -120,7 +128,7 @@ export class JupyterWidgetView extends DOMWidgetView {
           </Alert>
         }
         return (<div id="widgetContainer">
-                  <CurrentViewComponent data={this.state.data} currentViewSpec={this.state.graphSpec[0]}/>
+                  <CurrentViewComponent data={this.state.data} currentViewSpec={this.state.currentView}/>
                   <div id="tabBanner">
                     <Tabs activeKey={this.state.activeTab} id="tabBannerList" onSelect={this.handleSelect}>
                       {tabItems}
