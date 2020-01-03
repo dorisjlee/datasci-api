@@ -70,13 +70,14 @@ class DataObj:
 			dobj_dict["currentView"] = self.compiled.renderVSpec()
 		# Recommended Collection 
 		dobj_dict["recommendations"] = []
-		self.recommendation["vspec"] = []
-		for vis in self.recommendation["collection"].collection:
-			chart = vis.renderVSpec()
-			self.recommendation["vspec"].append(chart)
-		dobj_dict["recommendations"].append(self.recommendation)
-		# delete DataObjectCollection since not JSON serializable
-		del dobj_dict["recommendations"][0]["collection"] 
+		if (self.recommendation!={}):
+			self.recommendation["vspec"] = []
+			for vis in self.recommendation["collection"].collection:
+				chart = vis.renderVSpec()
+				self.recommendation["vspec"].append(chart)
+			dobj_dict["recommendations"].append(self.recommendation)
+			# delete DataObjectCollection since not JSON serializable
+			del dobj_dict["recommendations"][0]["collection"] 
 		return dobj_dict
 	def display(self,renderer="altair"): 
 		# render this data object as: vis, columns, etc.?
