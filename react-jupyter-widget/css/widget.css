@@ -1,5 +1,5 @@
 #widgetContainer{
-  height:307px;
+  height:308px;
 }
 input[type=text], select {
   width: 100%;
@@ -74,8 +74,8 @@ input[type=text], select {
   color:black;
 }
 .graph-container{
-  width: 300px;
-  height: 250px;
+  width: 270px;
+  height: 235px;
 }
 #mainVizTitle{
   font-size: 20px;
@@ -97,7 +97,8 @@ input[type=text], select {
 #mainVizInnerContainer{
   width: 290px;
   height: 240px;
-  top: 16%;
+  top: 15%;
+  left: 5%;
   position: absolute;
 }
 #tabBanner{
@@ -115,9 +116,13 @@ input[type=text], select {
   position: absolute;
   left: 33%;
   width: 65%;
-  bottom: 0%;
+  bottom: 6%;
   padding: 5px 30px 5px 10px;
 }
+/* canvas{
+  width: 229px;
+  height: 245px;
+} */
 /* Override .fade default to show tab*/
 .fade {
   opacity:1;

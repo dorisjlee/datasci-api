@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import ReactDOM from 'react-dom';
-import ToolComponent from './tool';
+// import ToolComponent from './tool';
 import { VegaLite } from 'react-vega';
 // import { VisualizationSpec } from 'vega-embed';
 interface chartGalleryProps{
@@ -18,8 +18,9 @@ class ChartGalleryComponent extends Component<chartGalleryProps,any> {
                 <div key={idx.toString()}
                      className="graph-container"
                      id={"graph-container-".concat(idx.toString())}>
-                    <VegaLite data={chartData} spec={item}/>
-                    <ToolComponent graphIdx={idx}/>
+                    <VegaLite data={chartData} spec={item}  
+                              padding={{left: 30, top: 5, right: 5, bottom: 20}} />
+                    {/* <ToolComponent graphIdx={idx}/> */}
                 </div>  
             );
         return (

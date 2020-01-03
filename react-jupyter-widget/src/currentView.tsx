@@ -14,7 +14,8 @@ class CurrentViewComponent extends Component<currentViewProps,any> {
             <div id="mainVizContainer">
                 <h2 id="mainVizTitle">Current View</h2>
                 <div id="mainVizInnerContainer">
-                    <VegaLite data={chartData} spec={this.props.currentViewSpec}/>
+                    <VegaLite data={chartData} spec={this.props.currentViewSpec}
+                              padding={{left: 30, top: 5, right: 5, bottom: 20}} />
                 </div>
             </div>
         );
