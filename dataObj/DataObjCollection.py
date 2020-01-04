@@ -24,9 +24,9 @@ class DataObjCollection:
 	def set(self,fieldName,fieldVal):
 		return NotImplemented
 
-	def sort(self, descending = True):
+	def sort(self, removeInvalid=True, descending = True):
 		# remove the items that have invalid (-1) score
-		self.collection = list(filter(lambda x: x.score!=-1,self.collection))
+		if (removeInvalid): self.collection = list(filter(lambda x: x.score!=-1,self.collection))
 		# sort in-place by “score” by default if available, otherwise user-specified field to sort by
 		self.collection.sort(key=lambda x: x.score, reverse=descending)
 
