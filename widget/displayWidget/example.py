@@ -5,7 +5,7 @@ from traitlets import Unicode, Int, List, Dict
 from ._frontend import module_name, module_version
 import json
 
-class ExampleWidget(DOMWidget):
+class DisplayWidget(DOMWidget):
     """TODO: Add docstring here
     """
     _model_name = Unicode('ExampleModel').tag(sync=True)

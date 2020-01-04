@@ -103,7 +103,7 @@ class DataObj:
 		# return chart
 		import displayWidget
 		dobjDict = self.toJSON()
-		widget = displayWidget.ExampleWidget(
+		widget = displayWidget.DisplayWidget(
 				data=json.loads(self.dataset.df.to_json(orient='records')),
 				currentView = dobjDict["currentView"],
 				recommendations = dobjDict["recommendations"]
