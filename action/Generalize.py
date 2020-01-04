@@ -10,9 +10,8 @@ def generalize(dobj):
 	# -->  return list of dataObjects with corresponding interestingness scores 
 	import scipy.stats
 	import numpy as np
-	# TODO: need to make this work for DataObject (when input is not collection and just a single DataObject)
 	dobj.recommendation = {"action":"Generalize",
-						   "description":"Remove one attribute or filter from the Current View"}
+						   "description":"Remove one attribute or filter to observe a more general trend."}
 	output = []
 	excludedColumns = []
 	for i in range(0,len(dobj.spec)):
@@ -47,7 +46,6 @@ def generalize(dobj):
 		# output.append(compiled)
 		output.append(tempDataObj.compiled)
 	# return(output)
-	print (output)
 	dobj.recommendation["collection"] = DataObjCollection(output)
 
 

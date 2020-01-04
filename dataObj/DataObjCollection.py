@@ -24,9 +24,9 @@ class DataObjCollection:
 	def set(self,fieldName,fieldVal):
 		return NotImplemented
 
-	def sort(self, descending = True):
+	def sort(self, removeInvalid=True, descending = True):
 		# remove the items that have invalid (-1) score
-		self.collection = list(filter(lambda x: x.score!=-1,self.collection))
+		if (removeInvalid): self.collection = list(filter(lambda x: x.score!=-1,self.collection))
 		# sort in-place by “score” by default if available, otherwise user-specified field to sort by
 		self.collection.sort(key=lambda x: x.score, reverse=descending)
 
@@ -38,16 +38,3 @@ class DataObjCollection:
 		#sort and truncate list to first K items
 		self.sort(descending=False)
 		return DataObjCollection(self.collection[:k])
-
-	def display(self,renderer="altair"):
-		# Similar to display for individual DataObjects, takes fully specified visualizations and renders them. If score is available, display order of dashboard is based on score, otherwise random display order
-		import widgetDisplay
-		chartSpecs = []
-		if (renderer=="altair"):
-			renderer = AltairRenderer()
-		collection = self.collection
-		for viz in collection:
-			chart = renderer.createVis(viz.compiled).to_dict()
-			chartSpecs.append(chart)
-		widget = widgetDisplay.Mockup(graphSpecs = chartSpecs)	
-		return widget
