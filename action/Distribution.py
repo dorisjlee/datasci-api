@@ -6,11 +6,13 @@ def distribution(dobj):
 	# -->  return DataObjectCollection with the scores 
 	import scipy.stats
 	import numpy as np
-	# TODO: need to make this work for DataObject (when input is not collection and just a single DataObject)
+	dobj.recommendation = {"action":"Distribution",
+						   "description":"Show univariate count distributions of different attributes in the dataset."}
 	vizCollection = dobj.compiled.collection
 	for obj in vizCollection:
 		measure = obj.getObjByDataModel("measure")[0]
 		msr = measure.columnName
-		
 		msrVals = list(obj.dataset.df[msr])
 		obj.score = np.abs(scipy.stats.skew(msrVals))
+	dobj.compiled.sort()
+	dobj.recommendation["collection"] = dobj.compiled

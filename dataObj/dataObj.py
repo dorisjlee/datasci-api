@@ -34,12 +34,15 @@ class DataObj:
 	# 	else: 
 	# 		return f"<Data Obj: {str(self.dataset)} -- {str(self.spec)}>"
 
-	def compile(self):
+	def compile(self,enumerateCollection = True):
 		dobj = self
 		compiler = Compiler()
 		# 1. If the DataObj represent a collection, then compile it into a collection. Otherwise, return False
 		# Input: DataObj --> Output: DataObjCollection/False
-		dataObjCollection = compiler.enumerateCollection(dobj)
+		if (enumerateCollection):
+			dataObjCollection = compiler.enumerateCollection(dobj)
+		else:
+			dataObjCollection = False
 		# 2. For every DataObject in the DataObject Collection, expand underspecified
 		# Output : DataObj/DataObjectCollection
 		if (dataObjCollection):
@@ -63,11 +66,21 @@ class DataObj:
 		if (renderer=="altair"):
 			renderer = AltairRenderer()
 		return renderer.createVis(self)
+	def isEmpty(self):
+		return self.spec ==[]
 	def toJSON(self):
 		dobj_dict = {}
 		# Current View (if any)
 		if (type(self.compiled).__name__=="DataObj"):
 			dobj_dict["currentView"] = self.compiled.renderVSpec()
+		if (type(self.compiled).__name__=="DataObjCollection"):
+			# if the compiled object is a collection, see if we can remove the elements with "?" and generate a Current View
+			specifiedDobj = self.getVariableFieldsRemoved()
+			if (specifiedDobj.isEmpty()):
+				dobj_dict["currentView"] =	{}
+			else:
+				specifiedDobj.compile(enumerateCollection=False)
+				dobj_dict["currentView"] = specifiedDobj.compiled.renderVSpec()
 		# Recommended Collection 
 		dobj_dict["recommendations"] = []
 		if (self.recommendation!={}):
@@ -134,7 +147,18 @@ class DataObj:
 			else:
 				newSpec.append(self.spec[i])
 		self.spec = newSpec
-
+	def getVariableFieldsRemoved(self):
+		# remove fields that either have a wildcard or is a list
+		import copy
+		withoutWildmarkCopy = copy.deepcopy(self)
+		for spec in withoutWildmarkCopy.spec:
+			if isinstance(spec,Column):
+				if (spec.columnName=="?" or isinstance(spec.columnName,list)):
+					withoutWildmarkCopy.spec.remove(spec)
+			elif isinstance(spec,Row):
+				if (spec.fVal=="?"):
+					withoutWildmarkCopy.spec.remove(spec)
+		return withoutWildmarkCopy
 	# TODO: move to global class method when there is an overall module for API
 	# def fromDataFrame(df):
 	# 	'''

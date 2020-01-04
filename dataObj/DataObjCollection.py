@@ -38,16 +38,3 @@ class DataObjCollection:
 		#sort and truncate list to first K items
 		self.sort(descending=False)
 		return DataObjCollection(self.collection[:k])
-
-	def display(self,renderer="altair"):
-		# Similar to display for individual DataObjects, takes fully specified visualizations and renders them. If score is available, display order of dashboard is based on score, otherwise random display order
-		import widgetDisplay
-		chartSpecs = []
-		if (renderer=="altair"):
-			renderer = AltairRenderer()
-		collection = self.collection
-		for viz in collection:
-			chart = renderer.createVis(viz.compiled).to_dict()
-			chartSpecs.append(chart)
-		widget = widgetDisplay.Mockup(graphSpecs = chartSpecs)	
-		return widget
