@@ -1,2 +1,0 @@
-recursive-include widgetDisplay/static *.*
-include widgetDisplay.json

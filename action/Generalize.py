@@ -1,6 +1,7 @@
 from dataObj.dataObj import DataObj
 from dataObj.DataObjCollection import DataObjCollection
 from interestingness.valueBasedInterestingness import valueBasedInterestingness
+# from compiler.Compiler import Compiler
 '''
 Shows possible visualizations when one attribute or filter from the current context is removed
 '''
@@ -9,9 +10,8 @@ def generalize(dobj):
 	# -->  return list of dataObjects with corresponding interestingness scores 
 	import scipy.stats
 	import numpy as np
-	# TODO: need to make this work for DataObject (when input is not collection and just a single DataObject)
 	dobj.recommendation = {"action":"Generalize",
-						   "description":"Remove one attribute or filter from the Current View"}
+						   "description":"Remove one attribute or filter to observe a more general trend."}
 	output = []
 	excludedColumns = []
 	for i in range(0,len(dobj.spec)):
@@ -25,7 +25,7 @@ def generalize(dobj):
 						tempDataObj = DataObj(dobj.dataset, dobj.spec)
 						tempDataObj.removeColumnFromSpecNew(column)
 						excludedColumns.append(column)
-						tempDataObj.score = valueBasedInterestingness(tempDataObj)
+						tempDataObj.score = 0.5#valueBasedInterestingness(tempDataObj)
 						output.append(tempDataObj)
 			elif type(columns) == str:
 				if columns not in excludedColumns:
@@ -37,8 +37,13 @@ def generalize(dobj):
 			newSpec = dobj.spec.copy()
 			newSpec.pop(i)
 			tempDataObj = DataObj(dobj.dataset, newSpec)
-			tempDataObj.score = valueBasedInterestingness(tempDataObj)
+			tempDataObj.score = 0.5#valueBasedInterestingness(tempDataObj)
+		# print ("before:",tempDataObj)
 		tempDataObj.compile() # need to recompile
+		# print ("after:",tempDataObj.compiled)
+		# compiler = Compiler()
+		# compiled = compiler.expandUnderspecified(tempDataObj) # autofill data type/model information
+		# output.append(compiled)
 		output.append(tempDataObj.compiled)
 	# return(output)
 	dobj.recommendation["collection"] = DataObjCollection(output)

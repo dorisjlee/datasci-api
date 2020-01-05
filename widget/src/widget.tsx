@@ -110,10 +110,6 @@ export class JupyterWidgetView extends DOMWidgetView {
       }
       render(){
         console.log("this.state.activeTab:",this.state.activeTab)
-        // function shuffle(array) {
-        //   return array.sort(() => Math.random() - 0.5);
-        // }
-        
         const tabItems = this.state.recommendations.map((actionResult,idx) =>
           <Tab eventKey={actionResult.action} title={actionResult.action} >
             <ChartGalleryComponent data={this.state.data} graphSpec={actionResult.vspec}/> 

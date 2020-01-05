@@ -124,7 +124,7 @@ input[type=text], select {
 #exportBtn{
   position: absolute;
   top: 8px;
-  right: 10px;
+  top: 20px;
   font-size: 20px;
 }
 #alertBox{
