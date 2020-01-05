@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 from ipywidgets import DOMWidget
-from traitlets import Unicode, Int, List
+from traitlets import Unicode, Int, List, Dict
 from ._frontend import module_name, module_version
 import json
 
@@ -17,11 +17,13 @@ class ExampleWidget(DOMWidget):
 
     value = Unicode('Hello World').tag(sync=True)
     selected_graphID = List([]).tag(sync=True)
-    graph_specs = List([]).tag(sync=True)
+    current_view = Dict({}).tag(sync=True)
+    recommendations = List([]).tag(sync=True)
     data = List([]).tag(sync=True)
-    def __init__(self, data=None, graphSpecs = None, spec=None, opt=None, **kwargs):
+    def __init__(self, data=None, currentView=None, recommendations=None, spec=None, opt=None, **kwargs):
         super().__init__(**kwargs)
         self._opt_source = json.dumps(opt)
         self.selected_graphID = []
         self.data = data
-        self.graph_specs = graphSpecs
+        self.current_view = currentView
+        self.recommendations = recommendations

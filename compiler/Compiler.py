@@ -28,6 +28,10 @@ class Compiler:
 		from dataObj.dataObj import DataObj
 		from dataObj.DataObjCollection import DataObjCollection
 
+		for attrs in colAttrs:
+			for attr in attrs:
+				print (attr)
+
 		collection = []
 		# generate combinations of column attributes recursively by continuing to accumulate attributes for len(colAtrr) times
 		def combine(colAttrs, accum):
@@ -37,7 +41,7 @@ class Compiler:
 				item = accum + [colAttrs[0][i]]
 				if last:
 					columnList = list(map(Column, item))
-					if len(rowVals) > 0: # if we have rows, generate combinations for each row. 
+					if len(rowVals) > 0: # if we have rows, generate combinations for each row.
 						for row in rowVals:
 							fVal = row
 							transformedDataset = applyDataTransformations(dobj.dataset, fAttr, fVal)  # rename?
@@ -55,7 +59,7 @@ class Compiler:
 
 	def enumerateCollection(self, dobj):
 		# Get all the column and row object, assign the attribute names to variables
-		colSpecs = list(filter(lambda x: x.className == "Column", dobj.spec))
+		colSpecs = sorted(list(filter(lambda x: x.className == "Column", dobj.spec)), key=lambda x: x.channel) # sort by channel x,y,z
 		rowSpecs = list(filter(lambda x: x.className == "Row", dobj.spec))
 		colAttrs = []
 		rowVals = []

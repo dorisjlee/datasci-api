@@ -1,4 +1,5 @@
 from vizLib.altair.AltairRenderer import AltairRenderer
+from service.patternSearch.similarityDistance import euclideanDist
 class DataObjCollection:
 	'''
 	DataObjCollection is a list of DataObjects. 
@@ -38,6 +39,17 @@ class DataObjCollection:
 		#sort and truncate list to first K items
 		self.sort(descending=False)
 		return DataObjCollection(self.collection[:k])
+
+	def similarPattern(self,query):
+		query.preprocess()
+		#for loop to create assign euclidean distance
+		for dobj in self.collection:
+			dobj.preprocess()
+			dobj.score = euclideanDist(query, dobj)
+			print("score: ",dobj.score)
+
+
+
 
 	def display(self,renderer="altair"):
 		# Similar to display for individual DataObjects, takes fully specified visualizations and renders them. If score is available, display order of dashboard is based on score, otherwise random display order

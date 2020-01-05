@@ -11,11 +11,13 @@ class DataObj:
     '''
     def __init__(self, dataset, spec = [], title = "" ):
         self.dataset = dataset # may be inefficient use of memory
+        self.transformedDataset = dataset
         self.spec =spec #list of Row and Column objects
         self.title = title
         self.type = ""
         self.mark = ""
         self.score = -1
+        self.recommendation= {}
         self.compile()
 
     def __repr__(self):
@@ -57,6 +59,81 @@ class DataObj:
             self.compiled = compiled
             # print ("uncompiled:",dobj)
             # print ("compiled:",self.compiled)
+    def renderVSpec(self,renderer="altair"):
+        from vizLib.altair.AltairRenderer import AltairRenderer
+        if (renderer=="altair"):
+            renderer = AltairRenderer()
+        return renderer.createVis(self)
+    def toJSON(self):
+        dobj_dict = {}
+        # Current View (if any)
+        if (type(self.compiled).__name__=="DataObj"):
+            dobj_dict["currentView"] = self.compiled.renderVSpec()
+        # Recommended Collection
+        dobj_dict["recommendations"] = []
+        self.recommendation["vspec"] = []
+        for vis in self.recommendation["collection"].collection:
+            chart = vis.renderVSpec()
+            self.recommendation["vspec"].append(chart)
+        dobj_dict["recommendations"].append(self.recommendation)
+        # delete DataObjectCollection since not JSON serializable
+        del dobj_dict["recommendations"][0]["collection"]
+        return dobj_dict
+    def display(self,renderer="altair"):
+        # render this data object as: vis, columns, etc.?
+        # import widgetDisplay
+        # if (renderer=="altair"):
+        # 	renderer = AltairRenderer()
+        # chart = renderer.createVis(self.compiled)
+        # widget = widgetDisplay.Mockup(graphSpecs = [chart.to_dict()])
+        # return widget
+        # return chart
+        import displayWidget
+        dobjDict = self.toJSON()
+        widget = displayWidget.ExampleWidget(
+                data=json.loads(self.dataset.df.to_json(orient='records')),
+                currentView = dobjDict["currentView"],
+                recommendations = dobjDict["recommendations"]
+            )
+        return widget
+    def singleDisplay(self,renderer="altair"):
+        # For debugging only:
+        # display not through widget but through altair default
+        if (renderer=="altair"):
+            renderer = AltairRenderer()
+        chart = renderer.createVis(self.compiled)
+        return chart
+    def getObjByRowColType(self,rowColType):
+        specObj =  list(filter(lambda x: x.className ==rowColType ,self.spec))
+        return specObj
+    def getObjFromChannel(self,channel):
+        specObj =  list(filter(lambda x: x.channel ==channel if hasattr(x,"channel") else False ,self.spec))
+        return specObj
+    def getObjByDataModel(self,dmodel):
+        return list(filter(lambda x: x.dataModel==dmodel if hasattr(x,"dataModel") else False,self.spec))
+    def getByColumnName(self,columnName):
+        return list(filter(lambda x: x.columnName == columnName, self.spec))
+    def removeColumnFromSpec(self,columnName):
+        self.spec = list(filter(lambda x: x.columnName!=columnName,self.spec))
+    def removeColumnFromSpecNew(self,columnName):
+        newSpec = []
+        for i in range(0,len(self.spec)):
+            if isinstance(self.spec[i],Column):
+                columnSpec = []
+                columnNames = self.spec[i].columnName
+                #if only one variable in a column, columnName results in a string and not a list so
+                #you need to differentiate the cases
+                if isinstance(columnNames, list):
+                    for column in columnNames:
+                        if column != columnName:
+                            columnSpec.append(column)
+                    newSpec.append(Column(columnSpec))
+                else:
+                    if columnNames != columnName:
+                            newSpec.append(Column(columnNames))
+            else:
+                newSpec.append(self.spec[i])
+        self.spec = newSpec
 
     def display(self,renderer="altair"):
         # render this data object as: vis, columns, etc.?
@@ -151,5 +228,5 @@ class DataObj:
     def preprocess(self):
         from service.patternSearch import preprocessing
         preprocessing.aggregate(self)
-        # preprocessing.interpolate(self)
-        # preprocessing.normalize(self)
+        preprocessing.interpolate(self,100)
+        preprocessing.normalize(self)

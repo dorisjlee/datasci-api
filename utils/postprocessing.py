@@ -4,5 +4,8 @@ def getSelectedDobjs(dobj,widget):
 def showJSONspec(dictSpec):
     from utils.renderjson import RenderJSON
     import json
-    parsed = json.loads(dictSpec)
+    if (type(dictSpec)!=dict):
+        parsed = json.loads(dictSpec)
+    else:
+        parsed = dictSpec
     return RenderJSON(parsed)
