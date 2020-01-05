@@ -32,7 +32,7 @@ module.exports = [
     module: {
       rules: rules
     },
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
     externals,
     resolve,
   },
