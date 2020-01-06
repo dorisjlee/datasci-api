@@ -47,3 +47,4 @@ class DataObjCollection:
 			dobj.preprocess()
 			dobj.score = euclideanDist(query, dobj)
 			print("score: ",dobj.score)
+
