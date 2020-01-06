@@ -117,7 +117,7 @@ class DataObj:
         import displayWidget
         widgetJSON = self.toJSON(currentView=currentView)
         widget = displayWidget.DisplayWidget(
-            data=json.loads(self.dataset.df.to_json(orient='records')),
+            # data=json.loads(self.dataset.df.to_json(orient='records')),
             currentView=widgetJSON["currentView"],
             recommendations=widgetJSON["recommendations"]
         )
