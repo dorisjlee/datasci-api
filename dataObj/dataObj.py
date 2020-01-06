@@ -84,7 +84,7 @@ class DataObj:
         if (type(self.compiled).__name__ == "DataObjCollection"):
             # if the compiled object is a collection, see if we can remove the elements with "?" and generate a Current View
             specifiedDobj = self.getVariableFieldsRemoved()
-            specifiedDobj.compile(enumerateCollection=False)
+            if (specifiedDobj.spec!=[]): specifiedDobj.compile(enumerateCollection=False)
             if (currentView!=""):
                 dobj_dict["currentView"] = currentView.compiled.renderVSpec()
             elif (specifiedDobj.isEmpty()):

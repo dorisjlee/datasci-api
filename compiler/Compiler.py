@@ -170,7 +170,7 @@ class Compiler:
 			autoChannel = {"x": measure, "y": countCol}
 			dobj.mark = "histogram"
 		elif (Ndim == 1 and (Nmsr == 0 or Nmsr == 1)):
-			# Bar Chart
+			# Line or Bar Chart
 			# if x is unspecified
 			if (Nmsr == 0):
 				countCol.channel = "y"
