@@ -75,7 +75,7 @@ class DataObj:
     def isEmpty(self):
         return self.spec == []
 
-    def toJSON(self):
+    def toJSON(self,currentView=""):
         dobj_dict = {}
         # Current View (if any)
         if (type(self.compiled).__name__ == "DataObj"):
@@ -83,7 +83,9 @@ class DataObj:
         if (type(self.compiled).__name__ == "DataObjCollection"):
             # if the compiled object is a collection, see if we can remove the elements with "?" and generate a Current View
             specifiedDobj = self.getVariableFieldsRemoved()
-            if (specifiedDobj.isEmpty()):
+            if (currentView!=""):
+                dobj_dict["currentView"] = currentView.compiled.renderVSpec()
+            elif (specifiedDobj.isEmpty()):
                 dobj_dict["currentView"] = {}
             else:
                 specifiedDobj.compile(enumerateCollection=False)
@@ -100,7 +102,7 @@ class DataObj:
             del dobj_dict["recommendations"][0]["collection"]
         return dobj_dict
 
-    def display(self, renderer="altair"):
+    def display(self, renderer="altair", currentView=""):
         # render this data object as: vis, columns, etc.?
         # import widgetDisplay
         # if (renderer=="altair"):
@@ -110,7 +112,7 @@ class DataObj:
         # return widget
         # return chart
         import displayWidget
-        dobjDict = self.toJSON()
+        dobjDict = self.toJSON(currentView=currentView)
         widget = displayWidget.DisplayWidget(
             data=json.loads(self.dataset.df.to_json(orient='records')),
             currentView=dobjDict["currentView"],
