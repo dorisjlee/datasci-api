@@ -21,6 +21,7 @@ class DataObj:
         self.mark = ""
         self.score = -1
         self.recommendation = {}
+        self.widgetJSON = {}
         self.compile()
 
     def __repr__(self):
@@ -75,7 +76,7 @@ class DataObj:
     def isEmpty(self):
         return self.spec == []
 
-    def toJSON(self):
+    def toJSON(self,currentView=""):
         dobj_dict = {}
         # Current View (if any)
         if (type(self.compiled).__name__ == "DataObj"):
@@ -83,24 +84,28 @@ class DataObj:
         if (type(self.compiled).__name__ == "DataObjCollection"):
             # if the compiled object is a collection, see if we can remove the elements with "?" and generate a Current View
             specifiedDobj = self.getVariableFieldsRemoved()
-            if (specifiedDobj.isEmpty()):
+            if (currentView!=""):
+                dobj_dict["currentView"] = currentView.compiled.renderVSpec()
+            elif (specifiedDobj.isEmpty()):
                 dobj_dict["currentView"] = {}
             else:
                 specifiedDobj.compile(enumerateCollection=False)
                 dobj_dict["currentView"] = specifiedDobj.compiled.renderVSpec()
         # Recommended Collection
         dobj_dict["recommendations"] = []
-        if (self.recommendation != {}):
-            self.recommendation["vspec"] = []
-            for vis in self.recommendation["collection"].collection:
+        import copy
+        recCopy= copy.copy(self.recommendation)
+        if (recCopy != {}):
+            recCopy["vspec"] = []
+            for vis in recCopy["collection"].collection:
                 chart = vis.renderVSpec()
-                self.recommendation["vspec"].append(chart)
-            dobj_dict["recommendations"].append(self.recommendation)
+                recCopy["vspec"].append(chart)
+            dobj_dict["recommendations"].append(recCopy)
             # delete DataObjectCollection since not JSON serializable
             del dobj_dict["recommendations"][0]["collection"]
         return dobj_dict
 
-    def display(self, renderer="altair"):
+    def display(self, renderer="altair", currentView=""):
         # render this data object as: vis, columns, etc.?
         # import widgetDisplay
         # if (renderer=="altair"):
@@ -110,11 +115,11 @@ class DataObj:
         # return widget
         # return chart
         import displayWidget
-        dobjDict = self.toJSON()
+        widgetJSON = self.toJSON(currentView=currentView)
         widget = displayWidget.DisplayWidget(
             data=json.loads(self.dataset.df.to_json(orient='records')),
-            currentView=dobjDict["currentView"],
-            recommendations=dobjDict["recommendations"]
+            currentView=widgetJSON["currentView"],
+            recommendations=widgetJSON["recommendations"]
         )
         return widget
 
@@ -223,3 +228,16 @@ class DataObj:
         preprocessing.aggregate(self)
         preprocessing.interpolate(self, 100)
         preprocessing.normalize(self)
+    def similarPattern(self,query):
+        from service.patternSearch.similarityDistance import euclideanDist
+        query.preprocess()
+        #for loop to create assign euclidean distance
+        self.recommendation = {"action":"Similarity",
+						   	   "description":"Show other charts that are visually similar to the Current View."}
+        for dobj in self.compiled.collection:
+            dobj.preprocess()
+            dobj.score = euclideanDist(query, dobj)
+            # print("score: ",dobj.score)
+        self.compiled.sort(removeInvalid=False)
+        self.recommendation["collection"] = self.compiled
+        # print (dobj.recommendation)

@@ -6,6 +6,7 @@ class LineChart(AltairChart):
 	def __repr__(self):
 		return f"Line Chart <{str(self.dobj)}>"
 	def initializeChart(self):
+		self.tooltip = False # tooltip looks weird for line chart
 		xAttr = self.dobj.getObjFromChannel("x")[0]
 		yAttr = self.dobj.getObjFromChannel("y")[0]
 		
@@ -20,7 +21,6 @@ class LineChart(AltairChart):
 			    x = alt.X(xAttr.columnName,type="quantitative", aggregate="mean"),
 			    y = alt.Y(yAttr.columnName, type = "ordinal")
 			)
-		chart = chart.configure_mark(tooltip=alt.TooltipContent('encoding')) # Setting tooltip as non-null
 		chart = chart.interactive() # If you want to enable Zooming and Panning
 		return chart 
 	
