@@ -223,3 +223,16 @@ class DataObj:
         preprocessing.aggregate(self)
         preprocessing.interpolate(self, 100)
         preprocessing.normalize(self)
+    def similarPattern(self,query):
+        from service.patternSearch.similarityDistance import euclideanDist
+        query.preprocess()
+        #for loop to create assign euclidean distance
+        self.recommendation = {"action":"Similarity",
+						   	   "description":"Show other charts that are visually similar to the Current View."}
+        for dobj in self.compiled.collection:
+            dobj.preprocess()
+            dobj.score = euclideanDist(query, dobj)
+            # print("score: ",dobj.score)
+        self.compiled.sort(removeInvalid=False)
+        self.recommendation["collection"] = self.compiled
+        # print (dobj.recommendation)
