@@ -237,7 +237,6 @@ class DataObj:
         for dobj in self.compiled.collection:
             dobj.preprocess()
             dobj.score = euclideanDist(query, dobj)
-            # print("score: ",dobj.score)
+        self.compiled.normalizeScore(invertOrder=True)
         self.compiled.sort(removeInvalid=False)
         self.recommendation["collection"] = self.compiled
-        # print (dobj.recommendation)
