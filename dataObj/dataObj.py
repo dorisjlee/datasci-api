@@ -84,6 +84,7 @@ class DataObj:
         if (type(self.compiled).__name__ == "DataObjCollection"):
             # if the compiled object is a collection, see if we can remove the elements with "?" and generate a Current View
             specifiedDobj = self.getVariableFieldsRemoved()
+            specifiedDobj.compile(enumerateCollection=False)
             if (currentView!=""):
                 dobj_dict["currentView"] = currentView.compiled.renderVSpec()
             elif (specifiedDobj.isEmpty()):
@@ -91,6 +92,10 @@ class DataObj:
             else:
                 specifiedDobj.compile(enumerateCollection=False)
                 dobj_dict["currentView"] = specifiedDobj.compiled.renderVSpec()
+            if (self.recommendation=={}):
+                self.recommendation = {"action": "Vis Collection",
+                    "collection":self.compiled
+                }
         # Recommended Collection
         dobj_dict["recommendations"] = []
         import copy
