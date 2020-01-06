@@ -7,9 +7,6 @@ def euclideanDist(query,dobj):
         dobjYAxis = dobj.getObjFromChannel("y")[0].columnName
         queryYAxis = query.getObjFromChannel("y")[0].columnName
 
-        print(dobjYAxis)
-        print(queryYAxis)
-
         dobjVector = dobj.transformedDataset.df[dobjYAxis].values
         queryVector = query.transformedDataset.df[queryYAxis].values
 

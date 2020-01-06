@@ -39,5 +39,10 @@ class DataObjCollection:
 		#sort and truncate list to first K items
 		self.sort(descending=False)
 		return DataObjCollection(self.collection[:k])
+	def normalizeScore(self, invertOrder = False):
+		maxScore = max(list(self.get("score")))
+		for dobj in self.collection:
+			dobj.score = dobj.score/maxScore
+			if (invertOrder): dobj.score = 1 - dobj.score 
 
 	

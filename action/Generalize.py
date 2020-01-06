@@ -38,9 +38,7 @@ def generalize(dobj):
 			newSpec.pop(i)
 			tempDataObj = DataObj(dobj.dataset, newSpec)
 			tempDataObj.score = 0.5#valueBasedInterestingness(tempDataObj)
-		# print ("before:",tempDataObj)
 		tempDataObj.compile() # need to recompile
-		# print ("after:",tempDataObj.compiled)
 		# compiler = Compiler()
 		# compiled = compiler.expandUnderspecified(tempDataObj) # autofill data type/model information
 		# output.append(compiled)

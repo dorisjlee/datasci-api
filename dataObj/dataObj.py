@@ -84,6 +84,7 @@ class DataObj:
         if (type(self.compiled).__name__ == "DataObjCollection"):
             # if the compiled object is a collection, see if we can remove the elements with "?" and generate a Current View
             specifiedDobj = self.getVariableFieldsRemoved()
+            if (specifiedDobj.spec!=[]): specifiedDobj.compile(enumerateCollection=False)
             if (currentView!=""):
                 dobj_dict["currentView"] = currentView.compiled.renderVSpec()
             elif (specifiedDobj.isEmpty()):
@@ -91,6 +92,10 @@ class DataObj:
             else:
                 specifiedDobj.compile(enumerateCollection=False)
                 dobj_dict["currentView"] = specifiedDobj.compiled.renderVSpec()
+            if (self.recommendation=={}):
+                self.recommendation = {"action": "Vis Collection",
+                    "collection":self.compiled
+                }
         # Recommended Collection
         dobj_dict["recommendations"] = []
         import copy
@@ -237,7 +242,6 @@ class DataObj:
         for dobj in self.compiled.collection:
             dobj.preprocess()
             dobj.score = euclideanDist(query, dobj)
-            # print("score: ",dobj.score)
+        self.compiled.normalizeScore(invertOrder=True)
         self.compiled.sort(removeInvalid=False)
         self.recommendation["collection"] = self.compiled
-        # print (dobj.recommendation)
