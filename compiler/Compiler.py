@@ -14,15 +14,16 @@ class Compiler:
 		# Automatic type conversion (only for single attributes not lists of attributes)
 		import copy
 		expandedDobj = copy.deepcopy(dobj)  # Preserve the original dobj
+
 		for rcObj in expandedDobj.spec:
 			if (rcObj.className == "Column" and rcObj.columnName != "?"):
 				if (type(rcObj.columnName)==list and len(rcObj.columnName)==1):
 					# Make `Column <['Horsepower']>` --> `Column <'Horsepower'>`
 					rcObj.columnName = rcObj.columnName[0]
 				if (rcObj.dataType == ""):
-					rcObj.dataType = expandedDobj.dataset.dataTypeLookup[rcObj.columnName]
+					rcObj.dataType = dobj.dataset.dataTypeLookup[rcObj.columnName]
 				if (rcObj.dataModel == ""):
-					rcObj.dataModel = expandedDobj.dataset.dataModelLookup[rcObj.columnName]
+					rcObj.dataModel = dobj.dataset.dataModelLookup[rcObj.columnName]
 		return expandedDobj
 
 	def generateCollection(self, colAttrs, rowVals, fAttr, dobj):  # [[colA,colB],[colC,colD]] -> [[colA,colC],[colA,colD],[colB,colC],[colB,colD]]
@@ -31,9 +32,9 @@ class Compiler:
 		from dataObj.dataObj import DataObj
 		from dataObj.DataObjCollection import DataObjCollection
 
-		for attrs in colAttrs:
-			for attr in attrs:
-				print (attr)
+		# for attrs in colAttrs:
+		# 	for attr in attrs:
+		# 		print (attr)
 
 		collection = []
 		# generate combinations of column attributes recursively by continuing to accumulate attributes for len(colAtrr) times
@@ -236,7 +237,7 @@ def convert2List(x):
 
 
 def applyDataTransformations(dataset, fAttribute, fVal):
-	transformedDataset = Dataset(dataset.filename, dataset.schema)
+	transformedDataset = Dataset(filename=dataset.filename, schema=dataset.schema)
 	transformedDataset.df = dataset.df[dataset.df[fAttribute] == fVal]
 	return transformedDataset
 
