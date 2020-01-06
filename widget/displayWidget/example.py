@@ -20,10 +20,9 @@ class DisplayWidget(DOMWidget):
     current_view = Dict({}).tag(sync=True)
     recommendations = List([]).tag(sync=True)
     data = List([]).tag(sync=True)
-    def __init__(self, data=None, currentView=None, recommendations=None, spec=None, opt=None, **kwargs):
+    def __init__(self, currentView=None, recommendations=None, spec=None, opt=None, **kwargs):
         super().__init__(**kwargs)
         self._opt_source = json.dumps(opt)
         self.selected_graphID = []
-        self.data = data
         self.current_view = currentView
         self.recommendations = recommendations

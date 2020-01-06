@@ -24,8 +24,8 @@ class AltairRenderer:
 		elif (dobj.mark =="line"):
 			chart = LineChart(dobj)
 		chart = chart.chart.to_dict()
-		del chart["datasets"]
-		chart["data"] =  { "name": 'chartData' }
+		# del chart["datasets"]
+		# chart["data"] =  { "name": 'chartData' }
 		chart["width"] = 200
 		chart["height"] = 180
 		return chart

@@ -21,6 +21,7 @@ class DataObj:
         self.mark = ""
         self.score = -1
         self.recommendation = {}
+        self.widgetJSON = {}
         self.compile()
 
     def __repr__(self):
@@ -92,12 +93,14 @@ class DataObj:
                 dobj_dict["currentView"] = specifiedDobj.compiled.renderVSpec()
         # Recommended Collection
         dobj_dict["recommendations"] = []
-        if (self.recommendation != {}):
-            self.recommendation["vspec"] = []
-            for vis in self.recommendation["collection"].collection:
+        import copy
+        recCopy= copy.copy(self.recommendation)
+        if (recCopy != {}):
+            recCopy["vspec"] = []
+            for vis in recCopy["collection"].collection:
                 chart = vis.renderVSpec()
-                self.recommendation["vspec"].append(chart)
-            dobj_dict["recommendations"].append(self.recommendation)
+                recCopy["vspec"].append(chart)
+            dobj_dict["recommendations"].append(recCopy)
             # delete DataObjectCollection since not JSON serializable
             del dobj_dict["recommendations"][0]["collection"]
         return dobj_dict
@@ -112,11 +115,11 @@ class DataObj:
         # return widget
         # return chart
         import displayWidget
-        dobjDict = self.toJSON(currentView=currentView)
+        widgetJSON = self.toJSON(currentView=currentView)
         widget = displayWidget.DisplayWidget(
-            data=json.loads(self.dataset.df.to_json(orient='records')),
-            currentView=dobjDict["currentView"],
-            recommendations=dobjDict["recommendations"]
+            # data=json.loads(self.dataset.df.to_json(orient='records')),
+            currentView=widgetJSON["currentView"],
+            recommendations=widgetJSON["recommendations"]
         )
         return widget
 
