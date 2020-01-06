@@ -7,8 +7,7 @@ def countBasedInterestingness(dobj):
 
 	numFilters = len(dobj.getObjByRowColType("Row"))
 	if numFilters == 0:
-		skewness = .skew(msrVals)
+		skewness = skew(msrVals)
 		return(skewness)
 	else:
 		#compare filtered data's distribution to original distribution
-		
