@@ -21,6 +21,7 @@ class DataObj:
         self.mark = ""
         self.score = -1
         self.recommendation = {}
+        self.jsonWidget = {}
         self.compile()
 
     def __repr__(self):
@@ -76,31 +77,35 @@ class DataObj:
         return self.spec == []
 
     def toJSON(self,currentView=""):
-        dobj_dict = {}
-        # Current View (if any)
-        if (type(self.compiled).__name__ == "DataObj"):
-            dobj_dict["currentView"] = self.compiled.renderVSpec()
-        if (type(self.compiled).__name__ == "DataObjCollection"):
-            # if the compiled object is a collection, see if we can remove the elements with "?" and generate a Current View
-            specifiedDobj = self.getVariableFieldsRemoved()
-            if (currentView!=""):
-                dobj_dict["currentView"] = currentView.compiled.renderVSpec()
-            elif (specifiedDobj.isEmpty()):
-                dobj_dict["currentView"] = {}
-            else:
-                specifiedDobj.compile(enumerateCollection=False)
-                dobj_dict["currentView"] = specifiedDobj.compiled.renderVSpec()
-        # Recommended Collection
-        dobj_dict["recommendations"] = []
-        if (self.recommendation != {}):
-            self.recommendation["vspec"] = []
-            for vis in self.recommendation["collection"].collection:
-                chart = vis.renderVSpec()
-                self.recommendation["vspec"].append(chart)
-            dobj_dict["recommendations"].append(self.recommendation)
-            # delete DataObjectCollection since not JSON serializable
-            del dobj_dict["recommendations"][0]["collection"]
-        return dobj_dict
+        if (self.jsonWidget=={}):
+            print ("here")
+            dobj_dict = {}
+            # Current View (if any)
+            if (type(self.compiled).__name__ == "DataObj"):
+                dobj_dict["currentView"] = self.compiled.renderVSpec()
+            if (type(self.compiled).__name__ == "DataObjCollection"):
+                # if the compiled object is a collection, see if we can remove the elements with "?" and generate a Current View
+                specifiedDobj = self.getVariableFieldsRemoved()
+                if (currentView!=""):
+                    dobj_dict["currentView"] = currentView.compiled.renderVSpec()
+                elif (specifiedDobj.isEmpty()):
+                    dobj_dict["currentView"] = {}
+                else:
+                    specifiedDobj.compile(enumerateCollection=False)
+                    dobj_dict["currentView"] = specifiedDobj.compiled.renderVSpec()
+            # Recommended Collection
+            dobj_dict["recommendations"] = []
+            if (self.recommendation != {}):
+                self.recommendation["vspec"] = []
+                for vis in self.recommendation["collection"].collection:
+                    chart = vis.renderVSpec()
+                    self.recommendation["vspec"].append(chart)
+                dobj_dict["recommendations"].append(self.recommendation)
+                # delete DataObjectCollection since not JSON serializable
+                if "collection" in dobj_dict["recommendations"][0]: del dobj_dict["recommendations"][0]["collection"]
+            return dobj_dict
+        else:
+            return self.jsonWidget
 
     def display(self, renderer="altair", currentView=""):
         # render this data object as: vis, columns, etc.?
@@ -112,11 +117,11 @@ class DataObj:
         # return widget
         # return chart
         import displayWidget
-        dobjDict = self.toJSON(currentView=currentView)
+        self.jsonWidget = self.toJSON(currentView=currentView)
         widget = displayWidget.DisplayWidget(
             data=json.loads(self.dataset.df.to_json(orient='records')),
-            currentView=dobjDict["currentView"],
-            recommendations=dobjDict["recommendations"]
+            currentView=self.jsonWidget["currentView"],
+            recommendations=self.jsonWidget["recommendations"]
         )
         return widget
 
