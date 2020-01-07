@@ -2,10 +2,10 @@ def interestingness(dobj):
 	numAttributes = len(dobj.getObjByRowColType("Column"))
 	if numAttributes == 1:
 		attrType = dobj.spec[0].dataModel
-		if classType == "measure":
-			from interestingness import valueBasedInterestingness
+		if attrType == "measure":
+			from interestingness.valueBasedInterestingness import valueBasedInterestingness
 			return(valueBasedInterestingness(dobj))
-		elif classType == "dimension":
+		elif attrType == "dimension":
 			return(0.5)
 			#from interestingness import countBasedInterestingness
 			#return(countBasedinterstingness(dobj))
@@ -14,9 +14,9 @@ def interestingness(dobj):
 		numDimension = len(dobj.getObjByDataModel("dimension"))
 
 		if numMeasure == 2:
-			from interestingness import relationshipBasedInterestingness
+			from interestingness.relationshipBasedInterestingness import relationshipBasedInterestingness
 			return(relationshipBasedInterestingness(dobj))
-		elif numMeasure == 1 and numDimension == 1
+		elif numMeasure == 1 and numDimension == 1:
 			return(0.5)
 			#from interstingness import distributionBasedInterestingness
 			#return(distributionBasedInterestingness(dobj))
