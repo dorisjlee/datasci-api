@@ -9,17 +9,18 @@ class LineChart(AltairChart):
 		self.tooltip = False # tooltip looks weird for line chart
 		xAttr = self.dobj.getObjFromChannel("x")[0]
 		yAttr = self.dobj.getObjFromChannel("y")[0]
-		
 		if (yAttr.dataModel == "measure"):		
-			chart = alt.Chart(self.dataURL).mark_line().encode(
-			    x = alt.X(xAttr.columnName, type = "ordinal"),
-			    # TODO: need to change aggregate to non-default function, read aggFunc info in somewhere
-			    y = alt.Y(yAttr.columnName,type="quantitative", aggregate="mean")
-			)
+			xAttrSpec = alt.X(xAttr.columnName, type = "ordinal")
+			yAttrSpec = alt.Y(yAttr.columnName,type="quantitative", aggregate="mean")
 		else:
-			chart = alt.Chart(self.dataURL).mark_line().encode(
-			    x = alt.X(xAttr.columnName,type="quantitative", aggregate="mean"),
-			    y = alt.Y(yAttr.columnName, type = "ordinal")
+			xAttrSpec = alt.X(xAttr.columnName,type="quantitative", aggregate="mean")
+			yAttrSpec = alt.Y(yAttr.columnName, type = "ordinal")
+		if (yAttr.columnName=="count()"):
+			yAttrSpec = alt.Y("Record",type="quantitative", aggregate="count")
+		chart = alt.Chart(self.dataURL).mark_line().encode(
+			    x = xAttrSpec,
+			    # TODO: need to change aggregate to non-default function, read aggFunc info in somewhere
+			    y = yAttrSpec
 			)
 		chart = chart.interactive() # If you want to enable Zooming and Panning
 		return chart 

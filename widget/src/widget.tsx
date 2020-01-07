@@ -51,7 +51,6 @@ export class JupyterWidgetView extends DOMWidgetView {
       value:any,
       currentView:object,
       recommendations:any[],
-      data:any[],
       activeTab:any,
       showAlert:boolean
     }
@@ -63,7 +62,6 @@ export class JupyterWidgetView extends DOMWidgetView {
           value: props.model.get("value"),
           currentView :  props.model.get("current_view"),
           recommendations:  props.model.get("recommendations"),
-          data: view.model.get("data"),
           activeTab: props.activeTab,
           showAlert:false
         }
@@ -112,7 +110,7 @@ export class JupyterWidgetView extends DOMWidgetView {
         console.log("this.state.activeTab:",this.state.activeTab)
         const tabItems = this.state.recommendations.map((actionResult,idx) =>
           <Tab eventKey={actionResult.action} title={actionResult.action} >
-            <ChartGalleryComponent data={this.state.data} graphSpec={actionResult.vspec}/> 
+            <ChartGalleryComponent graphSpec={actionResult.vspec}/> 
           </Tab>);
         let alertBtn;
         if (this.state.showAlert){
@@ -124,7 +122,7 @@ export class JupyterWidgetView extends DOMWidgetView {
           </Alert>
         }
         return (<div id="widgetContainer">
-                  <CurrentViewComponent data={this.state.data} currentViewSpec={this.state.currentView}/>
+                  <CurrentViewComponent currentViewSpec={this.state.currentView}/>
                   <div id="tabBanner">
                     <Tabs activeKey={this.state.activeTab} id="tabBannerList" onSelect={this.handleSelect}>
                       {tabItems}

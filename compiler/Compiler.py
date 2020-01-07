@@ -24,6 +24,9 @@ class Compiler:
 					rcObj.dataType = dobj.dataset.dataTypeLookup[rcObj.columnName]
 				if (rcObj.dataModel == ""):
 					rcObj.dataModel = dobj.dataset.dataModelLookup[rcObj.columnName]
+			if (rcObj.className == "Row"):
+				expandedDobj.dataset = applyDataTransformations(expandedDobj.dataset, fAttribute=rcObj.fAttribute, fVal = rcObj.fVal) 
+				expandedDobj.title = f"{rcObj.fAttribute}={rcObj.fVal}"
 		return expandedDobj
 
 	def generateCollection(self, colAttrs, rowVals, fAttr, dobj):  # [[colA,colB],[colC,colD]] -> [[colA,colC],[colA,colD],[colB,colC],[colB,colD]]
@@ -115,7 +118,6 @@ class Compiler:
 					Nmsr += 1
 			if (spec.className == "Row"):  # preserve to add back to dobj later
 				rowLst.append(spec)
-
 		# Helper function (TODO: Move this into utils)
 		def lineOrBar(dimension, measure):
 			dimType = dimension.dataType
@@ -169,7 +171,7 @@ class Compiler:
 			autoChannel = {"x": measure, "y": countCol}
 			dobj.mark = "histogram"
 		elif (Ndim == 1 and (Nmsr == 0 or Nmsr == 1)):
-			# Bar Chart
+			# Line or Bar Chart
 			# if x is unspecified
 			if (Nmsr == 0):
 				countCol.channel = "y"
@@ -220,7 +222,6 @@ class Compiler:
 			autoChannel = {"x": m1,
 						   "y": m2,
 						   "color": colorAttr}
-
 		dobj = enforceSpecifiedChannel(dobj, autoChannel)
 		dobj.spec.extend(rowLst)  # add back the preserved row objects
 		return dobj
