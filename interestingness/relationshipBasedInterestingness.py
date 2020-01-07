@@ -1,4 +1,4 @@
-def relationshipInterestingness(dobj):
+def relationshipBasedInterestingness(dobj):
 	from scipy.stats import pearsonr
 
 	#Interestingness metric for two measure attributes
@@ -24,8 +24,10 @@ def relationshipInterestingness(dobj):
 	else:
 		row = dobj.getObjByRowColType("Row")[0]
 		filteredData = dobj.dataset.df[dobj.dataset.df[row.fAttribute] == row.fVal]
-		if len(filteredData) != 0:
+		if len(filteredData) > 1:
 			m1Val = filteredData[m1]
 			m2Val = filteredData[m2]
 			pearsonCorr = pearsonr(m1Val, m2Val)[0]
 			return(pearsonCorr)
+		else:
+			return(0)
