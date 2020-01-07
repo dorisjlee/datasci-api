@@ -17,7 +17,7 @@ class ChartGalleryComponent extends Component<chartGalleryProps,any> {
                      className="graph-container"
                      id={"graph-container-".concat(idx.toString())}>
                     <VegaLite spec={item}  
-                              padding={{left: 30, top: 5, right: 5, bottom: 20}} />
+                              padding={{left: 20, top: 5, right: 5, bottom: 20}} />
                     {/* <ToolComponent graphIdx={idx}/> */}
                 </div>  
             );

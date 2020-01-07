@@ -19,7 +19,7 @@ class CurrentViewComponent extends Component<currentViewProps,any> {
                 <div id="mainVizInnerContainer">
                     <div className="vizContainer" onClick={()=>selectedVis("main")}>
                         <VegaLite spec={this.props.currentViewSpec}
-                                  padding={{left: 30, top: 5, right: 5, bottom: 20}} />
+                                  padding={{left: 20, top: 5, right: 5, bottom: 20}} />
                     </div>
                 </div>
             </div>
