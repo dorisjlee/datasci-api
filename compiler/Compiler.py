@@ -46,6 +46,7 @@ class Compiler:
 				if last:
 					columnList = list(map(Column, item))
 					if len(rowVals) > 0: # if we have rows, generate combinations for each row.
+						print("num row vals: ",len(rowVals))
 						for row in rowVals:
 							fVal = row
 							transformedDataset = applyDataTransformations(dobj.dataset, fAttr, fVal)  # rename?

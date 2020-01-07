@@ -1,6 +1,6 @@
 import pandas as pd
 from dataset.Dataset import Dataset
-
+import math
 def aggregate(dobj):
 # find y axis then aggregate on it
 	if dobj.getObjFromChannel("x") and dobj.getObjFromChannel("y"):
@@ -56,6 +56,11 @@ def normalize(dobj):
 
 	if dobj.getObjFromChannel("y"):
 		yAxis = dobj.getObjFromChannel("y")[0].columnName
-
 		df = dobj.transformedDataset.df
-		dobj.transformedDataset.df[yAxis] = (df[yAxis] - df[yAxis].min()) / (df[yAxis].max() - df[yAxis].min())
+		max = df[yAxis].max()
+		min = df[yAxis].min()
+
+		if(max == min or (max-min<1)):
+			return
+
+		dobj.transformedDataset.df[yAxis] = (df[yAxis] - min) / (max - min)

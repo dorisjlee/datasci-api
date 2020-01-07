@@ -230,14 +230,18 @@ class DataObj:
         preprocessing.normalize(self)
     def similarPattern(self,query):
         from service.patternSearch.similarityDistance import euclideanDist
-        query.preprocess()
-        #for loop to create assign euclidean distance
-        self.recommendation = {"action":"Similarity",
-						   	   "description":"Show other charts that are visually similar to the Current View."}
-        for dobj in self.compiled.collection:
-            dobj.preprocess()
-            dobj.score = euclideanDist(query, dobj)
-            # print("score: ",dobj.score)
-        self.compiled.sort(removeInvalid=False)
-        self.recommendation["collection"] = self.compiled
-        # print (dobj.recommendation)
+        from compiler.Compiler import applyDataTransformations
+        rowSpecs = list(filter(lambda x: x.className == "Row", query.spec))
+        if(len(rowSpecs) == 1):
+            query.dataset = applyDataTransformations(query.dataset,rowSpecs[0].fAttribute,rowSpecs[0].fVal)
+            query.preprocess()
+            #for loop to create assign euclidean distance
+            self.recommendation = {"action":"Similarity",
+                                   "description":"Show other charts that are visually similar to the Current View."}
+            for dobj in self.compiled.collection:
+                dobj.preprocess()
+                dobj.score = euclideanDist(query, dobj)
+            self.compiled.sort(removeInvalid=False)
+            self.recommendation["collection"] = self.compiled
+        else:
+            print("Query needs to have 1 row value")
