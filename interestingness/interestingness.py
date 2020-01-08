@@ -23,3 +23,5 @@ def interestingness(dobj):
 			#return(distributionBasedInterestingness(dobjCompiled))
 		else:
 			return(0)
+	else:
+		return(0.5)

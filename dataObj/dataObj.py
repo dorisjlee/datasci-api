@@ -228,6 +228,14 @@ class DataObj:
         from action.Generalize import generalize
         return generalize(self)
 
+    def filter(self):
+        from action.Filter import filter
+        return filter(self)
+
+    def enhance(self):
+        from action.Enhance import enhance
+        return enhance(self)
+
     def preprocess(self):
         from service.patternSearch import preprocessing
         preprocessing.aggregate(self)

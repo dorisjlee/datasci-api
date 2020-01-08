@@ -9,6 +9,8 @@ import pandas as pd
 Shows possible visualizations when filtered by categorical variables in the data object's dataset
 '''
 def filter(dobj):
+	dobj.recommendation = {"action":"Filter",
+						   "description":"Shows possible visualizations when filtered by categorical variables in the data object's dataset."}
 	filters = dobj.getObjByRowColType("Row")
 	output = []
 	#if Row is specified, create visualizations where data is filtered by all values of the Row's categorical variable 
@@ -21,14 +23,18 @@ def filter(dobj):
 				uniqueValues = dobj.dataset.df[row.fAttribute].unique()
 				#creates new data objects with new filters
 				for i in range(0, len(uniqueValues)):
+					#create new Data Object
 					newSpec = columnSpec.copy()
 					newFilter = Row(fAttribute = row.fAttribute, fVal = uniqueValues[i])
 					newSpec.append(newFilter)
 					tempDataObj = DataObj(dobj.dataset, newSpec)
 					tempDataObj.score = interestingness(tempDataObj)
-					output.append(tempDataObj)
+
+					#recompile the new Data Object before appending to output
+					tempDataObj.compile()
+					output.append(tempDataObj.compiled)
 				completedFilters.append(row.fAttribute)
-		return(output)
+		dobj.recommendation["collection"] = DataObjCollection(output)
 	#if Row is not specified, create filters using unique values from all categorical variables in the dataset
 	else:
 		categoricalVars = dobj.dataset.dataType['categorical']
@@ -41,5 +47,7 @@ def filter(dobj):
 				newSpec.append(newFilter)
 				tempDataObj = DataObj(dobj.dataset, newSpec)
 				tempDataObj.score = interestingness(tempDataObj)
-				output.append(tempDataObj)
-		return(output)
+
+				tempDataObj.compile()
+				output.append(tempDataObj.compiled)
+		dobj.recommendation["collection"] = DataObjCollection(output)
