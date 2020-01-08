@@ -177,7 +177,7 @@ class DataObj:
         # remove fields that either have a wildcard or is a list
         import copy
         withoutWildmarkCopy = copy.deepcopy(self)
-        for spec in withoutWildmarkCopy.spec:
+        for spec in withoutWildmarkCopy.spec[:]: # make a copy of list while iterating
             if isinstance(spec, Column):
                 if (spec.columnName == "?" or isinstance(spec.columnName, list)):
                     withoutWildmarkCopy.spec.remove(spec)
