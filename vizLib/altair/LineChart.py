@@ -1,5 +1,6 @@
 from vizLib.altair.AltairChart import AltairChart
 import altair as alt
+alt.data_transformers.disable_max_rows()
 class LineChart(AltairChart):
 	def __init__(self,dobj):
 		super().__init__(dobj)

@@ -1,8 +1,9 @@
 from vizLib.altair.AltairChart import AltairChart
 import altair as alt
+alt.data_transformers.disable_max_rows()
 class BarChart(AltairChart):
 	def __init__(self,dobj):
-		super(BarChart,self).__init__(dobj)
+		super().__init__(dobj)
 	def __repr__(self):
 		return f"Bar Chart <{str(self.dobj)}>"
 	def initializeChart(self):

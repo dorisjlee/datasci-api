@@ -1,8 +1,9 @@
 from vizLib.altair.AltairChart import AltairChart
 import altair as alt
+alt.data_transformers.disable_max_rows()
 class Histogram(AltairChart):
 	def __init__(self,dobj):
-		super(Histogram,self).__init__(dobj)
+		super().__init__(dobj)
 	def __repr__(self):
 		return f"Histogram <{str(self.dobj)}>"
 	def initializeChart(self):
