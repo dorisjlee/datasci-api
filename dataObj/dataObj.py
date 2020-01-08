@@ -248,7 +248,7 @@ class DataObj:
                 dobj.preprocess()
                 dobj.score = euclideanDist(query, dobj)
             self.compiled.normalizeScore(invertOrder=True)
-            self.compiled.sort(removeInvalid=False)
+            self.compiled.sort(removeInvalid=True)
             self.recommendation["collection"] = self.compiled
         else:
             print("Query needs to have 1 row value")

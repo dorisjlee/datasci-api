@@ -35,5 +35,5 @@ def correlation(dobj,ignoreIdentity=True,ignoreTranspose=True):
 			obj.score = np.abs(scipy.stats.pearsonr(msr1Vals,msr2Vals)[0])
 		else:
 			obj.score = -1	
-	dobj.compiled.sort(removeInvalid=False)
+	dobj.compiled.sort(removeInvalid=True)
 	dobj.recommendation["collection"] = dobj.compiled

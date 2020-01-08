@@ -42,7 +42,8 @@ class Dataset:
 		# Override with schema specified types
 		for attrInfo in self.schema:
 			key= list(attrInfo.keys())[0]
-			self.dataTypeLookup[key]= attrInfo[key]["dataType"]
+			if ("dataType" in attrInfo[key]):
+				self.dataTypeLookup[key]= attrInfo[key]["dataType"]
 		# for attr in list(df.dtypes[df.dtypes=="int64"].keys()):
 		# 	if self.cardinality[attr]>50:
 		self.dataType = self.mapping(self.dataTypeLookup)
@@ -53,6 +54,19 @@ class Dataset:
 			"measure":self.dataType["quantitative"],
 			"dimension":self.dataType["ordinal"]+self.dataType["categorical"]+self.dataType["date"]
 		}
+		# Override with schema specified types
+		for attrInfo in self.schema:
+			key= list(attrInfo.keys())[0]
+			if ("dataModel" in attrInfo[key]):
+				dataModel = attrInfo[key]["dataModel"]
+				if (dataModel=="measure"):
+					self.dataModel["dimension"].remove(key)
+					self.dataModel["measure"].append(key)
+				else:
+					self.dataModel["measure"].remove(key)
+					self.dataModel["dimension"].append(key)
+
+		
 
 		self.dataModelLookup = self.reverseMapping(self.dataModel)
 
