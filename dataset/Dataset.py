@@ -7,9 +7,12 @@ class Dataset:
 			self.df = self.loadCSV()
 		else:
 			self.df = df
-		self.attrList = list(self.df.columns)
+		
 		self.schema = schema
 		# self.df_json  = self.df.to_json(orient='records')
+		self.computeDatasetMetadata()
+	def computeDatasetMetadata(self):
+		self.attrList = list(self.df.columns)
 		self.dataTypeLookup = {}
 		self.dataType = {}
 		self.computeDataType()
@@ -17,7 +20,9 @@ class Dataset:
 		self.dataModel = {}
 		self.computeDataModel()
 		self.computeStats()
-
+	def set_df(self,df):
+		self.df = df 
+		self.computeDatasetMetadata() 
 	def __repr__(self):
 		return f"<Dataset Obj: {str(self.filename)}>"
 
@@ -36,7 +41,10 @@ class Dataset:
 
 		for attr in self.attrList:
 			if self.df.dtypes[attr]=="float64" or self.df.dtypes[attr]=="int64":
-				self.dataTypeLookup[attr]="quantitative"
+				if cardinality(self.df,attr)<10:
+					self.dataTypeLookup[attr]="categorical"
+				else:
+					self.dataTypeLookup[attr]="quantitative"
 			elif self.df.dtypes[attr]=="object":
 				self.dataTypeLookup[attr]="categorical"
 		# Override with schema specified types
@@ -86,10 +94,9 @@ class Dataset:
 
 	def computeStats(self):
 		# precompute statistics
-		def cardinality(df,columnName):
-			return len(df[columnName].unique())
 		self.cardinality = {}
 		for dimension in self.df.columns:
 			self.cardinality[dimension]=cardinality(self.df,dimension)
 		
-		
+def cardinality(df,columnName):
+	return len(df[columnName].unique())

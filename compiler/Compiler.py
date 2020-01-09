@@ -126,7 +126,6 @@ class Compiler:
 			else:  # unordered categorical
 				# chart = BarChart(dobj)
 				return "bar", {"x": measure, "y": dimension}
-
 		# TODO: if cardinality large than 6 then sort bars
 
 		def enforceSpecifiedChannel(dobj, autoChannel):
@@ -221,6 +220,13 @@ class Compiler:
 			autoChannel = {"x": m1,
 						   "y": m2,
 						   "color": colorAttr}
+		elif (Ndim == 0 and Nmsr == 3):
+			# Scatterplot with color
+			dobj.mark = "scatter"
+			autoChannel = {"x": dobj.spec[0],
+						   "y": dobj.spec[1],
+						   "color": dobj.spec[2]}
+
 		dobj = enforceSpecifiedChannel(dobj, autoChannel)
 		dobj.spec.extend(rowLst)  # add back the preserved row objects
 		return dobj
