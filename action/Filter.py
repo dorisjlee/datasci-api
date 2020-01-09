@@ -12,6 +12,7 @@ def filter(dobj):
 	dobj.recommendation = {"action":"Filter",
 						   "description":"Shows possible visualizations when filtered by categorical variables in the data object's dataset."}
 	filters = dobj.getObjByRowColType("Row")
+	filterValues = []
 	output = []
 	#if Row is specified, create visualizations where data is filtered by all values of the Row's categorical variable 
 	if len(filters) > 0:
@@ -21,18 +22,20 @@ def filter(dobj):
 		for row in filters:
 			if row.fAttribute not in completedFilters:
 				uniqueValues = dobj.dataset.df[row.fAttribute].unique()
+				filterValues.append(row.fVal)
 				#creates new data objects with new filters
 				for i in range(0, len(uniqueValues)):
-					#create new Data Object
-					newSpec = columnSpec.copy()
-					newFilter = Row(fAttribute = row.fAttribute, fVal = uniqueValues[i])
-					newSpec.append(newFilter)
-					tempDataObj = DataObj(dobj.dataset, newSpec)
-					tempDataObj.score = interestingness(tempDataObj)
+					if uniqueValues[i] not in filterValues:
+						#create new Data Object
+						newSpec = columnSpec.copy()
+						newFilter = Row(fAttribute = row.fAttribute, fVal = uniqueValues[i])
+						newSpec.append(newFilter)
+						tempDataObj = DataObj(dobj.dataset, newSpec)
+						tempDataObj.score = interestingness(tempDataObj)
 
-					#recompile the new Data Object before appending to output
-					tempDataObj.compile()
-					output.append(tempDataObj.compiled)
+						#recompile the new Data Object before appending to output
+						tempDataObj.compile()
+						output.append(tempDataObj.compiled)
 				completedFilters.append(row.fAttribute)
 		dobj.recommendation["collection"] = DataObjCollection(output)
 	#if Row is not specified, create filters using unique values from all categorical variables in the dataset
