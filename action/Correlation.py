@@ -18,7 +18,6 @@ def correlation(dobj,ignoreIdentity=True,ignoreTranspose=True):
 		else:
 			return False
 	for obj in vizCollection:
-		
 		measures = obj.getObjByDataModel("measure")
 		if len(measures)<2 : raise ValueError(f"Can not compute correlation between {[x.columnName for x in obj.spec]} since less than 2 measure values present.")
 		msr1 = measures[0].columnName
@@ -26,14 +25,14 @@ def correlation(dobj,ignoreIdentity=True,ignoreTranspose=True):
 		
 		msr1Vals = list(obj.dataset.df[msr1])
 		msr2Vals = list(obj.dataset.df[msr2])
+
 		if (ignoreTranspose):
 			checkTranspose = checkTransposeNotComputed(dobj,msr1,msr2)
 		else:
 			checkTranspose = True
-
-		if (not checkTranspose):
+		if (checkTranspose):
 			obj.score = np.abs(scipy.stats.pearsonr(msr1Vals,msr2Vals)[0])
 		else:
-			obj.score = -1	
+			obj.score = -1
 	dobj.compiled.sort(removeInvalid=True)
 	dobj.recommendation["collection"] = dobj.compiled
