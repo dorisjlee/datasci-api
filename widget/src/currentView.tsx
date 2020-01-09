@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { VegaLite } from 'react-vega';
+import _ from 'lodash';
 interface currentViewProps{
     currentViewSpec: object
 }
@@ -13,17 +14,22 @@ class CurrentViewComponent extends Component<currentViewProps,any> {
             // console.log("selectedVis event:",event)
             console.log(vizLabel)
         }
-        return (
-            <div id="mainVizContainer">
-                <h2 id="mainVizTitle">Current View</h2>
-                <div id="mainVizInnerContainer">
-                    <div className="vizContainer" onClick={()=>selectedVis("main")}>
-                        <VegaLite spec={this.props.currentViewSpec}
-                                  padding={{left: 20, top: 5, right: 5, bottom: 20}} />
+        if (!_.isEmpty(this.props.currentViewSpec)){
+            return (
+                <div id="mainVizContainer">
+                    <h2 id="mainVizTitle">Current View</h2>
+                    <div id="mainVizInnerContainer">
+                        <div className="vizContainer" onClick={()=>selectedVis("main")}>
+                            <VegaLite spec={this.props.currentViewSpec}
+                                      padding={{left: 20, top: 5, right: 5, bottom: 20}} />
+                        </div>
                     </div>
                 </div>
-            </div>
-        );
+            );
+        }else{
+            return null
+        }
+        
     }
 }
 export default CurrentViewComponent;
