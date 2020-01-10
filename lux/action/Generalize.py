@@ -1,6 +1,5 @@
-from dataObj.dataObj import DataObj
-from dataObj.DataObjCollection import DataObjCollection
-from interestingness.valueBasedInterestingness import valueBasedInterestingness
+import lux
+from lux.interestingness.valueBasedInterestingness import valueBasedInterestingness
 # from compiler.Compiler import Compiler
 '''
 Shows possible visualizations when one attribute or filter from the current context is removed
@@ -22,21 +21,21 @@ def generalize(dobj):
 			if type(columns) == list:
 				for column in columns:
 					if column not in excludedColumns:
-						tempDataObj = DataObj(dobj.dataset, dobj.spec)
+						tempDataObj = lux.DataObj(dobj.dataset, dobj.spec)
 						tempDataObj.removeColumnFromSpecNew(column)
 						excludedColumns.append(column)
 						tempDataObj.score = 0.5#valueBasedInterestingness(tempDataObj)
 						output.append(tempDataObj)
 			elif type(columns) == str:
 				if columns not in excludedColumns:
-					tempDataObj = DataObj(dobj.dataset, dobj.spec)
+					tempDataObj = lux.DataObj(dobj.dataset, dobj.spec)
 					tempDataObj.removeColumnFromSpecNew(columns)
 					excludedColumns.append(columns)
 					tempDataObj.score = 0.5#valueBasedInterestingness(tempDataObj)
 		elif dobj.spec[i].className == "Row":
 			newSpec = dobj.spec.copy()
 			newSpec.pop(i)
-			tempDataObj = DataObj(dobj.dataset, newSpec)
+			tempDataObj = lux.DataObj(dobj.dataset, newSpec)
 			tempDataObj.score = 0.5#valueBasedInterestingness(tempDataObj)
 		tempDataObj.compile() # need to recompile
 		# compiler = Compiler()
@@ -44,7 +43,7 @@ def generalize(dobj):
 		# output.append(compiled)
 		output.append(tempDataObj.compiled)
 	# return(output)
-	dobj.recommendation["collection"] = DataObjCollection(output)
+	dobj.recommendation["collection"] = lux.DataObjCollection(output)
 
 
 	# vizCollection = dobj.compiled.collection
@@ -68,7 +67,7 @@ def generalize(dobj):
 	# 		#if there is more than one column in a data object, iterate through the columns and remove them one by one
 	# 		if numCol > 1:
 	# 			for column in columns:
-	# 				tempDataObj = DataObj(obj.dataset, obj.spec)
+	# 				tempDataObj = lux.DataObj(obj.dataset, obj.spec)
 	# 				tempDataObj.removeColumnFromSpec(column.columnName)
 
 	# 				if len(tempDataObj.spec) > 0 and tempDataObj.spec[0].columnName not in columnNames:
@@ -81,7 +80,7 @@ def generalize(dobj):
 	# 		#iterates through the rows of the data object and removes one row at a time
 	# 		for row in rows:
 	# 			#use the original dataset before any filtering occurs
-	# 			tempDataObj = DataObj(dobj.dataset, obj.getObjByRowColType("Column"))
+	# 			tempDataObj = lux.DataObj(dobj.dataset, obj.getObjByRowColType("Column"))
 	# 			#remove current row from the data object's specification
 	# 			originalRows = obj.getObjByRowColType("Row")
 	# 			newRows = originalRows.remove(row)

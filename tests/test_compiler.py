@@ -1,12 +1,8 @@
 from .context import lux
-from dataset.Dataset import Dataset
-from dataObj.dataObj import DataObj
-from dataObj.Row import Row
-from dataObj.Column import Column
 import pytest
 def test_underspecifiedSingleVis():
-	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
-	dobj = DataObj(dataset,[Column("MilesPerGal"),Column("Weight")])
+	dataset = lux.Dataset("lux/data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = lux.DataObj(dataset,[lux.Column("MilesPerGal"),lux.Column("Weight")])
 	assert dobj.spec[0].dataType == ""
 	assert dobj.spec[0].dataModel == ""
 
@@ -14,51 +10,51 @@ def test_underspecifiedSingleVis():
 	assert dobj.compiled.spec[0].dataModel=="measure"
 def test_underspecifiedVisCollection():
 	
-	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
-	dobj = DataObj(dataset,[Column(["Horsepower","Weight","Acceleration"]),Column(["Year"],channel="x")])
+	dataset = lux.Dataset("lux/data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = lux.DataObj(dataset,[lux.Column(["Horsepower","Weight","Acceleration"]),lux.Column(["Year"],channel="x")])
 	assert len(dobj.compiled.collection) ==3
 	for obj in dobj.compiled.collection: 
 		assert obj.getObjFromChannel("x")[0].columnName == "Year"
 
-	dobj = DataObj(dataset,[Column("?"),Column("Year",channel="x")])
+	dobj = lux.DataObj(dataset,[lux.Column("?"),lux.Column("Year",channel="x")])
 	assert len(dobj.compiled.collection) == len(dobj.dataset.df.columns)
 	# TODO: Doris need to debug showMe enforceSpecifiedChannel 2 dim, 0 msr (count()) cases
 	# for obj in dobj.compiled.collection: 
 	# 	assert obj.getObjFromChannel("x")[0].columnName == "Year"
 
-	dobj = DataObj(dataset,[Column("?",dataModel="measure"),Column("MilesPerGal",channel="y")])
+	dobj = lux.DataObj(dataset,[lux.Column("?",dataModel="measure"),lux.Column("MilesPerGal",channel="y")])
 	for obj in dobj.compiled.collection: 
 		assert obj.getObjFromChannel("y")[0].columnName == "MilesPerGal"
 	
-	dobj = DataObj(dataset,[Column("?",dataModel="measure"),Column("?",dataModel="measure")])
+	dobj = lux.DataObj(dataset,[lux.Column("?",dataModel="measure"),lux.Column("?",dataModel="measure")])
 	assert len(dobj.compiled.collection) == 25
 	# TODO: Jay: this example is not working, need pairwise combination of measure values (mostly counts now?)	
 def test_underspecifiedVisCollection_Z():
 	# check if the number of charts is correct
-	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
-	dobj = DataObj(dataset, [Column("MilesPerGal"), Row("Origin", "?")])
+	dataset = lux.Dataset("lux/data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = lux.DataObj(dataset, [lux.Column("MilesPerGal"), lux.Row("Origin", "?")])
 	assert type(dobj.compiled).__name__ == "DataObjCollection"
 	assert len(dobj.compiled.collection) == 3
 
-	dobj = DataObj(dataset,[Column("Horsepower"),Column("Brand"),Row("Origin",["Japan","USA"])])
+	dobj = lux.DataObj(dataset,[lux.Column("Horsepower"),lux.Column("Brand"),lux.Row("Origin",["Japan","USA"])])
 	assert type(dobj.compiled).__name__ == "DataObjCollection"
 	assert len(dobj.compiled.collection) == 2
 
-	dobj = DataObj(dataset,[Column(["Horsepower","Weight"]),Column("Brand"),Row("Origin",["Japan","USA"])])
+	dobj = lux.DataObj(dataset,[lux.Column(["Horsepower","Weight"]),lux.Column("Brand"),lux.Row("Origin",["Japan","USA"])])
 	assert len(dobj.compiled.collection) == 4
 
 	# test ? command
-	dobj = DataObj(dataset,[Column(["Horsepower","Weight"]),Column("Brand"),Row("Origin","?")])
+	dobj = lux.DataObj(dataset,[lux.Column(["Horsepower","Weight"]),lux.Column("Brand"),lux.Row("Origin","?")])
 	assert len(dobj.compiled.collection) == 6
 
 	# test if z axis has been filtered correctly
-	dobj = DataObj(dataset,[Column(["Horsepower","Weight"]),Column("Brand"),Row("Origin",["Japan","USA"])])
+	dobj = lux.DataObj(dataset,[lux.Column(["Horsepower","Weight"]),lux.Column("Brand"),lux.Row("Origin",["Japan","USA"])])
 	chartTitles = list(dobj.compiled.get("title"))
 	assert "Origin=USA" and "Origin=Japan" in chartTitles
 	assert "Origin=Europe" not in chartTitles
 
 	# test number of data points makes sense
-	dobj = DataObj(dataset,[Column(["Horsepower"]),Column("Brand"),Row("Origin","?")])
+	dobj = lux.DataObj(dataset,[lux.Column(["Horsepower"]),lux.Column("Brand"),lux.Row("Origin","?")])
 	def getNumDataPoints(dObj):
 		numRows = getattr(dObj, "dataset").df.shape[0]
 		# Might want to write catch error if key not in field
@@ -68,73 +64,73 @@ def test_underspecifiedVisCollection_Z():
 
 def test_autoencodingScatter():
 	# No channel specified
-	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
-	dobj = DataObj(dataset,[Column("MilesPerGal"),Column("Weight")])
+	dataset = lux.Dataset("lux/data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = lux.DataObj(dataset,[lux.Column("MilesPerGal"),lux.Column("Weight")])
 	assert dobj.compiled.getByColumnName("MilesPerGal")[0].channel == "x"
 	assert dobj.compiled.getByColumnName("Weight")[0].channel == "y"
 	# Partial channel specified
-	dobj = DataObj(dataset,[Column("MilesPerGal", channel="y"),Column("Weight")])
+	dobj = lux.DataObj(dataset,[lux.Column("MilesPerGal", channel="y"),lux.Column("Weight")])
 	assert dobj.compiled.getByColumnName("MilesPerGal")[0].channel == "y"
 	assert dobj.compiled.getByColumnName("Weight")[0].channel == "x"
 
 	# Full channel specified
-	dobj = DataObj(dataset,[Column("MilesPerGal", channel="y"),Column("Weight", channel="x")])
+	dobj = lux.DataObj(dataset,[lux.Column("MilesPerGal", channel="y"),lux.Column("Weight", channel="x")])
 	assert dobj.compiled.getByColumnName("MilesPerGal")[0].channel == "y"
 	assert dobj.compiled.getByColumnName("Weight")[0].channel == "x"
 	# Duplicate channel specified
 	with pytest.raises(ValueError):
 		# Should throw error because there should not be columns with the same channel specified
-		dobj = DataObj(dataset,[Column("MilesPerGal", channel="x"),Column("Weight", channel="x")])
+		dobj = lux.DataObj(dataset,[lux.Column("MilesPerGal", channel="x"),lux.Column("Weight", channel="x")])
 
 	
 def test_autoencodingHistogram():
-	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dataset = lux.Dataset("lux/data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
 	
 	# Partial channel specified
-	dobj = DataObj(dataset,[Column("MilesPerGal",channel="y")])
+	dobj = lux.DataObj(dataset,[lux.Column("MilesPerGal",channel="y")])
 	assert dobj.compiled.getByColumnName("MilesPerGal")[0].channel == "y"
 
-	dobj = DataObj(dataset,[Column("MilesPerGal", channel="x")])
+	dobj = lux.DataObj(dataset,[lux.Column("MilesPerGal", channel="x")])
 	assert dobj.compiled.getByColumnName("MilesPerGal")[0].channel == "x"
 	assert dobj.compiled.getByColumnName("count()")[0].channel == "y"
 
 def test_autoencodingLineChart():
-	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
-	dobj = DataObj(dataset,[Column("Year"),Column("Acceleration")])
+	dataset = lux.Dataset("lux/data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = lux.DataObj(dataset,[lux.Column("Year"),lux.Column("Acceleration")])
 	checkAttributeOnChannel(dobj,"Year","x")
 	checkAttributeOnChannel(dobj,"Acceleration","y")
 	# Partial channel specified
-	dobj = DataObj(dataset,[Column("Year", channel="y"),Column("Acceleration")])
+	dobj = lux.DataObj(dataset,[lux.Column("Year", channel="y"),lux.Column("Acceleration")])
 	checkAttributeOnChannel(dobj,"Year","y")
 	checkAttributeOnChannel(dobj,"Acceleration","x")
 
 	# Full channel specified
-	dobj = DataObj(dataset,[Column("Year", channel="y"),Column("Acceleration", channel="x")])
+	dobj = lux.DataObj(dataset,[lux.Column("Year", channel="y"),lux.Column("Acceleration", channel="x")])
 	checkAttributeOnChannel(dobj,"Year","y")
 	checkAttributeOnChannel(dobj,"Acceleration","x")
 	# Duplicate channel specified
 	with pytest.raises(ValueError):
 		# Should throw error because there should not be columns with the same channel specified
-		dobj = DataObj(dataset,[Column("Year", channel="x"),Column("Acceleration", channel="x")])
+		dobj = lux.DataObj(dataset,[lux.Column("Year", channel="x"),lux.Column("Acceleration", channel="x")])
 
 def test_autoencodingColorLineChart():
-	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
-	dobj = DataObj(dataset,[Column("Year"),Column("Acceleration"),Column("Origin")])
+	dataset = lux.Dataset("lux/data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = lux.DataObj(dataset,[lux.Column("Year"),lux.Column("Acceleration"),lux.Column("Origin")])
 	checkAttributeOnChannel(dobj,"Year","x")
 	checkAttributeOnChannel(dobj,"Acceleration","y")
 	checkAttributeOnChannel(dobj,"Origin","color")
 def test_autoencodingColorScatterChart():
-	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
-	dobj = DataObj(dataset,[Column("Horsepower"),Column("Acceleration"),Column("Origin")])
+	dataset = lux.Dataset("lux/data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = lux.DataObj(dataset,[lux.Column("Horsepower"),lux.Column("Acceleration"),lux.Column("Origin")])
 	checkAttributeOnChannel(dobj,"Origin","color")
-	dobj = DataObj(dataset,[Column("Horsepower"),Column("Acceleration",channel="color"),Column("Origin")])
+	dobj = lux.DataObj(dataset,[lux.Column("Horsepower"),lux.Column("Acceleration",channel="color"),lux.Column("Origin")])
 	checkAttributeOnChannel(dobj,"Acceleration","color")
 def test_populateOptions():
-	from compiler.Compiler import populateOptions
-	dataset = Dataset("data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
-	dobj = DataObj(dataset,[Column("?"),Column("MilesPerGal")])
+	from lux.compiler.Compiler import populateOptions
+	dataset = lux.Dataset("lux/data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
+	dobj = lux.DataObj(dataset,[lux.Column("?"),lux.Column("MilesPerGal")])
 	assert listEqual(populateOptions(dobj, dobj.spec[0]), list(dobj.dataset.df.columns))
-	dobj = DataObj(dataset,[Column("?",dataModel="measure"),Column("MilesPerGal")])
+	dobj = lux.DataObj(dataset,[lux.Column("?",dataModel="measure"),lux.Column("MilesPerGal")])
 	assert listEqual(populateOptions(dobj, dobj.spec[0]), ['Acceleration','Weight','Horsepower','MilesPerGal','Displacement'])
 
 def listEqual(l1,l2):

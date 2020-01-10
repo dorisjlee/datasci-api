@@ -1,8 +1,4 @@
-from lux.dataObj.dataObj import DataObj
-from lux.dataObj.dataObj import Row
-from lux.dataObj.dataObj import Column
-
-from lux.dataObj.DataObjCollection import DataObjCollection
+import lux
 from lux.interestingness.interestingness import interestingness
 import pandas as pd
 '''
@@ -28,16 +24,16 @@ def filter(dobj):
 					if uniqueValues[i] not in filterValues:
 						#create new Data Object
 						newSpec = columnSpec.copy()
-						newFilter = Row(fAttribute = row.fAttribute, fVal = uniqueValues[i])
+						newFilter = lux.Row(fAttribute = row.fAttribute, fVal = uniqueValues[i])
 						newSpec.append(newFilter)
-						tempDataObj = DataObj(dobj.dataset, newSpec)
+						tempDataObj = lux.DataObj(dobj.dataset, newSpec)
 						tempDataObj.score = interestingness(tempDataObj)
 
 						#recompile the new Data Object before appending to output
 						tempDataObj.compile()
 						output.append(tempDataObj.compiled)
 				completedFilters.append(row.fAttribute)
-		dobj.recommendation["collection"] = DataObjCollection(output)
+		dobj.recommendation["collection"] = lux.DataObjCollection(output)
 	#if Row is not specified, create filters using unique values from all categorical variables in the dataset
 	else:
 		categoricalVars = dobj.dataset.dataType['categorical']
@@ -46,11 +42,11 @@ def filter(dobj):
 			uniqueValues = dobj.dataset.df[cat].unique()
 			for i in range(0, len(uniqueValues)):
 				newSpec = columnSpec.copy()
-				newFilter = Row(fAttribute = cat, fVal = uniqueValues[i])
+				newFilter = lux.Row(fAttribute = cat, fVal = uniqueValues[i])
 				newSpec.append(newFilter)
-				tempDataObj = DataObj(dobj.dataset, newSpec)
+				tempDataObj = lux.DataObj(dobj.dataset, newSpec)
 				tempDataObj.score = interestingness(tempDataObj)
 
 				tempDataObj.compile()
 				output.append(tempDataObj.compiled)
-		dobj.recommendation["collection"] = DataObjCollection(output)
+		dobj.recommendation["collection"] = lux.DataObjCollection(output)
