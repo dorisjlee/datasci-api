@@ -46,12 +46,12 @@ input[type=text], select {
   flex: 1 0 auto;
   padding-right: 10px !important;
 }
-.vega-embed:hover{
+/* .vega-embed:hover{
   border: solid 1px;
   border-color: rgba(0, 0, 0, 0.4);
   box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.5);
   cursor: pointer;
-}  
+}   */
 .vega-embed:checked{
   border: solid 1px;
   border-color: blue;
@@ -86,13 +86,11 @@ input[type=text], select {
   color:black;
 }
 .graph-container{
-  width: 270px;
   height: 235px;
-  /* border: blue;
-  border-style: solid;
-  border-width: 1px; */
+  max-height: 270px;
   margin: 10px 0px 20px 5px;
   padding: 15px 0px 0px 0px;
+  overflow-y: auto;
 }
 #mainVizTitle{
   font-size: 20px;
@@ -108,9 +106,10 @@ input[type=text], select {
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
-  width: 80%;
+  min-width: 30%;
   height: 100%;
 }
+
 #mainVizInnerContainer{
   width: 300px;
   height: 245px;
