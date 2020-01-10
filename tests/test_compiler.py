@@ -30,7 +30,7 @@ def test_underspecifiedVisCollection():
 		assert obj.getObjFromChannel("y")[0].columnName == "MilesPerGal"
 	
 	dobj = DataObj(dataset,[Column("?",dataModel="measure"),Column("?",dataModel="measure")])
-	assert len(dobj.compiled.collection) == 36
+	assert len(dobj.compiled.collection) == 25
 	# TODO: Jay: this example is not working, need pairwise combination of measure values (mostly counts now?)	
 def test_underspecifiedVisCollection_Z():
 	# check if the number of charts is correct
@@ -134,7 +134,7 @@ def test_populateOptions():
 	dobj = DataObj(dataset,[Column("?"),Column("MilesPerGal")])
 	assert listEqual(populateOptions(dobj, dobj.spec[0]), list(dobj.dataset.df.columns))
 	dobj = DataObj(dataset,[Column("?",dataModel="measure"),Column("MilesPerGal")])
-	assert listEqual(populateOptions(dobj, dobj.spec[0]), ['Acceleration','Weight','Horsepower','MilesPerGal','Cylinders','Displacement'])
+	assert listEqual(populateOptions(dobj, dobj.spec[0]), ['Acceleration','Weight','Horsepower','MilesPerGal','Displacement'])
 
 def listEqual(l1,l2):
     l1.sort()
