@@ -1,5 +1,7 @@
 #widgetContainer{
   height:312px;
+  width:100%;
+  display:inline-flex;
 }
 input[type=text], select {
   width: 100%;
@@ -24,7 +26,7 @@ input[type=text], select {
   /* padding-top: 10px; */
   height: 100%;
   box-sizing: border-box;
-  width: 70%;
+  width: 100%;
   position: relative;
 }
 .recommendationContentOuter{
@@ -95,18 +97,18 @@ input[type=text], select {
 #mainVizTitle{
   font-size: 20px;
   display: inline-block;
-  left: 30%;
+  left: 10%;
   top: 0px;
   position: absolute;
 }
 #mainVizContainer{
   padding: 10px 10px 0px 0px;
-  position: absolute;
+  /* position: absolute; */
   border: 0.5px solid #bcbdbd;
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
-  width: 30%;
+  width: 80%;
   height: 100%;
 }
 #mainVizInnerContainer{
@@ -117,9 +119,8 @@ input[type=text], select {
   position: absolute;
 }
 #tabBanner{
-  position: relative;
-  left: 30%;
-  /* height: 42px; */
+  width: auto;
+  overflow: hidden;
 }
 #exportBtn{
   position: absolute;
