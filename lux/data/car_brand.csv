@@ -21,13 +21,13 @@ datsun pl510,datsun
 volkswagen 1131 deluxe sedan,volkswagen
 peugeot 504,peugeot
 audi 100 ls,audi
-saab 99e,saab
-bmw 2002,bmw
+saab 99e,others
+bmw 2002,others
 amc gremlin,amc
 ford f250,ford
 chevy c20,chevrolet
 dodge d200,dodge
-hi 1200d,hi
+hi 1200d,others
 chevrolet vega 2300,chevrolet
 toyota corona,toyota
 plymouth satellite custom,plymouth
@@ -42,7 +42,7 @@ chevrolet vega (sw),chevrolet
 pontiac firebird,pontiac
 ford mustang,ford
 mercury capri 2000,mercury
-opel 1900,opel
+opel 1900,others
 peugeot 304,peugeot
 fiat 124b,fiat
 toyota corolla 1200,toyota
@@ -67,7 +67,7 @@ plymouth satellite custom (sw),plymouth
 volvo 145e (sw),volvo
 volkswagen 411 (sw),volkswagen
 peugeot 504 (sw),peugeot
-renault 12 (sw),renault
+renault 12 (sw),others
 ford pinto (sw),ford
 datsun 510 (sw),datsun
 toyouta corona mark ii (sw),toyota
@@ -99,11 +99,11 @@ fiat 124 sport coupe,fiat
 chevrolet monte carlo s,chevrolet
 pontiac grand prix,pontiac
 fiat 128,fiat
-opel manta,opel
+opel manta,others
 audi 100ls,audi
 volvo 144ea,volvo
 dodge dart custom,dodge
-saab 99le,saab
+saab 99le,others
 toyota mark ii,toyota
 oldsmobile omega,oldsmobile
 chevrolet nova,chevrolet
@@ -118,7 +118,7 @@ datsun 710,datsun
 dodge colt,dodge
 fiat 124 tc,fiat
 honda civic,honda
-subaru,subaru
+subaru,others
 fiat x1.9,fiat
 plymouth valiant custom,plymouth
 mercury monarch,mercury
@@ -138,7 +138,7 @@ volvo 244dl,volvo
 honda civic cvcc,honda
 fiat 131,fiat
 capri ii,ford
-renault 12tl,renault
+renault 12tl,others
 dodge coronet brougham,dodge
 chevrolet chevette,chevrolet
 chevrolet woody,chevrolet
@@ -150,14 +150,14 @@ amc pacer d/l,amc
 datsun b-210,datsun
 volvo 245,volvo
 plymouth volare premier v8,plymouth
-mercedes-benz 280s,mercedes
-cadillac seville,cadillac
+mercedes-benz 280s,others
+cadillac seville,others
 chevy c10,chevrolet
 ford f108,ford
 dodge d100,dodge
 honda Accelerationord cvcc,honda
-buick opel isuzu deluxe,buick
-renault 5 gtl,renault
+buick opel isuzu deluxe,others
+renault 5 gtl,others
 plymouth arrow gs,plymouth
 datsun f-10 hatchback,datsun
 oldsmobile cutlass supreme,oldsmobile
@@ -176,9 +176,9 @@ pontiac sunbird coupe,pontiac
 toyota corolla liftback,toyota
 ford mustang ii 2+2,ford
 dodge colt m/m,dodge
-subaru dl,subaru
+subaru dl,others
 datsun 810,datsun
-bmw 320i,bmw
+bmw 320i,others
 mazda rx-4,mazda
 volkswagen rabbit custom diesel,volkswagen
 ford fiesta,ford
@@ -207,7 +207,7 @@ oldsmobile starfire sx,oldsmobile
 datsun 200-sx,datsun
 audi 5000,audi
 volvo 264gl,volvo
-saab 99gle,saab
+saab 99gle,others
 peugeot 604sl,peugeot
 volkswagen scirocco,volkswagen
 honda Accelerationord lx,honda
@@ -225,8 +225,8 @@ vw rabbit custom,volkswagen
 maxda glc deluxe,mazda
 dodge colt hatchback custom,dodge
 amc spirit dl,amc
-mercedes benz 300d,mercedes
-cadillac eldorado,cadillac
+mercedes benz 300d,others
+cadillac eldorado,others
 plymouth horizon,plymouth
 plymouth horizon tc3,plymouth
 datsun 210,datsun
@@ -246,12 +246,12 @@ mazda glc,mazda
 vw rabbit c (diesel),volkswagen
 vw dasher (diesel),volkswagen
 audi 5000s (diesel),audi
-mercedes-benz 240d,mercedes
+mercedes-benz 240d,others
 honda civic 1500 gl,honda
 vokswagen rabbit,volkswagen
 datsun 280-zx,datsun
 mazda rx-7 gs,mazda
-triumph tr7 coupe,triumph
+triumph tr7 coupe,others
 honda Accelerationord,honda
 plymouth reliant,plymouth
 dodge aries wagon (sw),dodge
@@ -284,7 +284,7 @@ mazda glc custom l,mazda
 mazda glc custom,mazda
 plymouth horizon miser,plymouth
 mercury lynx l,mercury
-nissan stanza xe,nissan
+nissan stanza xe,others
 honda civic (auto),honda
 datsun 310 gx,datsun
 buick century limited,buick

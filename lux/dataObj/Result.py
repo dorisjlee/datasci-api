@@ -16,24 +16,24 @@ class Result:
         dobj_dict = {}
         dobj = self.resultsDataObjs[0]
         # Current View (if any)
-        if (type(dobj.compiled).__name__ == "DataObj"):
-            dobj_dict["currentView"] = dobj.compiled.renderVSpec()
-        if (type(dobj.compiled).__name__ == "DataObjCollection"):
-            # if the compiled object is a collection, see if we can remove the elements with "?" and generate a Current View
-            specifiedDobj = dobj.getVariableFieldsRemoved()
-            if (specifiedDobj.spec!=[]): specifiedDobj.compile(enumerateCollection=False)
-            if (currentView!=""):
-                dobj_dict["currentView"] = currentView.compiled.renderVSpec()
-            elif (specifiedDobj.isEmpty()):
-                dobj_dict["currentView"] = {}
-            else:
-                specifiedDobj.compile(enumerateCollection=False)
-                dobj_dict["currentView"] = specifiedDobj.compiled.renderVSpec()
-            if (dobj.recommendations==[]):
-                visCollection = {"action": "Vis Collection",
-                    "collection":dobj.compiled
-                }
-                dobj.recommendations.append(visCollection)
+        # if (type(dobj.compiled).__name__ == "DataObj"):
+        #     dobj_dict["currentView"] = dobj.compiled.renderVSpec()
+        # if (type(dobj.compiled).__name__ == "DataObjCollection"):
+        # if the compiled object is a collection, see if we can remove the elements with "?" and generate a Current View
+        specifiedDobj = dobj.getVariableFieldsRemoved()
+        if (specifiedDobj.spec!=[]): specifiedDobj.compile(enumerateCollection=False)
+        if (currentView!=""):
+            dobj_dict["currentView"] = currentView.compiled.renderVSpec()
+        elif (specifiedDobj.isEmpty()):
+            dobj_dict["currentView"] = {}
+        else:
+            specifiedDobj.compile(enumerateCollection=False)
+            dobj_dict["currentView"] = specifiedDobj.compiled.renderVSpec()
+        if (dobj.recommendations==[]):
+            visCollection = {"action": "Vis Collection",
+                "collection":dobj.compiled
+            }
+            dobj.recommendations.append(visCollection)
         # Recommended Collection
         dobj_dict["recommendations"] = []
         import copy

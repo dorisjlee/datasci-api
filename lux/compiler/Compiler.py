@@ -90,8 +90,8 @@ class Compiler:
 		else:
 			collection = self.generateCollection(colAttrs, rowVals, fAttr, dobj)
 			return collection
-
-	def determineEncoding(self, dobj):
+	@classmethod
+	def determineEncoding(cls, dobj):
 		'''
 		determineEncoding populates dobj with the appropriate mark type and channel information
 
@@ -128,39 +128,12 @@ class Compiler:
 				return "bar", {"x": measure, "y": dimension}
 		# TODO: if cardinality large than 6 then sort bars
 
-		def enforceSpecifiedChannel(dobj, autoChannel):
-			resultDict = {}  # result of enforcing specified channel will be stored in resultDict
-			specifiedDict = {}  # specifiedDict={"x":[],"y":[list of Dobj with y specified as channel]}
-			# create a dictionary of specified channels in the given dobj
-			for val in autoChannel.keys():
-				specifiedDict[val] = dobj.getObjFromChannel(val)
-				resultDict[val] = ""
-			# for every element, replace with what's in specifiedDict if specified
-			for sVal, sAttr in specifiedDict.items():
-				if (len(sAttr) == 1):  # if specified in dobj
-					# remove the specified channel from autoChannel (matching by value, since channel key may not be same)
-					for i in list(autoChannel.keys()):
-						if (autoChannel[i].columnName == sAttr[0].columnName):
-							autoChannel.pop(i)
-					sAttr[0].channel = sVal
-					resultDict[sVal] = sAttr[0]
-				elif (len(sAttr) > 1):
-					raise ValueError("There should not be more than one attribute specified in the same channel.")
-			# For the leftover channels that are still unspecified in resultDict,
-			# and the leftovers in the autoChannel specification,
-			# step through them together and fill it automatically.
-			leftover_channels = list(filter(lambda x: resultDict[x] == '', resultDict))
-			for leftover_channel, leftover_encoding in zip(leftover_channels, autoChannel.values()):
-				leftover_encoding.channel = leftover_channel
-				resultDict[leftover_channel] = leftover_encoding
-			dobj.spec = list(resultDict.values())
-			return dobj
-
 		# ShowMe logic + additional heuristics
 		countCol = Column("count()", dataModel="measure")
 		xAttr = dobj.getObjFromChannel("x")
 		yAttr = dobj.getObjFromChannel("y")
 		zAttr = dobj.getObjFromChannel("z")
+		autoChannel={}
 		if (Ndim == 0 and Nmsr == 1):
 			# Histogram with Count on the y axis
 			measure = dobj.getObjByDataModel("measure")[0]
@@ -172,7 +145,7 @@ class Compiler:
 			# Line or Bar Chart
 			# if x is unspecified
 			if (Nmsr == 0):
-				countCol.channel = "y"
+				countCol.channel = "x"
 				dobj.spec.append(countCol)
 			dimension = dobj.getObjByDataModel("dimension")[0]
 			measure = dobj.getObjByDataModel("measure")[0]
@@ -226,12 +199,38 @@ class Compiler:
 			autoChannel = {"x": dobj.spec[0],
 						   "y": dobj.spec[1],
 						   "color": dobj.spec[2]}
-
-		dobj = enforceSpecifiedChannel(dobj, autoChannel)
-		dobj.spec.extend(rowLst)  # add back the preserved row objects
+		if (autoChannel!={}):
+			dobj = cls.enforceSpecifiedChannel(dobj, autoChannel) 
+			dobj.spec.extend(rowLst)  # add back the preserved row objects
 		return dobj
-
-
+	@staticmethod
+	def enforceSpecifiedChannel(dobj, autoChannel):
+		resultDict = {}  # result of enforcing specified channel will be stored in resultDict
+		specifiedDict = {}  # specifiedDict={"x":[],"y":[list of Dobj with y specified as channel]}
+		# create a dictionary of specified channels in the given dobj
+		for val in autoChannel.keys():
+			specifiedDict[val] = dobj.getObjFromChannel(val)
+			resultDict[val] = ""
+		# for every element, replace with what's in specifiedDict if specified
+		for sVal, sAttr in specifiedDict.items():
+			if (len(sAttr) == 1):  # if specified in dobj
+				# remove the specified channel from autoChannel (matching by value, since channel key may not be same)
+				for i in list(autoChannel.keys()):
+					if (autoChannel[i].columnName == sAttr[0].columnName):
+						autoChannel.pop(i)
+				sAttr[0].channel = sVal
+				resultDict[sVal] = sAttr[0]
+			elif (len(sAttr) > 1):
+				raise ValueError("There should not be more than one attribute specified in the same channel.")
+		# For the leftover channels that are still unspecified in resultDict,
+		# and the leftovers in the autoChannel specification,
+		# step through them together and fill it automatically.
+		leftover_channels = list(filter(lambda x: resultDict[x] == '', resultDict))
+		for leftover_channel, leftover_encoding in zip(leftover_channels, autoChannel.values()):
+			leftover_encoding.channel = leftover_channel
+			resultDict[leftover_channel] = leftover_encoding
+		dobj.spec = list(resultDict.values())
+		return dobj
 def convert2List(x):
 	'''
 	"a" --> ["a"]

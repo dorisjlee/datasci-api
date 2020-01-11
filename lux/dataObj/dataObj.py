@@ -236,13 +236,14 @@ class DataObj:
         return enhance(self)
     def overview(self):
         dataset = self.dataset
-        from lux.action.Correlation import correlation
-        dobj = lux.DataObj(dataset,[lux.Column("?",dataModel="measure"),lux.Column("?",dataModel="measure")])
-        result = dobj.correlation()
-
         from lux.action.Distribution import distribution
         dobj = lux.DataObj(dataset,[lux.Column("?",dataModel="measure")])
-        result2 = dobj.distribution()
+        result = dobj.distribution()
+
+        from lux.action.Correlation import correlation
+        dobj = lux.DataObj(dataset,[lux.Column("?",dataModel="measure"),lux.Column("?",dataModel="measure")])
+        result2 = dobj.correlation()
+
         # Merge the two Result object from the two actions
         result.mergeResult(result2)
         return result
@@ -251,21 +252,26 @@ class DataObj:
         preprocessing.aggregate(self)
         preprocessing.interpolate(self, 100)
         preprocessing.normalize(self)
-    def similarPattern(self,query):
+    def similarPattern(self,query,topK=-1):
         from lux.service.patternSearch.similarityDistance import euclideanDist
         from lux.compiler.Compiler import applyDataTransformations
+        result = lux.Result()
         rowSpecs = list(filter(lambda x: x.className == "Row", query.spec))
         if(len(rowSpecs) == 1):
             query.dataset = applyDataTransformations(query.dataset,rowSpecs[0].fAttribute,rowSpecs[0].fVal)
             query.preprocess()
             #for loop to create assign euclidean distance
-            self.recommendation = {"action":"Similarity",
+            recommendation = {"action":"Similarity",
                                    "description":"Show other charts that are visually similar to the Current View."}
             for dobj in self.compiled.collection:
                 dobj.preprocess()
                 dobj.score = euclideanDist(query, dobj)
             self.compiled.normalizeScore(invertOrder=True)
             self.compiled.sort(removeInvalid=True)
-            self.recommendation["collection"] = self.compiled
+            if(topK!=-1):
+                self.compiled = self.compiled.topK(topK)
+            recommendation["collection"] = self.compiled
+            result.addResult(recommendation,dobj)
+            return result
         else:
             print("Query needs to have 1 row value")

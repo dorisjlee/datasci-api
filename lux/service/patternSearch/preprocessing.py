@@ -1,5 +1,5 @@
+import lux
 import pandas as pd
-from dataset.Dataset import Dataset
 import math
 def aggregate(dobj):
 # find y axis then aggregate on it
@@ -8,7 +8,7 @@ def aggregate(dobj):
 		xAxis = dobj.getObjFromChannel("x")[0].columnName
 		yAxis = dobj.getObjFromChannel("y")[0].columnName
 
-		dobj.transformedDataset = Dataset(dobj.dataset.filename, dobj.dataset.schema)
+		dobj.transformedDataset = lux.Dataset(dobj.dataset.filename, dobj.dataset.schema)
 
 		dobj.transformedDataset.df = dobj.dataset.df[[xAxis,yAxis]].groupby(xAxis,as_index=False).agg({yAxis:'mean'})
 

@@ -7,6 +7,7 @@ class BarChart(AltairChart):
 	def __repr__(self):
 		return f"Bar Chart <{str(self.dobj)}>"
 	def initializeChart(self):
+		self.tooltip = False
 		xAttr = self.dobj.getObjFromChannel("x")[0]
 		yAttr = self.dobj.getObjFromChannel("y")[0]
 		if (xAttr.dataModel == "measure"):
@@ -23,7 +24,8 @@ class BarChart(AltairChart):
 			    y = yAttrField,
 			    x = xAttrField
 			)
-		chart = chart.configure_mark(tooltip=alt.TooltipContent('encoding')) # Setting tooltip as non-null
+		# TODO: tooltip messes up the count() bar charts
+		# chart = chart.configure_mark(tooltip=alt.TooltipContent('encoding')) # Setting tooltip as non-null
 		# Can not do interactive whenever you have default count measure otherwise output strange error (Javascript Error: Cannot read property 'length' of undefined)
 		#chart = chart.interactive() # If you want to enable Zooming and Panning
 		return chart 
