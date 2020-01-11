@@ -19,18 +19,18 @@ def test_generalize():
 	dataset = lux.Dataset("lux/data/cars.csv",schema=[{"Year":{"dataType":"date"}}])
 
 	dobj = lux.DataObj(dataset,[lux.Column("Acceleration"), lux.Column("Horsepower")])
-	dobj.generalize()
+	result = dobj.generalize()
 	# assert math.isclose(generalizedList[0].score, 40952, rel_tol=0.01) 
 	# assert math.isclose(generalizedList[1].score, 6092.2, rel_tol=0.01) 
-	assert len(dobj.recommendation["collection"].collection) == 2
+	assert len(result.resultsJSON[0]["collection"].collection) == 2
 
 	dobj = lux.DataObj(dataset,[lux.Column("MilesPerGal"),lux.Column("Weight"),lux.Column("Origin")])
-	dobj.generalize()
-	assert len(dobj.recommendation["collection"].collection) == 3 
+	result = dobj.generalize()
+	assert len(result.resultsJSON[0]["collection"].collection) == 3 
 
 	dobj = lux.DataObj(dataset,[lux.Column("Acceleration"), lux.Column("Horsepower"),lux.Row(fAttribute="Origin",fVal="USA")])
-	dobj.generalize()
-	assert len(dobj.recommendation["collection"].collection) == 3
+	result = dobj.generalize()
+	assert len(result.resultsJSON[0]["collection"].collection) == 3
 	# dobj = lux.DataObj(dataset,[lux.Column(["Acceleration", "Horsepower"]),lux.Row(fAttribute="Origin",fVal="USA")])
 	# dobj.generalize()
 	# assert math.isclose(generalizedList[0].score, 29167, rel_tol=0.01) 
