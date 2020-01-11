@@ -7,7 +7,7 @@ def correlation(dobj,ignoreIdentity=True,ignoreTranspose=True):
 	import scipy.stats
 	import numpy as np
 	# TODO: need to make this work for DataObject (when input is not collection and just a single DataObject)
-	dobj.recommendation = {"action":"Correlation",
+	recommendation = {"action":"Correlation",
 						   "description":"Show relationships between two quantitative variables."}
 	vizCollection = dobj.compiled.collection
 	if (ignoreIdentity): vizCollection =  filter(lambda x: x.spec[0].columnName!=x.spec[1].columnName,dobj.compiled.collection)
@@ -35,4 +35,6 @@ def correlation(dobj,ignoreIdentity=True,ignoreTranspose=True):
 		else:
 			obj.score = -1
 	dobj.compiled.sort(removeInvalid=True)
-	dobj.recommendation["collection"] = dobj.compiled
+	recommendation["collection"] = dobj.compiled
+	# dobj.recommendations.append(recommendation)
+	return recommendation

@@ -4,3 +4,4 @@ from lux.dataObj.dataObj import DataObj
 from lux.dataObj.DataObjCollection import DataObjCollection
 from lux.dataObj.Row import Row
 from lux.dataObj.Column import Column
+from lux.dataObj.Result import Result

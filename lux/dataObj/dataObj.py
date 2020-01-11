@@ -20,8 +20,7 @@ class DataObj:
         self.type = ""
         self.mark = ""
         self.score = -1
-        self.recommendation = {}
-        self.widgetJSON = {}
+        self.recommendations = []
         self.compile()
 
     def __repr__(self):
@@ -75,58 +74,6 @@ class DataObj:
 
     def isEmpty(self):
         return self.spec == []
-
-    def toJSON(self,currentView=""):
-        dobj_dict = {}
-        # Current View (if any)
-        if (type(self.compiled).__name__ == "DataObj"):
-            dobj_dict["currentView"] = self.compiled.renderVSpec()
-        if (type(self.compiled).__name__ == "DataObjCollection"):
-            # if the compiled object is a collection, see if we can remove the elements with "?" and generate a Current View
-            specifiedDobj = self.getVariableFieldsRemoved()
-            if (specifiedDobj.spec!=[]): specifiedDobj.compile(enumerateCollection=False)
-            if (currentView!=""):
-                dobj_dict["currentView"] = currentView.compiled.renderVSpec()
-            elif (specifiedDobj.isEmpty()):
-                dobj_dict["currentView"] = {}
-            else:
-                specifiedDobj.compile(enumerateCollection=False)
-                dobj_dict["currentView"] = specifiedDobj.compiled.renderVSpec()
-            if (self.recommendation=={}):
-                self.recommendation = {"action": "Vis Collection",
-                    "collection":self.compiled
-                }
-        # Recommended Collection
-        dobj_dict["recommendations"] = []
-        import copy
-        recCopy= copy.copy(self.recommendation)
-        if (recCopy != {}):
-            recCopy["vspec"] = []
-            for vis in recCopy["collection"].collection:
-                chart = vis.renderVSpec()
-                recCopy["vspec"].append(chart)
-            dobj_dict["recommendations"].append(recCopy)
-            # delete DataObjectCollection since not JSON serializable
-            del dobj_dict["recommendations"][0]["collection"]
-        return dobj_dict
-
-    def display(self, renderer="altair", currentView=""):
-        # render this data object as: vis, columns, etc.?
-        # import widgetDisplay
-        # if (renderer=="altair"):
-        # 	renderer = AltairRenderer()
-        # chart = renderer.createVis(self.compiled)
-        # widget = widgetDisplay.Mockup(graphSpecs = [chart.to_dict()])
-        # return widget
-        # return chart
-        import displayWidget
-        widgetJSON = self.toJSON(currentView=currentView)
-        widget = displayWidget.DisplayWidget(
-            # data=json.loads(self.dataset.df.to_json(orient='records')),
-            currentView=widgetJSON["currentView"],
-            recommendations=widgetJSON["recommendations"]
-        )
-        return widget
 
     def singleDisplay(self, renderer="altair"):
         # For debugging only:
@@ -235,7 +182,20 @@ class DataObj:
     def enhance(self):
         from lux.action.Enhance import enhance
         return enhance(self)
+    def overview(self):
+        from lux.action.Correlation import correlation
+        resultset = lux.Result()
+        dobj = lux.DataObj(self.dataset,[lux.Column("?",dataModel="measure"),lux.Column("?",dataModel="measure")])
+        result = correlation(dobj)
+        resultset.resultsJSON.append(result)
+        resultset.resultsDataObjs.append(dobj)
 
+        from lux.action.Distribution import distribution
+        dobj = lux.DataObj(self.dataset,[lux.Column("?",dataModel="measure")])
+        result = distribution(dobj)
+        resultset.resultsJSON.append(result)
+        resultset.resultsDataObjs.append(dobj)
+        return resultset
     def preprocess(self):
         from lux.service.patternSearch import preprocessing
         preprocessing.aggregate(self)

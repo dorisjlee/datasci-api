@@ -8,7 +8,7 @@ def distribution(dobj):
 	# -->  return DataObjectCollection with the scores 
 	import scipy.stats
 	import numpy as np
-	dobj.recommendation = {"action":"Distribution",
+	recommendation = {"action":"Distribution",
 						   "description":"Show univariate count distributions of different attributes in the dataset."}
 	vizCollection = dobj.compiled.collection
 	for obj in vizCollection:
@@ -23,4 +23,6 @@ def distribution(dobj):
 			obj.score = 0.5
 
 	dobj.compiled.sort()
-	dobj.recommendation["collection"] = dobj.compiled
+	recommendation["collection"] = dobj.compiled
+	# dobj.recommendations.append(recommendation)
+	return recommendation
