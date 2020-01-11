@@ -22,7 +22,8 @@ class DataObj:
         self.type = ""
         self.mark = ""
         self.score = -1
-        self.recommendations = []
+        self.recommendations = [] # for the Result recommendations
+        self.recommendation = {} # for the display() and toJSON() in DataObj
         self.compile()
 
     def __repr__(self):
@@ -148,9 +149,6 @@ class DataObj:
     # 	dataset = Dataset(df = df)
     # 	return DataObj(dataset)
     # Mappers to Action classes
-    def correlation(self):
-        from action.Correlation import correlation
-        correlation(self)
 
     # TODO: move to global class method when there is an overall module for API
     # def fromDataFrame(df):
@@ -167,16 +165,68 @@ class DataObj:
     # Mappers to Action classes
     def correlation(self):
         from lux.action.Correlation import correlation
-        correlation(self)
+        return correlation(self)
 
     def distribution(self):
         from lux.action.Distribution import distribution
-        distribution(self)
+        return distribution(self)
 
     def generalize(self):
         from lux.action.Generalize import generalize
         return generalize(self)
 
+    def toJSON(self,currentView=""):
+        dobj_dict = {}
+        # Current View (if any)
+        if (type(self.compiled).__name__ == "DataObj"):
+            dobj_dict["currentView"] = self.compiled.renderVSpec()
+        if (type(self.compiled).__name__ == "DataObjCollection"):
+            # if the compiled object is a collection, see if we can remove the elements with "?" and generate a Current View
+            specifiedDobj = self.getVariableFieldsRemoved()
+            if (specifiedDobj.spec!=[]): specifiedDobj.compile(enumerateCollection=False)
+            if (currentView!=""):
+                dobj_dict["currentView"] = currentView.compiled.renderVSpec()
+            elif (specifiedDobj.isEmpty()):
+                dobj_dict["currentView"] = {}
+            else:
+                specifiedDobj.compile(enumerateCollection=False)
+                dobj_dict["currentView"] = specifiedDobj.compiled.renderVSpec()
+            if (self.recommendation=={}):
+                self.recommendation = {"action": "Vis Collection",
+                    "collection":self.compiled
+                }
+        # Recommended Collection
+        dobj_dict["recommendations"] = []
+        import copy
+        recCopy= copy.copy(self.recommendation)
+        if (recCopy != {}):
+            recCopy["vspec"] = []
+            for vis in recCopy["collection"].collection:
+                chart = vis.renderVSpec()
+                recCopy["vspec"].append(chart)
+            dobj_dict["recommendations"].append(recCopy)
+            # delete DataObjectCollection since not JSON serializable
+            del dobj_dict["recommendations"][0]["collection"]
+        return dobj_dict
+
+    def display(self, renderer="altair", currentView=""):
+        # render this data object as: vis, columns, etc.?
+        # import widgetDisplay
+        # if (renderer=="altair"):
+        # 	renderer = AltairRenderer()
+        # chart = renderer.createVis(self.compiled)
+        # widget = widgetDisplay.Mockup(graphSpecs = [chart.to_dict()])
+        # return widget
+        # return chart
+        import displayWidget
+        widgetJSON = self.toJSON(currentView=currentView)
+        widget = displayWidget.DisplayWidget(
+            # data=json.loads(self.dataset.df.to_json(orient='records')),
+            currentView=widgetJSON["currentView"],
+            recommendations=widgetJSON["recommendations"]
+        )
+        return widget
+        
     def filter(self):
         from lux.action.Filter import filter
         return filter(self)
@@ -188,11 +238,11 @@ class DataObj:
         dataset = self.dataset
         from lux.action.Correlation import correlation
         dobj = lux.DataObj(dataset,[lux.Column("?",dataModel="measure"),lux.Column("?",dataModel="measure")])
-        result = correlation(dobj)
+        result = dobj.correlation()
 
         from lux.action.Distribution import distribution
         dobj = lux.DataObj(dataset,[lux.Column("?",dataModel="measure")])
-        result2 = distribution(dobj)
+        result2 = dobj.distribution()
         # Merge the two Result object from the two actions
         result.mergeResult(result2)
         return result

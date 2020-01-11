@@ -1,3 +1,4 @@
+import lux
 from lux.dataObj.dataObj import DataObj
 from lux.dataObj.dataObj import Row
 from lux.dataObj.dataObj import Column
@@ -9,8 +10,9 @@ import pandas as pd
 Shows possible visualizations when an additional attribute is added to the current view
 '''
 def enhance(dobj):
-	dobj.recommendation = {"action":"Enhance",
-						   "description":"Shows possible visualizations when an additional attribute is added to the current view."}
+	result = lux.Result()
+	recommendation = {"action":"Enhance",
+					"description":"Shows possible visualizations when an additional attribute is added to the current view."}
 	quantitativeVars = dobj.dataset.dataType['quantitative']
 	categoricalVars = dobj.dataset.dataType['categorical']
 	output = []
@@ -43,4 +45,6 @@ def enhance(dobj):
 
 			tempDataObj.compile()
 			output.append(tempDataObj.compiled)
-	dobj.recommendation["collection"] = DataObjCollection(output)
+	recommendation["collection"] = DataObjCollection(output)
+	result.addResult(recommendation,dobj)
+	return result
