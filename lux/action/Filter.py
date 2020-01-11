@@ -5,7 +5,8 @@ import pandas as pd
 Shows possible visualizations when filtered by categorical variables in the data object's dataset
 '''
 def filter(dobj):
-	dobj.recommendation = {"action":"Filter",
+	result = lux.Result()
+	recommendation = {"action":"Filter",
 						   "description":"Shows possible visualizations when filtered by categorical variables in the data object's dataset."}
 	filters = dobj.getObjByRowColType("Row")
 	filterValues = []
@@ -33,7 +34,7 @@ def filter(dobj):
 						tempDataObj.compile()
 						output.append(tempDataObj.compiled)
 				completedFilters.append(row.fAttribute)
-		dobj.recommendation["collection"] = lux.DataObjCollection(output)
+		recommendation["collection"] = lux.DataObjCollection(output)
 	#if Row is not specified, create filters using unique values from all categorical variables in the dataset
 	else:
 		categoricalVars = dobj.dataset.dataType['categorical']
@@ -49,4 +50,6 @@ def filter(dobj):
 
 				tempDataObj.compile()
 				output.append(tempDataObj.compiled)
-		dobj.recommendation["collection"] = lux.DataObjCollection(output)
+		recommendation["collection"] = lux.DataObjCollection(output)
+	result.addResult(recommendation,dobj)
+	return result

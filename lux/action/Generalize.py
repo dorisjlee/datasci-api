@@ -9,7 +9,8 @@ def generalize(dobj):
 	# -->  return list of dataObjects with corresponding interestingness scores 
 	import scipy.stats
 	import numpy as np
-	dobj.recommendation = {"action":"Generalize",
+	result = lux.Result()
+	recommendation = {"action":"Generalize",
 						   "description":"Remove one attribute or filter to observe a more general trend."}
 	output = []
 	excludedColumns = []
@@ -43,9 +44,9 @@ def generalize(dobj):
 		# output.append(compiled)
 		output.append(tempDataObj.compiled)
 	# return(output)
-	dobj.recommendation["collection"] = lux.DataObjCollection(output)
-
-
+	recommendation["collection"] = lux.DataObjCollection(output)
+	result.addResult(recommendation,dobj)
+	return result
 	# vizCollection = dobj.compiled.collection
 	# #list that will contain the DataObjs to be returned in the output
 	# outputDataCollection = []

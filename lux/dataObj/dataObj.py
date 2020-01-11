@@ -275,3 +275,12 @@ class DataObj:
             return result
         else:
             print("Query needs to have 1 row value")
+    def showMore(self):
+        currentViewExist = self.compiled.spec==[]
+        if (currentViewExist):
+            result = self.enhance()
+            result = self.filter()
+            result = self.generalize()
+        else: 
+            result = self.overview()
+        return result
