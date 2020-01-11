@@ -5,7 +5,12 @@ class Result:
 
     def __repr__(self):
         return f"Result[{self.resultsJSON}]"
-	
+    def mergeResult(self,result2):
+        self.resultsDataObjs.extend(result2.resultsDataObjs)
+        self.resultsJSON.extend(result2.resultsJSON)
+    def addResult(self,recommendation,dobj):
+        self.resultsJSON.append(recommendation)
+        self.resultsDataObjs.append(dobj)
     def toJSON(self,currentView=""):
 
         dobj_dict = {}

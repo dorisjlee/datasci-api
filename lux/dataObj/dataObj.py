@@ -1,5 +1,7 @@
 from lux.dataObj.Row import Row
 from lux.dataObj.Column import Column
+
+import lux
 from lux.vizLib.altair.AltairRenderer import AltairRenderer
 from lux.compiler.Compiler import Compiler
 import json
@@ -183,19 +185,17 @@ class DataObj:
         from lux.action.Enhance import enhance
         return enhance(self)
     def overview(self):
+        dataset = self.dataset
         from lux.action.Correlation import correlation
-        resultset = lux.Result()
-        dobj = lux.DataObj(self.dataset,[lux.Column("?",dataModel="measure"),lux.Column("?",dataModel="measure")])
+        dobj = lux.DataObj(dataset,[lux.Column("?",dataModel="measure"),lux.Column("?",dataModel="measure")])
         result = correlation(dobj)
-        resultset.resultsJSON.append(result)
-        resultset.resultsDataObjs.append(dobj)
 
         from lux.action.Distribution import distribution
-        dobj = lux.DataObj(self.dataset,[lux.Column("?",dataModel="measure")])
-        result = distribution(dobj)
-        resultset.resultsJSON.append(result)
-        resultset.resultsDataObjs.append(dobj)
-        return resultset
+        dobj = lux.DataObj(dataset,[lux.Column("?",dataModel="measure")])
+        result2 = distribution(dobj)
+        # Merge the two Result object from the two actions
+        result.mergeResult(result2)
+        return result
     def preprocess(self):
         from lux.service.patternSearch import preprocessing
         preprocessing.aggregate(self)

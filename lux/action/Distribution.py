@@ -2,8 +2,9 @@
 Gets a measure of skewness of the distributions of all measures
 '''
 from lux.interestingness.interestingness import interestingness
+import lux
 def distribution(dobj):
-
+	result = lux.Result()
 	# Enumerate --> compute the scores for each item in the collection 
 	# -->  return DataObjectCollection with the scores 
 	import scipy.stats
@@ -25,4 +26,5 @@ def distribution(dobj):
 	dobj.compiled.sort()
 	recommendation["collection"] = dobj.compiled
 	# dobj.recommendations.append(recommendation)
-	return recommendation
+	result.addResult(recommendation,dobj)
+	return result

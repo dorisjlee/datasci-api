@@ -1,12 +1,14 @@
 '''
 Correlation between measure variables
 '''
+import lux
 def correlation(dobj,ignoreIdentity=True,ignoreTranspose=True):
 	# Enumerate --> compute the scores for each item in the collection 
 	# -->  return DataObjectCollection with the scores 
 	import scipy.stats
 	import numpy as np
 	# TODO: need to make this work for DataObject (when input is not collection and just a single DataObject)
+	result = lux.Result()
 	recommendation = {"action":"Correlation",
 						   "description":"Show relationships between two quantitative variables."}
 	vizCollection = dobj.compiled.collection
@@ -37,4 +39,5 @@ def correlation(dobj,ignoreIdentity=True,ignoreTranspose=True):
 	dobj.compiled.sort(removeInvalid=True)
 	recommendation["collection"] = dobj.compiled
 	# dobj.recommendations.append(recommendation)
-	return recommendation
+	result.addResult(recommendation,dobj)
+	return result
