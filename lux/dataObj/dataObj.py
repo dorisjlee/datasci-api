@@ -276,11 +276,12 @@ class DataObj:
         else:
             print("Query needs to have 1 row value")
     def showMore(self):
-        currentViewExist = self.compiled.spec==[]
+        currentViewExist = self.compiled.spec!=[]
+        result = lux.Result()
         if (currentViewExist):
-            result = self.enhance()
-            result = self.filter()
-            result = self.generalize()
+            result.mergeResult(self.enhance())
+            result.mergeResult(self.filter())
+            result.mergeResult(self.generalize())
         else: 
-            result = self.overview()
+            result.mergeResult(self.overview())
         return result
