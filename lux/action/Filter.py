@@ -34,7 +34,6 @@ def filter(dobj):
 						tempDataObj.compile()
 						output.append(tempDataObj.compiled)
 				completedFilters.append(row.fAttribute)
-		recommendation["collection"] = lux.DataObjCollection(output)
 	#if Row is not specified, create filters using unique values from all categorical variables in the dataset
 	else:
 		categoricalVars = dobj.dataset.dataType['categorical']
@@ -50,6 +49,8 @@ def filter(dobj):
 
 				tempDataObj.compile()
 				output.append(tempDataObj.compiled)
-		recommendation["collection"] = lux.DataObjCollection(output)
+	outputDataObjCol = lux.DataObjCollection(output)
+	outputDataObjCol = outputDataObjCol.topK(5)
+	recommendation["collection"] = outputDataObjCol
 	result.addResult(recommendation,dobj)
 	return result

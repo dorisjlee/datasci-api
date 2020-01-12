@@ -24,10 +24,10 @@ def relationshipBasedInterestingness(dobj):
 	else:
 		row = dobj.getObjByRowColType("Row")[0]
 		filteredData = dobj.dataset.df[dobj.dataset.df[row.fAttribute] == row.fVal]
-		if len(filteredData) > 1:
+		if len(filteredData) > 20: # should have at least 20 datapoints to compute a correlation
 			m1Val = filteredData[m1]
 			m2Val = filteredData[m2]
 			pearsonCorr = pearsonr(m1Val, m2Val)[0]
 			return(pearsonCorr)
 		else:
-			return(0)
+			return(-1)

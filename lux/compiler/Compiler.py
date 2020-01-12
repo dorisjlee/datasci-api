@@ -145,7 +145,6 @@ class Compiler:
 			# Line or Bar Chart
 			# if x is unspecified
 			if (Nmsr == 0):
-				countCol.channel = "x"
 				dobj.spec.append(countCol)
 			dimension = dobj.getObjByDataModel("dimension")[0]
 			measure = dobj.getObjByDataModel("measure")[0]

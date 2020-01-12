@@ -86,10 +86,10 @@ input[type=text], select {
   color:black;
 }
 .graph-container{
-  height: 235px;
+  height: 250px;
   max-height: 270px;
-  margin: 10px 0px 20px 5px;
-  padding: 15px 0px 0px 0px;
+  margin: 10px 0px 5px 5px;
+  padding: 0px 0px 0px 0px;
   overflow-y: auto;
 }
 #mainVizTitle{
@@ -120,6 +120,7 @@ input[type=text], select {
 #tabBanner{
   width: auto;
   overflow: hidden;
+  min-width: 70%;
 }
 #exportBtn{
   position: absolute;
